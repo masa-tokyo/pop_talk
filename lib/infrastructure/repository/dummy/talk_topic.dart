@@ -1,5 +1,5 @@
 import 'package:pop_talk/domain/model/talk_topic.dart';
-import 'package:pop_talk/domain/repository/user.dart';
+import 'package:pop_talk/domain/repository/talk_topic.dart';
 
 final _talkTopics = [
   TalkTopic(id: '1', name: '夢占いの話'),

@@ -1,4 +1,4 @@
-package com.example.pop_talk
+package com.yamyanu.poptalk
 
 import io.flutter.embedding.android.FlutterActivity
 
