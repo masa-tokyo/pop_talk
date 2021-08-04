@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>461311922713-dmv7pd4lqu8u9tlsh8cq0salifthf6k6.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.461311922713-dmv7pd4lqu8u9tlsh8cq0salifthf6k6</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCCkUxMRX8tPKJQO1lzVcx7z_sBXNl8-KY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>461311922713</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.yamyanu.poptalk</string>
+	<key>PROJECT_ID</key>
+	<string>poptalk-development</string>
+	<key>STORAGE_BUCKET</key>
+	<string>poptalk-development.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:461311922713:ios:d7131eba21be84c42d5088</string>
+</dict>
+</plist>

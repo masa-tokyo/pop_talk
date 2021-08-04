@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pop_talk/domain/model/talk_topic.dart';
-import 'package:pop_talk/domain/repository/user.dart';
+import 'package:pop_talk/domain/repository/talk_topic.dart';
 
 class TalkTopicNotifier with ChangeNotifier {
   TalkTopicNotifier(this._repository);
