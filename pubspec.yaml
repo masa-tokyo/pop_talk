@@ -81,4 +81,4 @@ flutter:
 
   assets:
     - .env
-    - assets/images/
+    - assets/images/default_avatar.png
