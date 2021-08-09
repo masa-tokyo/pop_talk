@@ -12,7 +12,6 @@ class TalkItemNotifier with ChangeNotifier {
 
   final TalkItemRepository _repository;
 
-  int tabIndex = 0;
   bool isLoading = false;
   List<TalkItem> savedTalkItems = [];
   List<TalkItem> postedTalkItems = [];
@@ -27,16 +26,11 @@ class TalkItemNotifier with ChangeNotifier {
     notifyListeners();
   }
 
-  void init() {
+  Future<void> init() async {
     startLoading();
-    fetchSavedItems();
-    fetchPostedItems();
+    await fetchSavedItems();
+    await fetchPostedItems();
     endLoading();
-  }
-
-  void changeTabIndex({required int index}) {
-    tabIndex = index;
-    notifyListeners();
   }
 
   Future<void> fetchSavedItems() async {

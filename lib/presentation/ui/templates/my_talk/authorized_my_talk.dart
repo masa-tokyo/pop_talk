@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/domain/model/authed_user.dart';
 import 'package:pop_talk/presentation/ui/organisms/talk_tile.dart';
-import 'package:pop_talk/presentation/notifier/talk_item.dart';
 
-class AuthorizedMyTalk extends StatelessWidget {
+class AuthorizedMyTalk extends StatefulWidget {
   const AuthorizedMyTalk({
     Key? key,
     required this.savedTalkItems,
@@ -16,6 +14,14 @@ class AuthorizedMyTalk extends StatelessWidget {
   final List<TalkItem> savedTalkItems;
   final List<TalkItem> postedTalkItems;
   final AuthedUser userData;
+
+  @override
+  _AuthorizedMyTalkState createState() => _AuthorizedMyTalkState();
+}
+
+class _AuthorizedMyTalkState extends State<AuthorizedMyTalk> {
+  int _tabIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -60,7 +66,7 @@ class AuthorizedMyTalk extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        userData.name,
+                        widget.userData.name,
                         style: Theme.of(context).textTheme.headline6,
                       ),
                       const SizedBox(height: 8),
@@ -77,73 +83,70 @@ class AuthorizedMyTalk extends StatelessWidget {
                 ],
               ),
             ),
-            Consumer(
-              builder: (context, watch, __) {
-                final _talkItemNotifier = watch(talkItemProvider);
-                return Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: DefaultTabController(
-                    length: 2,
-                    initialIndex: 0,
-                    child: Column(
-                      children: [
-                        TabBar(
-                          labelColor: Colors.black,
-                          unselectedLabelColor: Colors.black45,
-                          indicatorSize: TabBarIndicatorSize.label,
-                          indicator: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            border: Border.all(color: Colors.black38),
-                          ),
-                          onTap: (index) {
-                            _talkItemNotifier.changeTabIndex(index: index);
-                          },
-                          tabs: const [
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 30),
-                              child: Tab(text: '保存済み'),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 30),
-                              child: Tab(text: '配信済み'),
-                            ),
-                          ],
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: DefaultTabController(
+                length: 2,
+                initialIndex: 0,
+                child: Column(
+                  children: [
+                    TabBar(
+                      labelColor: Colors.black,
+                      unselectedLabelColor: Colors.black45,
+                      indicatorSize: TabBarIndicatorSize.label,
+                      indicator: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        border: Border.all(color: Colors.black38),
+                      ),
+                      onTap: (index) {
+                        setState(() {
+                          _tabIndex = index;
+                        });
+                      },
+                      tabs: const [
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 30),
+                          child: Tab(text: '保存済み'),
                         ),
-                        SizedBox(
-                          height: _talkItemNotifier.tabIndex == 0
-                              ? height * 0.18 * savedTalkItems.length
-                              : height * 0.20 * postedTalkItems.length,
-                          width: width * 0.90,
-                          child: TabBarView(
-                            children: [
-                              ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: savedTalkItems.length,
-                                itemBuilder: (BuildContext context, int i) {
-                                  return TalkTile(
-                                    talkItem: savedTalkItems[i],
-                                    isPublic: false,
-                                  );
-                                },
-                              ),
-                              ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: savedTalkItems.length,
-                                itemBuilder: (BuildContext context, int i) {
-                                  return TalkTile(
-                                    talkItem: postedTalkItems[i],
-                                    isPublic: true,
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 30),
+                          child: Tab(text: '配信済み'),
                         ),
                       ],
                     ),
-                  ),
-                );
-              },
+                    SizedBox(
+                      height: _tabIndex == 0
+                          ? height * 0.18 * widget.savedTalkItems.length
+                          : height * 0.20 * widget.postedTalkItems.length,
+                      width: width * 0.90,
+                      child: TabBarView(
+                        children: [
+                          ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: widget.savedTalkItems.length,
+                            itemBuilder: (BuildContext context, int i) {
+                              return TalkTile(
+                                talkItem: widget.savedTalkItems[i],
+                                isPublic: false,
+                              );
+                            },
+                          ),
+                          ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: widget.postedTalkItems.length,
+                            itemBuilder: (BuildContext context, int i) {
+                              return TalkTile(
+                                talkItem: widget.postedTalkItems[i],
+                                isPublic: true,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
