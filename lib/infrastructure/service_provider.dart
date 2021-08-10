@@ -6,9 +6,9 @@ import 'package:pop_talk/domain/repository/talk_item.dart';
 import 'package:pop_talk/infrastructure/repository/dummy/authed_user.dart';
 import 'package:pop_talk/infrastructure/repository/dummy/talk_topic.dart';
 import 'package:pop_talk/infrastructure/repository/dummy/talk_item.dart';
-import 'package:pop_talk/infrastructure/repository/firestore/authed_user.dart';
-import 'package:pop_talk/infrastructure/repository/firestore/talk_topic.dart';
-import 'package:pop_talk/infrastructure/repository/firestore/talk_item.dart';
+import 'package:pop_talk/infrastructure/repository/firebase/authed_user.dart';
+import 'package:pop_talk/infrastructure/repository/firebase/talk_topic.dart';
+import 'package:pop_talk/infrastructure/repository/firebase/talk_item.dart';
 
 Future<bool> registerDIContainer() async {
   await dotenv.load();
