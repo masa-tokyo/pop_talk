@@ -3,10 +3,10 @@ import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/presentation/ui/organisms/talk_tile.dart';
 
 class UnauthorizedMyTalk extends StatelessWidget {
-  const UnauthorizedMyTalk({Key? key, required this.talkItems})
+  const UnauthorizedMyTalk({Key? key, required this.savedTalkItems})
       : super(key: key);
 
-  final List<TalkItem> talkItems;
+  final List<TalkItem> savedTalkItems;
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -80,13 +80,16 @@ class UnauthorizedMyTalk extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: height * 0.18 * talkItems.length,
+              height: height * 0.18 * savedTalkItems.length,
               width: width * 0.90,
               child: ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: talkItems.length,
+                itemCount: savedTalkItems.length,
                 itemBuilder: (BuildContext context, int i) {
-                  return SavedTalkTile(talkItems[i]);
+                  return TalkTile(
+                    talkItem: savedTalkItems[i],
+                    isPublic: false,
+                  );
                 },
               ),
             ),

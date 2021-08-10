@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
 
-class SavedTalkTile extends StatelessWidget {
-  const SavedTalkTile(this.talkItem);
+class TalkTile extends StatelessWidget {
+  const TalkTile({
+    required this.talkItem,
+    required this.isPublic,
+  });
 
   final TalkItem talkItem;
+  final bool isPublic;
 
   @override
   Widget build(BuildContext context) {
@@ -28,55 +32,81 @@ class SavedTalkTile extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Container(
-                    width: width * 0.36,
-                    height: height * 0.12,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black38),
-                      borderRadius: BorderRadius.circular(12),
-                      color: Color(talkItem.colorCode),
-                    ),
-                    child: Stack(
-                      alignment: AlignmentDirectional.center,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            color: Colors.black26,
-                          ),
-                          child: Text(
-                            talkItem.talkTopic,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline3
-                                ?.copyWith(color: Colors.white),
+                  Column(
+                    children: [
+                      Container(
+                        width: width * 0.36,
+                        height: height * 0.12,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black38),
+                          borderRadius: BorderRadius.circular(12),
+                          color: Color(talkItem.colorCode),
+                        ),
+                        child: Stack(
+                          alignment: AlignmentDirectional.center,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                color: Colors.black26,
+                              ),
+                              child: Text(
+                                talkItem.talkTopic,
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline3
+                                    ?.copyWith(color: Colors.white),
+                              ),
+                            ),
+                            Positioned(
+                              right: 10,
+                              bottom: 5,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color: Colors.black26,
+                                ),
+                                child: Text(
+                                  '${talkItem.time}分',
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline5
+                                      ?.copyWith(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (isPublic)
+                        SizedBox(
+                          width: width * 0.36,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(Icons.remove_red_eye_outlined),
+                                  Text('${talkItem.view}')
+                                ],
+                              ),
+                              const SizedBox(width: 8),
+                              Row(
+                                children: [
+                                  const Icon(Icons.favorite_outline),
+                                  Text('${talkItem.like}')
+                                ],
+                              )
+                            ],
                           ),
                         ),
-                        Positioned(
-                          right: 10,
-                          bottom: 5,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              color: Colors.black26,
-                            ),
-                            child: Text(
-                              '${talkItem.time}分',
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline5
-                                  ?.copyWith(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    ],
                   ),
                   SizedBox(
                     height: height * 0.12,
