@@ -15,6 +15,8 @@ class AuthNotifier with ChangeNotifier {
     currentUser = await _repository.implicitLogin();
     notifyListeners();
   }
+
+  Future<void> addLikeTalk() async {}
 }
 
 final authProvider = ChangeNotifierProvider<AuthNotifier>(

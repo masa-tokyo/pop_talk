@@ -11,6 +11,8 @@ final _talkItems = [
     recordedAt: DateTime(2021, 8, 1, 00, 00),
     colorCode: 0xFF80C3C5,
     isPublic: false,
+    createdUser: TalkUser(
+        id: '5', name: '金子太郎', photoUrl: 'https://picsum.photos/250?image=9'),
   ),
   TalkItem(
     id: '2',
@@ -21,6 +23,8 @@ final _talkItems = [
     recordedAt: DateTime(2021, 7, 30, 00, 00),
     colorCode: 0xFFEFD9A7,
     isPublic: false,
+    createdUser: TalkUser(
+        id: '8', name: '中尾太郎', photoUrl: 'https://picsum.photos/250?image=9'),
   ),
   TalkItem(
     id: '3',
@@ -31,6 +35,8 @@ final _talkItems = [
     recordedAt: DateTime(2021, 7, 28, 00, 00),
     colorCode: 0xFFF1BF89,
     isPublic: false,
+    createdUser: TalkUser(
+        id: '2', name: '矢野太郎', photoUrl: 'https://picsum.photos/250?image=9'),
   ),
   TalkItem(
     id: '4',
@@ -41,6 +47,8 @@ final _talkItems = [
     recordedAt: DateTime(2021, 7, 26, 00, 00),
     colorCode: 0xFF9FCF70,
     isPublic: false,
+    createdUser: TalkUser(
+        id: '4', name: '福岡太郎', photoUrl: 'https://picsum.photos/250?image=9'),
   ),
   TalkItem(
     id: '5',
@@ -53,6 +61,8 @@ final _talkItems = [
     isPublic: true,
     like: 120,
     view: 400,
+    createdUser: TalkUser(
+        id: '11', name: '原太郎', photoUrl: 'https://picsum.photos/250?image=9'),
   ),
   TalkItem(
     id: '6',
@@ -65,6 +75,8 @@ final _talkItems = [
     isPublic: true,
     like: 80,
     view: 50,
+    createdUser: TalkUser(
+        id: '6', name: '山本太郎', photoUrl: 'https://picsum.photos/250?image=9'),
   ),
   TalkItem(
     id: '7',
@@ -77,6 +89,8 @@ final _talkItems = [
     isPublic: true,
     like: 300,
     view: 900,
+    createdUser: TalkUser(
+        id: '7', name: '今野太郎', photoUrl: 'https://picsum.photos/250?image=9'),
   ),
   TalkItem(
     id: '8',
@@ -89,6 +103,10 @@ final _talkItems = [
     isPublic: true,
     like: 500,
     view: 1000,
+    createdUser: TalkUser(
+        id: '12',
+        name: 'ジェームス太郎',
+        photoUrl: 'https://picsum.photos/250?image=9'),
   ),
 ];
 
@@ -101,5 +119,28 @@ class DummyTalkItemRepository implements TalkItemRepository {
   @override
   Future<List<TalkItem>> fetchPostedItems() async {
     return _talkItems.where((item) => item.isPublic == true).toList();
+  }
+
+  @override
+  Future<List<TalkItem>> fetchRecommendLists() async {
+    return _talkItems.toList();
+  }
+
+  @override
+  Future<List<TalkItem>> fetchByIds(List<String> ids) async {
+    return _talkItems.where((item) => ids.contains(item.id)).toList();
+  }
+
+  @override
+  Future<List<TalkItem>> fetchByCreatedUserIds(
+      List<String> createdUserIds) async {
+    return _talkItems
+        .where((item) => createdUserIds.contains(item.createdUser.id))
+        .toList();
+  }
+
+  @override
+  Future<List<TalkItem>> fetchPlayerLists() {
+    throw UnimplementedError();
   }
 }
