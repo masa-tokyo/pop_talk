@@ -17,13 +17,9 @@ class UnauthorizedMyTalk extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              margin: const EdgeInsets.only(top: 8),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.black38),
-                borderRadius: BorderRadius.circular(12),
-              ),
+              margin: const EdgeInsets.only(bottom: 16),
+              color: Colors.white,
               height: height * 0.20,
-              width: width * 0.90,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -50,6 +46,8 @@ class UnauthorizedMyTalk extends StatelessWidget {
                               ?.copyWith(
                                 padding:
                                     MaterialStateProperty.all(EdgeInsets.zero),
+                                backgroundColor: MaterialStateProperty.all(
+                                    Theme.of(context).primaryColor),
                               ),
                           child: const Text('新規登録'),
                         ),
@@ -69,8 +67,8 @@ class UnauthorizedMyTalk extends StatelessWidget {
                                 ?.copyWith(
                                   padding: MaterialStateProperty.all(
                                       EdgeInsets.zero),
-                                  backgroundColor:
-                                      MaterialStateProperty.all(Colors.green),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Theme.of(context).primaryColor),
                                 ),
                             child: const Text('ログイン')),
                       ),
@@ -80,7 +78,7 @@ class UnauthorizedMyTalk extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: height * 0.18 * savedTalkItems.length,
+              height: height * 0.20 * savedTalkItems.length,
               width: width * 0.90,
               child: ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
