@@ -8,7 +8,7 @@ class DummyAuthedUserRepository implements AuthedUserRepository {
       id: '1',
       name: 'テスト太郎',
       isAnonymous: false,
-      followUserIds: ['5', '2', '8'],
+      followingUserIds: ['5', '2', '8'],
       likeTalkIds: ['1', '3', '5', '6'],
     );
   }

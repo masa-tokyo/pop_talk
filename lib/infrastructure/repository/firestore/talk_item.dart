@@ -135,11 +135,6 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
   }
 
   @override
-  Future<List<TalkItem>> fetchFollowIds(List<String> ids) {
-    throw UnimplementedError();
-  }
-
-  @override
   Future<List<TalkItem>> fetchByIds(List<String> ids) {
     throw UnimplementedError();
   }
@@ -151,6 +146,11 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
 
   @override
   Future<List<TalkItem>> fetchRecommendLists() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<TalkItem>> fetchByCreatedUserIds(List<String> createdUserIds) {
     throw UnimplementedError();
   }
 }

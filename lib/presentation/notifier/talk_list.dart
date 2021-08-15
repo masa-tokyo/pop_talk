@@ -31,9 +31,11 @@ class TalkListNotifier with ChangeNotifier {
 
   Future<void> init() async {
     startLoading();
-    await fetchRecommendLists();
-    await fetchLikeLists();
-    await fetchFollowLists();
+    await Future.wait([
+      fetchRecommendLists(),
+      fetchLikeLists(),
+      fetchFollowLists(),
+    ]);
     endLoading();
   }
 
@@ -45,8 +47,8 @@ class TalkListNotifier with ChangeNotifier {
     if (_authedUser == null) {
       return;
     }
-    final followUserIds = _authedUser!.followUserIds;
-    followLists = await _repository.fetchByIds(followUserIds);
+    final followUserIds = _authedUser!.followingUserIds;
+    followLists = await _repository.fetchByCreatedUserIds(followUserIds);
   }
 
   Future<void> fetchLikeLists() async {

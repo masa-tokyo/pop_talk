@@ -12,7 +12,7 @@ final _talkItems = [
     colorCode: 0xFF80C3C5,
     isPublic: false,
     createdUser: TalkUser(
-        id: '1', name: '金子太郎', photoUrl: 'https://picsum.photos/250?image=9'),
+        id: '5', name: '金子太郎', photoUrl: 'https://picsum.photos/250?image=9'),
   ),
   TalkItem(
     id: '2',
@@ -24,7 +24,7 @@ final _talkItems = [
     colorCode: 0xFFEFD9A7,
     isPublic: false,
     createdUser: TalkUser(
-        id: '2', name: '中尾太郎', photoUrl: 'https://picsum.photos/250?image=9'),
+        id: '8', name: '中尾太郎', photoUrl: 'https://picsum.photos/250?image=9'),
   ),
   TalkItem(
     id: '3',
@@ -36,7 +36,7 @@ final _talkItems = [
     colorCode: 0xFFF1BF89,
     isPublic: false,
     createdUser: TalkUser(
-        id: '3', name: '矢野太郎', photoUrl: 'https://picsum.photos/250?image=9'),
+        id: '2', name: '矢野太郎', photoUrl: 'https://picsum.photos/250?image=9'),
   ),
   TalkItem(
     id: '4',
@@ -62,7 +62,7 @@ final _talkItems = [
     like: 120,
     view: 400,
     createdUser: TalkUser(
-        id: '5', name: '原太郎', photoUrl: 'https://picsum.photos/250?image=9'),
+        id: '11', name: '原太郎', photoUrl: 'https://picsum.photos/250?image=9'),
   ),
   TalkItem(
     id: '6',
@@ -104,7 +104,7 @@ final _talkItems = [
     like: 500,
     view: 1000,
     createdUser: TalkUser(
-        id: '8',
+        id: '12',
         name: 'ジェームス太郎',
         photoUrl: 'https://picsum.photos/250?image=9'),
   ),
@@ -129,6 +129,14 @@ class DummyTalkItemRepository implements TalkItemRepository {
   @override
   Future<List<TalkItem>> fetchByIds(List<String> ids) async {
     return _talkItems.where((item) => ids.contains(item.id)).toList();
+  }
+
+  @override
+  Future<List<TalkItem>> fetchByCreatedUserIds(
+      List<String> createdUserIds) async {
+    return _talkItems
+        .where((item) => createdUserIds.contains(item.createdUser.id))
+        .toList();
   }
 
   @override

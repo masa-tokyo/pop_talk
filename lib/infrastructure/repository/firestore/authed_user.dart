@@ -11,7 +11,7 @@ class FirestoreAuthedUserRepository implements AuthedUserRepository {
       name:
           firebaseUser.user!.displayName ?? 'ゲストユーザー${firebaseUser.user!.uid}',
       isAnonymous: firebaseUser.user!.isAnonymous,
-      followUserIds: [],
+      followingUserIds: [],
       likeTalkIds: [],
     );
   }
