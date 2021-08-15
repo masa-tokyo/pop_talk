@@ -127,12 +127,7 @@ class DummyTalkItemRepository implements TalkItemRepository {
   }
 
   @override
-  Future<List<TalkItem>> fetchLikeIds(List<String> ids) async {
-    return _talkItems.where((item) => ids.contains(item.id)).toList();
-  }
-
-  @override
-  Future<List<TalkItem>> fetchFollowIds(List<String> ids) async {
+  Future<List<TalkItem>> fetchByIds(List<String> ids) async {
     return _talkItems.where((item) => ids.contains(item.id)).toList();
   }
 

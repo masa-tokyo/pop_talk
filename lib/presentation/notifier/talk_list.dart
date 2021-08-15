@@ -46,7 +46,7 @@ class TalkListNotifier with ChangeNotifier {
       return;
     }
     final followUserIds = _authedUser!.followUserIds;
-    followLists = await _repository.fetchFollowIds(followUserIds);
+    followLists = await _repository.fetchByIds(followUserIds);
   }
 
   Future<void> fetchLikeLists() async {
@@ -54,7 +54,7 @@ class TalkListNotifier with ChangeNotifier {
       return;
     }
     final likeTalkIds = _authedUser!.likeTalkIds;
-    likeLists = await _repository.fetchLikeIds(likeTalkIds);
+    likeLists = await _repository.fetchByIds(likeTalkIds);
   }
 }
 

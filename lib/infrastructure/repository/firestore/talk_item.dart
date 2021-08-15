@@ -140,7 +140,7 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
   }
 
   @override
-  Future<List<TalkItem>> fetchLikeIds(List<String> ids) {
+  Future<List<TalkItem>> fetchByIds(List<String> ids) {
     throw UnimplementedError();
   }
 
