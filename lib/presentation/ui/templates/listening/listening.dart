@@ -28,6 +28,8 @@ class _ListeningTempleteState extends State<ListeningTemplete> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return DefaultTabController(
       length: 3,
       initialIndex: 0,
@@ -97,58 +99,55 @@ class _ListeningTempleteState extends State<ListeningTemplete> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 25),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  children: [
-                                    Container(
-                                      width: 150,
-                                      height: 150,
-                                      decoration: BoxDecoration(
-                                          border:
-                                              Border.all(color: Colors.orange),
-                                          shape: BoxShape.circle,
-                                          image: const DecorationImage(
-                                              fit: BoxFit.fill,
-                                              image: NetworkImage(
-                                                  'https://picsum.photos/250?image=9'))),
+                                horizontal: 8, vertical: 12),
+                            child: Container(
+                              height: height * 0.25,
+                              width: width * 0.75,
+                              decoration: BoxDecoration(
+                                color: Colors.blue[50],
+                                borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10),
+                                    bottomRight: Radius.circular(10)),
+                              ),
+                              child: Column(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            width: 50,
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color: Colors.orange),
+                                                shape: BoxShape.circle,
+                                                image: const DecorationImage(
+                                                    fit: BoxFit.fill,
+                                                    image: NetworkImage(
+                                                        'https://picsum.photos/250?image=9'))),
+                                          ),
+                                          const Text('山田太郎',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              )),
+                                        ],
+                                      ),
                                     ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    const Text('山田太郎',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        )),
-                                  ],
-                                ),
-                                const Icon(
-                                  Icons.clear_outlined,
-                                  color: Color(0xFFBDBDBD),
-                                  size: 50,
-                                ),
-                                Column(
-                                  children: [
-                                    const Text(
-                                      '最近お気に入りの',
+                                  ),
+                                  const Center(
+                                    child: Text(
+                                      '面白かったこと',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          decoration: TextDecoration.underline),
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                    const SizedBox(
-                                      height: 80,
-                                    ),
-                                    const Text(
-                                      'Youtuber',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          decoration: TextDecoration.underline),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                           const Center(
@@ -157,8 +156,12 @@ class _ListeningTempleteState extends State<ListeningTemplete> {
                             style: TextStyle(fontWeight: FontWeight.bold),
                           )),
                           const SizedBox(
-                            height: 20,
+                            height: 10,
                           ),
+                          const Center(
+                              child: Text(
+                            'テキストテキストテキスト',
+                          )),
                           Slider(
                             value: _currentValue,
                             min: 0,
@@ -173,7 +176,7 @@ class _ListeningTempleteState extends State<ListeningTemplete> {
                             inactiveColor: Colors.grey[300],
                           ),
                           const SizedBox(
-                            height: 45,
+                            height: 15,
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 3),
@@ -205,47 +208,51 @@ class _ListeningTempleteState extends State<ListeningTemplete> {
                             ),
                           ),
                           const SizedBox(
-                            height: 65,
+                            height: 40,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              OutlinedButton.icon(
-                                onPressed: () {},
-                                style: OutlinedButton.styleFrom(
-                                  side: const BorderSide(
-                                      width: 1, color: Colors.black),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  primary: Colors.black,
-                                ),
-                                label: const Text('フォロー'),
-                                icon: const Icon(
-                                  Icons.person_add,
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 15,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 15),
-                                child: OutlinedButton.icon(
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                OutlinedButton.icon(
                                   onPressed: () {},
                                   style: OutlinedButton.styleFrom(
-                                      side: const BorderSide(
-                                          width: 1, color: Colors.black),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      primary: Colors.black),
-                                  label: const Text('いいね'),
+                                    side: const BorderSide(
+                                        width: 1, color: Colors.black),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    primary: Colors.black,
+                                  ),
+                                  label: const Text('フォロー'),
                                   icon: const Icon(
-                                    Icons.favorite,
+                                    Icons.person_add,
                                   ),
                                 ),
-                              ),
-                            ],
+                                const SizedBox(
+                                  width: 15,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 15),
+                                  child: OutlinedButton.icon(
+                                    onPressed: () {},
+                                    style: OutlinedButton.styleFrom(
+                                        side: const BorderSide(
+                                            width: 1, color: Colors.black),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        primary: Colors.black),
+                                    label: const Text('いいね'),
+                                    icon: const Icon(
+                                      Icons.favorite,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
