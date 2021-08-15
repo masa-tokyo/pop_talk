@@ -27,14 +27,14 @@ class _AuthorizedMyTalkState extends State<AuthorizedMyTalk> {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
-      child: SizedBox(
-        width: width,
+      child: Align(
+        alignment: Alignment.center,
         child: Column(
           children: [
             Container(
               margin: const EdgeInsets.only(top: 8),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.black38),
+                border: Border.all(color: Theme.of(context).primaryColor),
                 borderRadius: BorderRadius.circular(12),
               ),
               height: height * 0.20,
@@ -62,62 +62,79 @@ class _AuthorizedMyTalkState extends State<AuthorizedMyTalk> {
                       ),
                     ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        widget.userData.name,
-                        style: Theme.of(context).textTheme.headline6,
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Text(
-                            'フォロワー 100  いいね 100',
-                            style: Theme.of(context).textTheme.bodyText2,
-                          ),
-                        ],
-                      )
-                    ],
+                  SizedBox(
+                    width: width * 0.50,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          widget.userData.name,
+                          style: Theme.of(context).textTheme.headline6,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Text(
+                              'フォロワー 100  いいね 100',
+                              style: Theme.of(context).textTheme.bodyText2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 8),
+              padding: const EdgeInsets.only(top: 20),
               child: DefaultTabController(
                 length: 2,
                 initialIndex: 0,
                 child: Column(
                   children: [
-                    TabBar(
-                      labelColor: Colors.black,
-                      unselectedLabelColor: Colors.black45,
-                      indicatorSize: TabBarIndicatorSize.label,
-                      indicator: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        border: Border.all(color: Colors.black38),
+                    Container(
+                      height: 32,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black54),
+                        borderRadius: BorderRadius.circular(4),
                       ),
-                      onTap: (index) {
-                        setState(() {
-                          _tabIndex = index;
-                        });
-                      },
-                      tabs: const [
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 30),
-                          child: Tab(text: '保存済み'),
+                      child: TabBar(
+                        isScrollable: true,
+                        labelColor: Colors.white,
+                        unselectedLabelColor: Colors.black45,
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        indicator: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: BorderRadius.circular(4),
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 30),
-                          child: Tab(text: '配信済み'),
-                        ),
-                      ],
+                        onTap: (index) {
+                          setState(() {
+                            _tabIndex = index;
+                          });
+                        },
+                        tabs: const [
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            child: Tab(
+                              child: Text('保存済み'),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            child: Tab(
+                              child: Text('配信済み'),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     SizedBox(
                       height: _tabIndex == 0
-                          ? height * 0.18 * widget.savedTalkItems.length
-                          : height * 0.20 * widget.postedTalkItems.length,
+                          ? height * 0.20 * widget.savedTalkItems.length
+                          : height * 0.22 * widget.postedTalkItems.length,
                       width: width * 0.90,
                       child: TabBarView(
                         children: [
