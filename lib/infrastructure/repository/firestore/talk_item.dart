@@ -14,6 +14,10 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
         recordedAt: DateTime(2021, 7, 26, 00, 00),
         colorCode: 0xFF80C3C5,
         isPublic: false,
+        createdUser: TalkUser(
+            id: '1',
+            name: '金子太郎',
+            photoUrl: 'https://picsum.photos/250?image=9'),
       ),
       TalkItem(
         id: '2',
@@ -24,6 +28,10 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
         recordedAt: DateTime(2021, 7, 28, 00, 00),
         colorCode: 0xFFEFD9A7,
         isPublic: false,
+        createdUser: TalkUser(
+            id: '1',
+            name: '金子太郎',
+            photoUrl: 'https://picsum.photos/250?image=9'),
       ),
       TalkItem(
         id: '3',
@@ -34,6 +42,10 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
         recordedAt: DateTime(2021, 7, 30, 00, 00),
         colorCode: 0xFFF1BF89,
         isPublic: false,
+        createdUser: TalkUser(
+            id: '1',
+            name: '金子太郎',
+            photoUrl: 'https://picsum.photos/250?image=9'),
       ),
       TalkItem(
         id: '4',
@@ -44,6 +56,10 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
         recordedAt: DateTime(2021, 8, 1, 00, 00),
         colorCode: 0xFF9FCF70,
         isPublic: false,
+        createdUser: TalkUser(
+            id: '1',
+            name: '金子太郎',
+            photoUrl: 'https://picsum.photos/250?image=9'),
       ),
     ];
   }
@@ -62,6 +78,10 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
         isPublic: true,
         like: 120,
         view: 400,
+        createdUser: TalkUser(
+            id: '1',
+            name: '金子太郎',
+            photoUrl: 'https://picsum.photos/250?image=9'),
       ),
       TalkItem(
         id: '6',
@@ -74,6 +94,10 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
         isPublic: true,
         like: 80,
         view: 50,
+        createdUser: TalkUser(
+            id: '1',
+            name: '金子太郎',
+            photoUrl: 'https://picsum.photos/250?image=9'),
       ),
       TalkItem(
         id: '7',
@@ -86,6 +110,10 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
         isPublic: true,
         like: 300,
         view: 900,
+        createdUser: TalkUser(
+            id: '1',
+            name: '金子太郎',
+            photoUrl: 'https://picsum.photos/250?image=9'),
       ),
       TalkItem(
         id: '8',
@@ -98,7 +126,31 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
         isPublic: true,
         like: 500,
         view: 1000,
+        createdUser: TalkUser(
+            id: '1',
+            name: '金子太郎',
+            photoUrl: 'https://picsum.photos/250?image=9'),
       ),
     ];
+  }
+
+  @override
+  Future<List<TalkItem>> fetchFollowIds(List<String> ids) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<TalkItem>> fetchLikeIds(List<String> ids) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<TalkItem>> fetchPlayerLists() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<TalkItem>> fetchRecommendLists() {
+    throw UnimplementedError();
   }
 }

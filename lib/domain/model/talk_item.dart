@@ -10,6 +10,7 @@ class TalkItem extends Object {
     required this.isPublic,
     this.like = 0,
     this.view = 0,
+    required this.createdUser,
   });
 
   final String id;
@@ -22,6 +23,7 @@ class TalkItem extends Object {
   final bool isPublic;
   int like;
   int view;
+  final TalkUser createdUser;
 
   @override
   bool operator ==(Object other) =>
@@ -29,4 +31,12 @@ class TalkItem extends Object {
 
   @override
   int get hashCode => id.hashCode;
+}
+
+class TalkUser {
+  TalkUser({required this.id, required this.name, required this.photoUrl});
+
+  final String id;
+  final String name;
+  final String photoUrl;
 }
