@@ -1,5 +1,7 @@
+import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
+import 'package:pop_talk/presentation/notifier/player.dart';
 import 'package:pop_talk/presentation/ui/organisms/listening_tile.dart';
 
 class ListeningTemplete extends StatefulWidget {
@@ -19,11 +21,18 @@ class ListeningTemplete extends StatefulWidget {
 }
 
 class _ListeningTempleteState extends State<ListeningTemplete> {
-  double _currentValue = 45;
+  late final PageManager _pageManager;
 
   @override
   void initState() {
     super.initState();
+    _pageManager = PageManager();
+  }
+
+  @override
+  void dispose() {
+    _pageManager.dispose();
+    super.dispose();
   }
 
   @override
@@ -162,50 +171,45 @@ class _ListeningTempleteState extends State<ListeningTemplete> {
                               child: Text(
                             'テキストテキストテキスト',
                           )),
-                          Slider(
-                            value: _currentValue,
-                            min: 0,
-                            max: 100,
-                            label: _currentValue.round().toString(),
-                            onChanged: (double value) {
-                              setState(() {
-                                _currentValue = value.roundToDouble();
-                              });
+                          ValueListenableBuilder<ProgressBarState>(
+                            valueListenable: _pageManager.progressNotifier,
+                            builder: (_, value, __) {
+                              return Padding(
+                                padding: const EdgeInsets.all(15),
+                                child: ProgressBar(
+                                  progress: value.current,
+                                  buffered: value.buffered,
+                                  total: value.total,
+                                  onSeek: _pageManager.seek,
+                                ),
+                              );
                             },
-                            activeColor: Colors.deepOrangeAccent,
-                            inactiveColor: Colors.grey[300],
                           ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 3),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(
-                                      Icons.arrow_back_ios,
-                                      size: 50,
-                                      color: Colors.deepOrangeAccent,
-                                    )),
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(
-                                      Icons.play_circle_fill_outlined,
-                                      size: 50,
-                                      color: Colors.deepOrangeAccent,
-                                    )),
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(
-                                      Icons.arrow_forward_ios,
-                                      size: 50,
-                                      color: Colors.deepOrangeAccent,
-                                    )),
-                              ],
-                            ),
+                          ValueListenableBuilder<ButtonState>(
+                            valueListenable: _pageManager.buttonNotifier,
+                            builder: (_, value, __) {
+                              switch (value) {
+                                case ButtonState.loading:
+                                  return Container(
+                                    margin: EdgeInsets.all(8.0),
+                                    width: 32.0,
+                                    height: 32.0,
+                                    child: CircularProgressIndicator(),
+                                  );
+                                case ButtonState.paused:
+                                  return IconButton(
+                                    icon: Icon(Icons.play_arrow),
+                                    iconSize: 32.0,
+                                    onPressed: _pageManager.play,
+                                  );
+                                case ButtonState.playing:
+                                  return IconButton(
+                                    icon: Icon(Icons.pause),
+                                    iconSize: 32.0,
+                                    onPressed: _pageManager.pause,
+                                  );
+                              }
+                            },
                           ),
                           const SizedBox(
                             height: 40,
