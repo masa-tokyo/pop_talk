@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/presentation/ui/organisms/talk_tile.dart';
+import 'package:pop_talk/presentation/ui/pages/resister.dart';
 
 class UnauthorizedMyTalk extends StatelessWidget {
   const UnauthorizedMyTalk({Key? key, required this.savedTalkItems})
@@ -59,7 +60,13 @@ class UnauthorizedMyTalk extends StatelessWidget {
                         ),
                         child: ElevatedButton(
                             onPressed: () {
-                              // TODO(MyTalkTeam): ログイン
+                              showModalBottomSheet<void>(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (BuildContext builder) {
+                                  return const ResisterPage();
+                                },
+                              );
                             },
                             style: Theme.of(context)
                                 .elevatedButtonTheme
