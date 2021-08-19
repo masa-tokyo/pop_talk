@@ -1,7 +1,9 @@
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
+import 'package:pop_talk/presentation/notifier/play_button.dart';
 import 'package:pop_talk/presentation/notifier/player.dart';
+import 'package:pop_talk/presentation/notifier/progress.dart';
 import 'package:pop_talk/presentation/ui/organisms/listening_tile.dart';
 
 class ListeningTemplete extends StatefulWidget {
@@ -20,9 +22,9 @@ class ListeningTemplete extends StatefulWidget {
   _ListeningTempleteState createState() => _ListeningTempleteState();
 }
 
-class _ListeningTempleteState extends State<ListeningTemplete> {
-  late final PageManager _pageManager;
+late final PageManager _pageManager;
 
+class _ListeningTempleteState extends State<ListeningTemplete> {
   @override
   void initState() {
     super.initState();
@@ -171,45 +173,14 @@ class _ListeningTempleteState extends State<ListeningTemplete> {
                               child: Text(
                             'テキストテキストテキスト',
                           )),
-                          ValueListenableBuilder<ProgressBarState>(
-                            valueListenable: _pageManager.progressNotifier,
-                            builder: (_, value, __) {
-                              return Padding(
-                                padding: const EdgeInsets.all(15),
-                                child: ProgressBar(
-                                  progress: value.current,
-                                  buffered: value.buffered,
-                                  total: value.total,
-                                  onSeek: _pageManager.seek,
-                                ),
-                              );
-                            },
-                          ),
-                          ValueListenableBuilder<ButtonState>(
-                            valueListenable: _pageManager.buttonNotifier,
-                            builder: (_, value, __) {
-                              switch (value) {
-                                case ButtonState.loading:
-                                  return Container(
-                                    margin: EdgeInsets.all(8.0),
-                                    width: 32.0,
-                                    height: 32.0,
-                                    child: CircularProgressIndicator(),
-                                  );
-                                case ButtonState.paused:
-                                  return IconButton(
-                                    icon: Icon(Icons.play_arrow),
-                                    iconSize: 32.0,
-                                    onPressed: _pageManager.play,
-                                  );
-                                case ButtonState.playing:
-                                  return IconButton(
-                                    icon: Icon(Icons.pause),
-                                    iconSize: 32.0,
-                                    onPressed: _pageManager.pause,
-                                  );
-                              }
-                            },
+                          Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              children: [
+                                AudioProgressBar(),
+                                AudioControlButtons(),
+                              ],
+                            ),
                           ),
                           const SizedBox(
                             height: 40,
@@ -358,6 +329,108 @@ class _ListeningTempleteState extends State<ListeningTemplete> {
           ))
         ],
       ),
+    );
+  }
+}
+
+class AudioProgressBar extends StatelessWidget {
+  const AudioProgressBar({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<ProgressBarState>(
+      valueListenable: _pageManager.progressNotifier,
+      builder: (_, value, __) {
+        return ProgressBar(
+          progress: value.current,
+          buffered: value.buffered,
+          total: value.total,
+          onSeek: _pageManager.seek,
+        );
+      },
+    );
+  }
+}
+
+class AudioControlButtons extends StatelessWidget {
+  const AudioControlButtons({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 60,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          PreviousSongButton(),
+          PlayButton(),
+          NextSongButton(),
+        ],
+      ),
+    );
+  }
+}
+
+class NextSongButton extends StatelessWidget {
+  const NextSongButton({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: _pageManager.isLastSongNotifier,
+      builder: (_, isLast, __) {
+        return IconButton(
+          icon: Icon(Icons.skip_next),
+          onPressed: (isLast) ? null : _pageManager.onNextSongButtonPressed,
+        );
+      },
+    );
+  }
+}
+
+class PlayButton extends StatelessWidget {
+  const PlayButton({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<ButtonState>(
+      valueListenable: _pageManager.playButtonNotifier,
+      builder: (_, value, __) {
+        switch (value) {
+          case ButtonState.loading:
+            return Container(
+              margin: EdgeInsets.all(8.0),
+              width: 32.0,
+              height: 32.0,
+              child: CircularProgressIndicator(),
+            );
+          case ButtonState.paused:
+            return IconButton(
+              icon: Icon(Icons.play_arrow),
+              iconSize: 32.0,
+              onPressed: _pageManager.play,
+            );
+          case ButtonState.playing:
+            return IconButton(
+              icon: Icon(Icons.pause),
+              iconSize: 32.0,
+              onPressed: _pageManager.pause,
+            );
+        }
+      },
+    );
+  }
+}
+
+class PreviousSongButton extends StatelessWidget {
+  const PreviousSongButton({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: _pageManager.isFirstSongNotifier,
+      builder: (_, isFirst, __) {
+        return IconButton(
+          icon: Icon(Icons.skip_previous),
+          onPressed:
+              (isFirst) ? null : _pageManager.onPreviousSongButtonPressed,
+        );
+      },
     );
   }
 }
