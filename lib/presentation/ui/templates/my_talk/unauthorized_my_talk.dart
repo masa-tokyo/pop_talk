@@ -38,9 +38,10 @@ class UnauthorizedMyTalk extends StatelessWidget {
                           height: height * 0.06,
                         ),
                         child: ElevatedButton(
-                          onPressed: () {
-                            // TODO(MyTalkTeam): 新規登録
-                          },
+                          onPressed: () => _showModalBottomSheet(
+                            context: context,
+                            isMember: false,
+                          ),
                           style: Theme.of(context)
                               .elevatedButtonTheme
                               .style
@@ -59,15 +60,10 @@ class UnauthorizedMyTalk extends StatelessWidget {
                           height: height * 0.06,
                         ),
                         child: ElevatedButton(
-                            onPressed: () {
-                              showModalBottomSheet<void>(
-                                context: context,
-                                isScrollControlled: true,
-                                builder: (BuildContext builder) {
-                                  return const ResisterPage();
-                                },
-                              );
-                            },
+                            onPressed: () => _showModalBottomSheet(
+                                  context: context,
+                                  isMember: true,
+                                ),
                             style: Theme.of(context)
                                 .elevatedButtonTheme
                                 .style
@@ -103,4 +99,24 @@ class UnauthorizedMyTalk extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showModalBottomSheet({
+  required BuildContext context,
+  required bool isMember,
+}) {
+  showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter modalSetState) {
+          return ResisterPage(
+            isMember: isMember,
+            modalSetState: modalSetState,
+          );
+        },
+      );
+    },
+  );
 }

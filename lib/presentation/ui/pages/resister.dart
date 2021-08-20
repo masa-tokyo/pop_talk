@@ -5,15 +5,26 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ResisterPage extends StatefulWidget {
-  const ResisterPage({Key? key}) : super(key: key);
+  const ResisterPage({
+    Key? key,
+    required this.isMember,
+    required this.modalSetState,
+  }) : super(key: key);
+
+  final bool isMember;
+  final StateSetter modalSetState;
 
   @override
   _ResisterPageState createState() => _ResisterPageState();
 }
 
 class _ResisterPageState extends State<ResisterPage> {
+  bool? isMember;
+  bool isInit = true;
+
   @override
   Widget build(BuildContext context) {
+    isMember = isInit ? widget.isMember : !widget.isMember;
     return Column(
       children: [
         Container(
@@ -42,7 +53,7 @@ class _ResisterPageState extends State<ResisterPage> {
                 letterSpacing: 0.5,
                 textStyle: const TextStyle(
                   fontSize: 56,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w800,
                   color: Color(0xFF804B3A),
                 ),
               ),
@@ -72,9 +83,9 @@ class _ResisterPageState extends State<ResisterPage> {
                       width: 20,
                       fit: BoxFit.cover,
                     ),
-                    const Text(
-                      'Googleでログインする',
-                      style: TextStyle(color: Colors.black),
+                    Text(
+                      isMember! ? 'Googleでログインする' : 'Googleで始める',
+                      style: const TextStyle(color: Colors.black),
                     ),
                   ],
                 ),
@@ -91,14 +102,14 @@ class _ResisterPageState extends State<ResisterPage> {
                 onPressed: () {},
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
-                    Icon(
+                  children: [
+                    const Icon(
                       FontAwesomeIcons.apple,
                       size: 20,
                     ),
                     Text(
-                      'Appleでログインする',
-                      style: TextStyle(color: Colors.white),
+                      isMember! ? 'Appleでログインする' : 'Appleで始める',
+                      style: const TextStyle(color: Colors.white),
                     ),
                   ],
                 ),
@@ -111,7 +122,7 @@ class _ResisterPageState extends State<ResisterPage> {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: 'アカウントをお持ちでない方は',
+                        text: isMember! ? 'アカウントをお持ちでない方は' : 'アカウントをお持ちの方は',
                         style: TextStyle(color: Colors.grey[800]),
                       ),
                       TextSpan(
@@ -121,14 +132,23 @@ class _ResisterPageState extends State<ResisterPage> {
                           fontWeight: FontWeight.w600,
                         ),
                         recognizer: TapGestureRecognizer()
-                          ..onTap = () => Navigator.pop(context),
+                          ..onTap = () {
+                            widget.modalSetState(() {
+                              isInit = !isInit;
+                            });
+                          },
                       ),
                     ],
                   ),
                 ),
               ),
               const SizedBox(height: 16),
-              RichText(
+            ],
+          ),
+        ),
+        isMember!
+            ? RichText(
+                textAlign: TextAlign.center,
                 overflow: TextOverflow.clip,
                 text: TextSpan(
                   children: [
@@ -139,8 +159,7 @@ class _ResisterPageState extends State<ResisterPage> {
                         color: Colors.blue.shade800,
                         decoration: TextDecoration.underline,
                       ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () => Navigator.pop(context),
+                      recognizer: TapGestureRecognizer()..onTap = () {},
                     ),
                     const TextSpan(
                         text: ' | ',
@@ -152,8 +171,7 @@ class _ResisterPageState extends State<ResisterPage> {
                         color: Colors.blue.shade800,
                         decoration: TextDecoration.underline,
                       ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () => Navigator.pop(context),
+                      recognizer: TapGestureRecognizer()..onTap = () {},
                     ),
                     const TextSpan(
                         text: ' | ',
@@ -166,10 +184,50 @@ class _ResisterPageState extends State<ResisterPage> {
                     ),
                   ],
                 ),
+              )
+            : RichText(
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.clip,
+                text: TextSpan(
+                  children: [
+                    const TextSpan(
+                      text: 'アカウント登録により\n',
+                      style: TextStyle(fontSize: 12, color: Colors.black),
+                    ),
+                    TextSpan(
+                      text: '利用規約',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.blue.shade800,
+                        decoration: TextDecoration.underline,
+                      ),
+                      recognizer: TapGestureRecognizer()..onTap = () {},
+                    ),
+                    const TextSpan(
+                      text: 'と',
+                      style: TextStyle(fontSize: 12, color: Colors.black),
+                    ),
+                    TextSpan(
+                      text: 'プライバシーポリシー',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.blue.shade800,
+                        decoration: TextDecoration.underline,
+                      ),
+                      recognizer: TapGestureRecognizer()..onTap = () {},
+                    ),
+                    const TextSpan(
+                        text: 'に同意することになります\n',
+                        style: TextStyle(fontSize: 12, color: Colors.black)),
+                    TextSpan(
+                      text: 'お問い合わせ',
+                      style: const TextStyle(fontSize: 12, color: Colors.black),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
       ],
     );
   }

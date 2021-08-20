@@ -28,12 +28,11 @@ class MyTalkPage extends StatelessWidget {
         } else if (_authNotifier.currentUser == null) {
           return UnauthorizedMyTalk(savedTalkItems: _savedTalkItems);
         } else {
-          return UnauthorizedMyTalk(savedTalkItems: _savedTalkItems);
-          //     AuthorizedMyTalk(
-          //   savedTalkItems: _savedTalkItems,
-          //   postedTalkItems: _postedTalkItems,
-          //   userData: _authNotifier.currentUser!,
-          // );
+          return AuthorizedMyTalk(
+            savedTalkItems: _savedTalkItems,
+            postedTalkItems: _postedTalkItems,
+            userData: _authNotifier.currentUser!,
+          );
         }
       },
     );
