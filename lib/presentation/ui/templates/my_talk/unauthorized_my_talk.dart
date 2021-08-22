@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/presentation/ui/organisms/talk_tile.dart';
+import 'package:pop_talk/presentation/ui/pages/resister.dart';
 
 class UnauthorizedMyTalk extends StatelessWidget {
   const UnauthorizedMyTalk({Key? key, required this.savedTalkItems})
@@ -37,9 +38,10 @@ class UnauthorizedMyTalk extends StatelessWidget {
                           height: height * 0.06,
                         ),
                         child: ElevatedButton(
-                          onPressed: () {
-                            // TODO(MyTalkTeam): 新規登録
-                          },
+                          onPressed: () => _showModalBottomSheet(
+                            context: context,
+                            isMember: false,
+                          ),
                           style: Theme.of(context)
                               .elevatedButtonTheme
                               .style
@@ -58,9 +60,10 @@ class UnauthorizedMyTalk extends StatelessWidget {
                           height: height * 0.06,
                         ),
                         child: ElevatedButton(
-                            onPressed: () {
-                              // TODO(MyTalkTeam): ログイン
-                            },
+                            onPressed: () => _showModalBottomSheet(
+                                  context: context,
+                                  isMember: true,
+                                ),
                             style: Theme.of(context)
                                 .elevatedButtonTheme
                                 .style
@@ -96,4 +99,24 @@ class UnauthorizedMyTalk extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showModalBottomSheet({
+  required BuildContext context,
+  required bool isMember,
+}) {
+  showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter modalSetState) {
+          return ResisterPage(
+            isMember: isMember,
+            modalSetState: modalSetState,
+          );
+        },
+      );
+    },
+  );
 }
