@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
+import 'package:pop_talk/presentation/ui/pages/preview.dart';
 
 class TalkTile extends StatelessWidget {
   const TalkTile({
@@ -18,9 +19,10 @@ class TalkTile extends StatelessWidget {
       padding: const EdgeInsets.only(top: 4),
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () {
-          // TODO(MyTalkTeam): プレビュー画面表示
-        },
+        onTap: () => _showModalBottomSheet(
+          context: context,
+          talkItem: talkItem,
+        ),
         child: Card(
           elevation: 2,
           shape: RoundedRectangleBorder(
@@ -141,4 +143,30 @@ class TalkTile extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showModalBottomSheet({
+  required BuildContext context,
+  required TalkItem talkItem,
+}) {
+  showModalBottomSheet<void>(
+    context: context,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    isScrollControlled: true,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter modalSetState) {
+          return SizedBox(
+            height: MediaQuery.of(context).size.height * 0.88,
+            child: PreviewPage(
+              talkItem: talkItem,
+              modalSetState: modalSetState,
+            ),
+          );
+        },
+      );
+    },
+  );
 }
