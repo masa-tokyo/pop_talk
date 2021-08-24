@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
+import 'package:pop_talk/presentation/ui/pages/talk_datail.dart';
 
 class PreviewPage extends StatefulWidget {
   const PreviewPage({
@@ -137,9 +138,10 @@ class _PreviewPageState extends State<PreviewPage> {
                         .headline2!
                         .copyWith(fontWeight: FontWeight.normal)),
                 GestureDetector(
-                  onTap: () {
-                    // MBS表示
-                  },
+                  onTap: () => _showModalBottomSheet(
+                    context: context,
+                    talkItem: widget.talkItem,
+                  ),
                   child: Text(
                     '詳細',
                     textAlign: TextAlign.end,
@@ -253,4 +255,20 @@ class _PreviewPageState extends State<PreviewPage> {
       ),
     );
   }
+}
+
+void _showModalBottomSheet({
+  required BuildContext context,
+  required TalkItem talkItem,
+}) {
+  showModalBottomSheet<void>(
+    context: context,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    isScrollControlled: true,
+    builder: (context) {
+      return TalkDetailPage(talkItem: talkItem);
+    },
+  );
 }
