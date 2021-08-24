@@ -25,8 +25,10 @@ dependencies:
   collection: ^1.15.0
   flutter:
     sdk: flutter
+  flutter_countdown_timer: ^4.1.0
   flutter_dotenv: ^5.0.0
   flutter_riverpod: ^0.14.0+3
+  flutter_sequence_animation: ^4.0.0-nullsafety
   get_it: ^7.2.0
   google_fonts: ^2.1.0
 
