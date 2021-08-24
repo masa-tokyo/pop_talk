@@ -54,8 +54,8 @@ class MyApp extends StatelessWidget {
             ),
             elevatedButtonTheme: ElevatedButtonThemeData(
               style: ElevatedButton.styleFrom(
-                primary: Colors.blue,
-                onSurface: Colors.blue[300],
+                primary: const Color(0xFFFF934E),
+                onSurface: const Color(0xFFC4C4C4),
                 textStyle: TextStyle(
                   fontSize: 16,
                   fontFamily: GoogleFonts.mPlus1p().fontFamily,
@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                backgroundColor: Colors.blue,
+                backgroundColor: const Color(0xFFFF934E),
                 textStyle: TextStyle(
                   fontSize: 16,
                   color: Colors.white,
@@ -92,8 +92,8 @@ class MyApp extends StatelessWidget {
                 ),
               ),
             ),
-            primaryColor: const Color(0xff438ff5),
-            scaffoldBackgroundColor: Colors.white,
+            primaryColor: const Color(0xFFFF934E),
+            scaffoldBackgroundColor: const Color(0xFFF1EFE5),
             canvasColor: const Color(0xfff2f2f2),
             hoverColor: Colors.transparent,
             disabledColor: Colors.blue[300],

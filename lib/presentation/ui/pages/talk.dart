@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pop_talk/presentation/notifier/talk_topics.dart';
+import 'package:pop_talk/presentation/ui/pages/talk/post_recording_screen.dart';
 
 class TalkPage extends StatelessWidget {
   static const routeName = '/talk';
@@ -30,8 +31,11 @@ class TalkPage extends StatelessWidget {
               children: _talkTopicNotifier.talkTopics.map((topic) {
                 return Padding(
                   padding: const EdgeInsets.all(10),
-                  child: Card(
-                    child: Center(child: Text(topic.name)),
+                  child: GestureDetector(
+                    onTap: () => _openPostRecordingScreen(context),
+                    child: Card(
+                      child: Center(child: Text(topic.name)),
+                    ),
                   ),
                 );
               }).toList(),
@@ -40,5 +44,13 @@ class TalkPage extends StatelessWidget {
         ],
       );
     });
+  }
+
+  void _openPostRecordingScreen(BuildContext context) {
+
+    //todo show the screen from the bottom
+    Navigator.push(context, MaterialPageRoute<void>
+      (builder: (_) => const PostRecordingScreen()
+    ));
   }
 }
