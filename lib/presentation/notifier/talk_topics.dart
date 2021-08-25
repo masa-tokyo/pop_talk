@@ -16,6 +16,12 @@ class TalkTopicNotifier with ChangeNotifier {
     talkTopics = await _repository.getRandom();
     notifyListeners();
   }
+
+  void reset() {
+    talkTopics = [];
+    notifyListeners();
+  }
+
 }
 
 final talkTopicProvider = ChangeNotifierProvider<TalkTopicNotifier>(
