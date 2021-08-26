@@ -1,11 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pop_talk/presentation/ui/pages/listening.dart';
-import 'package:pop_talk/presentation/ui/pages/my_talk.dart';
 import 'package:pop_talk/presentation/ui/pages/service/privacy.dart';
 import 'package:pop_talk/presentation/ui/pages/service/term_of_use.dart';
-import 'package:pop_talk/presentation/ui/pages/talk.dart';
 import 'package:pop_talk/presentation/ui/pages/top.dart';
 
 import 'infrastructure/service_provider.dart';
@@ -19,7 +17,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RegisterDIContainer(
+    return SetUp(
       child: ProviderScope(
         child: MaterialApp(
           title: 'PopTalk',
@@ -56,8 +54,8 @@ class MyApp extends StatelessWidget {
             ),
             elevatedButtonTheme: ElevatedButtonThemeData(
               style: ElevatedButton.styleFrom(
-                primary: Colors.blue,
-                onSurface: Colors.blue[300],
+                primary: const Color(0xFFFF934E),
+                onSurface: const Color(0xFFC4C4C4),
                 textStyle: TextStyle(
                   fontSize: 16,
                   fontFamily: GoogleFonts.mPlus1p().fontFamily,
@@ -76,7 +74,7 @@ class MyApp extends StatelessWidget {
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                backgroundColor: Colors.blue,
+                backgroundColor: const Color(0xFFFF934E),
                 textStyle: TextStyle(
                   fontSize: 16,
                   color: Colors.white,
@@ -94,8 +92,8 @@ class MyApp extends StatelessWidget {
                 ),
               ),
             ),
-            primaryColor: const Color(0xff438ff5),
-            scaffoldBackgroundColor: Colors.white,
+            primaryColor: const Color(0xFFFF934E),
+            scaffoldBackgroundColor: const Color(0xFFF1EFE5),
             canvasColor: const Color(0xfff2f2f2),
             hoverColor: Colors.transparent,
             disabledColor: Colors.blue[300],
@@ -112,8 +110,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class RegisterDIContainer extends StatelessWidget {
-  const RegisterDIContainer({
+class SetUp extends StatelessWidget {
+  const SetUp({
     required this.child,
   });
 
@@ -122,7 +120,7 @@ class RegisterDIContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: registerDIContainer(),
+      future: setUp(),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return child;
@@ -131,6 +129,14 @@ class RegisterDIContainer extends StatelessWidget {
       },
     );
   }
+
+  Future<void> setUp() {
+    return Future.wait<void>([
+      Firebase.initializeApp(),
+      registerDIContainer(),
+    ]);
+  }
+
 }
 
 class MyHomePage extends StatefulWidget {

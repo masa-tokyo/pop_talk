@@ -1,8 +1,5 @@
 include: package:pedantic_mono/analysis_options.yaml
 
-analyzer:
-  exclude:
-    - "**/*.freezed.dart"
 linter:
   rules:
     one_member_abstracts: false
@@ -10,3 +7,7 @@ linter:
     use_key_in_widget_constructors: false
 enable-experiment:
   - extension-methods
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
