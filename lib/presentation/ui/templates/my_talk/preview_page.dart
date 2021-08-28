@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
+import 'package:pop_talk/presentation/ui/templates/my_talk/existing_talk_edit_page.dart';
 import 'package:pop_talk/presentation/ui/templates/my_talk/talk_datail_page.dart';
 
 class PreviewPage extends StatefulWidget {
@@ -203,9 +204,10 @@ class _PreviewPageState extends State<PreviewPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ElevatedButton(
-                      onPressed: () {
-                        // 編集画面へ
-                      },
+                      onPressed: () => _showModalBottomSheet(
+                        context: context,
+                        page: ExisitingTalkEditPage(talkItem: widget.talkItem),
+                      ),
                       style: ElevatedButton.styleFrom(
                         primary: Theme.of(context).primaryColor,
                         shape: RoundedRectangleBorder(
