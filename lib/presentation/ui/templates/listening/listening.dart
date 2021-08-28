@@ -1,6 +1,7 @@
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
+import 'package:pop_talk/infrastructure/service_locator.dart';
 import 'package:pop_talk/presentation/notifier/play_button.dart';
 import 'package:pop_talk/presentation/notifier/player.dart';
 import 'package:pop_talk/presentation/notifier/progress.dart';
@@ -337,14 +338,15 @@ class AudioProgressBar extends StatelessWidget {
   const AudioProgressBar({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final pageManager = getIt<PageManager>();
     return ValueListenableBuilder<ProgressBarState>(
-      valueListenable: _pageManager.progressNotifier,
+      valueListenable: pageManager.progressNotifier,
       builder: (_, value, __) {
         return ProgressBar(
           progress: value.current,
           buffered: value.buffered,
           total: value.total,
-          onSeek: _pageManager.seek,
+          onSeek: pageManager.seek,
         );
       },
     );
@@ -369,16 +371,17 @@ class AudioControlButtons extends StatelessWidget {
   }
 }
 
-class NextSongButton extends StatelessWidget {
-  const NextSongButton({Key? key}) : super(key: key);
+class PreviousSongButton extends StatelessWidget {
+  const PreviousSongButton({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final pageManager = getIt<PageManager>();
     return ValueListenableBuilder<bool>(
-      valueListenable: _pageManager.isLastSongNotifier,
-      builder: (_, isLast, __) {
+      valueListenable: pageManager.isFirstSongNotifier,
+      builder: (_, isFirst, __) {
         return IconButton(
-          icon: Icon(Icons.skip_next),
-          onPressed: (isLast) ? null : _pageManager.onNextSongButtonPressed,
+          icon: Icon(Icons.skip_previous),
+          onPressed: (isFirst) ? null : pageManager.previous,
         );
       },
     );
@@ -389,8 +392,9 @@ class PlayButton extends StatelessWidget {
   const PlayButton({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final pageManager = getIt<PageManager>();
     return ValueListenableBuilder<ButtonState>(
-      valueListenable: _pageManager.playButtonNotifier,
+      valueListenable: pageManager.playButtonNotifier,
       builder: (_, value, __) {
         switch (value) {
           case ButtonState.loading:
@@ -404,13 +408,13 @@ class PlayButton extends StatelessWidget {
             return IconButton(
               icon: Icon(Icons.play_arrow),
               iconSize: 32.0,
-              onPressed: _pageManager.play,
+              onPressed: pageManager.play,
             );
           case ButtonState.playing:
             return IconButton(
               icon: Icon(Icons.pause),
               iconSize: 32.0,
-              onPressed: _pageManager.pause,
+              onPressed: pageManager.pause,
             );
         }
       },
@@ -418,17 +422,17 @@ class PlayButton extends StatelessWidget {
   }
 }
 
-class PreviousSongButton extends StatelessWidget {
-  const PreviousSongButton({Key? key}) : super(key: key);
+class NextSongButton extends StatelessWidget {
+  const NextSongButton({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final pageManager = getIt<PageManager>();
     return ValueListenableBuilder<bool>(
-      valueListenable: _pageManager.isFirstSongNotifier,
-      builder: (_, isFirst, __) {
+      valueListenable: pageManager.isLastSongNotifier,
+      builder: (_, isLast, __) {
         return IconButton(
-          icon: Icon(Icons.skip_previous),
-          onPressed:
-              (isFirst) ? null : _pageManager.onPreviousSongButtonPressed,
+          icon: Icon(Icons.skip_next),
+          onPressed: (isLast) ? null : pageManager.next,
         );
       },
     );

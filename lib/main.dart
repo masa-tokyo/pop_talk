@@ -2,13 +2,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pop_talk/infrastructure/service_locator.dart';
 import 'package:pop_talk/presentation/ui/pages/service/privacy.dart';
 import 'package:pop_talk/presentation/ui/pages/service/term_of_use.dart';
 import 'package:pop_talk/presentation/ui/pages/top.dart';
 
 import 'infrastructure/service_provider.dart';
 
-void main() {
+void main() async {
+  await setupServiceLocator();
   runApp(const MyApp());
 }
 
@@ -136,7 +138,6 @@ class SetUp extends StatelessWidget {
       registerDIContainer(),
     ]);
   }
-
 }
 
 class MyHomePage extends StatefulWidget {
