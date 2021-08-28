@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
+import 'package:pop_talk/presentation/ui/templates/my_talk/existing_talk_edit_page.dart';
+import 'package:pop_talk/presentation/ui/templates/my_talk/talk_datail_page.dart';
 
 class PreviewPage extends StatefulWidget {
   const PreviewPage({
@@ -137,9 +139,10 @@ class _PreviewPageState extends State<PreviewPage> {
                         .headline2!
                         .copyWith(fontWeight: FontWeight.normal)),
                 GestureDetector(
-                  onTap: () {
-                    // MBS表示
-                  },
+                  onTap: () => _showModalBottomSheet(
+                    context: context,
+                    page: TalkDetailPage(talkItem: widget.talkItem),
+                  ),
                   child: Text(
                     '詳細',
                     textAlign: TextAlign.end,
@@ -201,9 +204,10 @@ class _PreviewPageState extends State<PreviewPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ElevatedButton(
-                      onPressed: () {
-                        // 編集画面へ
-                      },
+                      onPressed: () => _showModalBottomSheet(
+                        context: context,
+                        page: ExisitingTalkEditPage(talkItem: widget.talkItem),
+                      ),
                       style: ElevatedButton.styleFrom(
                         primary: Theme.of(context).primaryColor,
                         shape: RoundedRectangleBorder(
@@ -253,4 +257,20 @@ class _PreviewPageState extends State<PreviewPage> {
       ),
     );
   }
+}
+
+void _showModalBottomSheet({
+  required BuildContext context,
+  required Widget page,
+}) {
+  showModalBottomSheet<void>(
+    context: context,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    isScrollControlled: true,
+    builder: (context) {
+      return page;
+    },
+  );
 }
