@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
-import 'package:pop_talk/presentation/ui/templates/my_talk/talk_datail.dart';
+import 'package:pop_talk/presentation/ui/templates/my_talk/talk_datail_page.dart';
 
 class PreviewPage extends StatefulWidget {
   const PreviewPage({
