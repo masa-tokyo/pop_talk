@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
-import 'package:pop_talk/presentation/ui/pages/talk_datail.dart';
+import 'package:pop_talk/presentation/ui/templates/my_talk/talk_datail.dart';
 
 class PreviewPage extends StatefulWidget {
   const PreviewPage({
@@ -140,7 +140,7 @@ class _PreviewPageState extends State<PreviewPage> {
                 GestureDetector(
                   onTap: () => _showModalBottomSheet(
                     context: context,
-                    talkItem: widget.talkItem,
+                    page: TalkDetailPage(talkItem: widget.talkItem),
                   ),
                   child: Text(
                     '詳細',
@@ -259,7 +259,7 @@ class _PreviewPageState extends State<PreviewPage> {
 
 void _showModalBottomSheet({
   required BuildContext context,
-  required TalkItem talkItem,
+  required Widget page,
 }) {
   showModalBottomSheet<void>(
     context: context,
@@ -268,7 +268,7 @@ void _showModalBottomSheet({
     ),
     isScrollControlled: true,
     builder: (context) {
-      return TalkDetailPage(talkItem: talkItem);
+      return page;
     },
   );
 }
