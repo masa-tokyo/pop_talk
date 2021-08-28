@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pop_talk/presentation/notifier/talk_topics.dart';
@@ -7,17 +9,14 @@ class GachaView extends StatefulWidget {
   _GachaViewState createState() => _GachaViewState();
 }
 
-class _GachaViewState extends State<GachaView> {
+class _GachaViewState extends State<GachaView>
+    with SingleTickerProviderStateMixin {
   bool isTapped = false;
+  final imageWidget = Image.asset('assets/images/pop.png');
 
   @override
   Widget build(BuildContext context) {
     final _talkTopicNotifier = context.read(talkTopicProvider);
-    final imageWidget = Container(
-      width: 150,
-      height: 150,
-      color: Colors.orange,
-    );
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -33,9 +32,6 @@ class _GachaViewState extends State<GachaView> {
                   child: imageWidget,
                 )
               : imageWidget,
-          const SizedBox(
-            height: 100,
-          ),
           ElevatedButton(
             onPressed: () {
               setState(() {
@@ -68,15 +64,19 @@ class ShakeAnimation extends StatefulWidget {
 }
 
 class _ShakeAnimationState extends State<ShakeAnimation>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late final AnimationController controller;
+
+  final imageWidget = Image.asset('assets/images/pop.png');
+  int shakeCount = 0;
 
   @override
   void initState() {
     controller = AnimationController(
-      duration: const Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 800),
       vsync: this,
-    )..forward().then((_) => widget.onEndAnimation());
+    )..forward();
+
     super.initState();
   }
 
@@ -88,11 +88,30 @@ class _ShakeAnimationState extends State<ShakeAnimation>
 
   @override
   Widget build(BuildContext context) {
-    final offsetAnimation = Tween(begin: 0.0, end: 24.0)
-        .chain(CurveTween(curve: Curves.elasticIn))
-        .animate(controller)
-          ..addStatusListener(
+    final offsetAnimation = Tween(
+      begin: 0.0,
+      end: 24.0,
+    )
+        .chain(
+          CurveTween(curve: Curves.elasticIn),
+        )
+        .animate(
+          controller,
+        )..addStatusListener(
             (status) {
+              if (shakeCount >= 3) {
+                if (shakeCount == 3) {
+                  controller.forward().then(
+                        (value) => widget.onEndAnimation(),
+                      );
+                }
+                return;
+              }
+
+              if (status == AnimationStatus.dismissed) {
+                shakeCount++;
+                controller.forward();
+              }
               if (status == AnimationStatus.completed) {
                 controller.reverse();
               }
@@ -102,18 +121,57 @@ class _ShakeAnimationState extends State<ShakeAnimation>
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        AnimatedBuilder(
-          animation: offsetAnimation,
-          builder: (buildContext, child) {
-            return Container(
-              color: Colors.transparent,
-              margin: EdgeInsets.symmetric(horizontal: 24.0),
-              padding: EdgeInsets.only(
-                  left: offsetAnimation.value + 24.0,
-                  right: 24.0 - offsetAnimation.value),
-              child: widget.child,
-            );
-          },
+        Stack(
+          alignment: AlignmentDirectional.center,
+          children: [
+            AnimatedBuilder(
+              animation: offsetAnimation,
+              builder: (buildContext, child) {
+                if (shakeCount == 1) {
+                  return Transform.rotate(
+                    angle: math.sin(controller.value * 10 * math.pi) / 60,
+                    child: widget.child,
+                  );
+                } else if (shakeCount == 2) {
+                  return Transform.rotate(
+                    angle: math.sin(controller.value * 5 * math.pi) / 10,
+                    child: widget.child,
+                  );
+                } else {
+                  shakeCount++;
+                  return widget.child;
+                }
+              },
+            ),
+            AnimatedBuilder(
+                animation: offsetAnimation,
+                builder: (buildContext, child) {
+                  if (shakeCount > 2) {
+                    return Transform.scale(
+                      scale: controller.value * 10,
+                      child: Container(
+                        width: 100,
+                        height: 100,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                        ),
+                      ),
+                    );
+                  } else {
+                    return Center(
+                      child: Container(
+                        width: 0,
+                        height: 0,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                        ),
+                      ),
+                    );
+                  }
+                }),
+          ],
         ),
       ],
     );
