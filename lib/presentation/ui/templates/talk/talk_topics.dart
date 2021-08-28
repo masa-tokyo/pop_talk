@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pop_talk/domain/model/talk_topic.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pop_talk/presentation/notifier/gacha_timer.dart';
 import 'package:pop_talk/presentation/notifier/talk_topics.dart';
 import 'package:pop_talk/presentation/ui/pages/talk/post_recording_screen.dart';
@@ -131,9 +131,29 @@ class _PopCornGridViewState extends State<PopCornGridView>
             opacity: animations[entry.key],
             child: InkWell(
               onTap: () => _openPostRecordingScreen(context),
-              child: Card(
-                child: Center(
-                  child: Text(entry.value.name),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      color: Color(
+                        int.parse('0xff804B3A'),
+                      ),
+                      width: 10),
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: Stack(
+                  children: [
+                    CustomPaint(
+                      painter: CirclePainter(),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: Text(entry.value.name),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -147,5 +167,23 @@ class _PopCornGridViewState extends State<PopCornGridView>
     //todo show the screen from the bottom
     Navigator.push(context,
         MaterialPageRoute<void>(builder: (_) => const PostRecordingScreen()));
+  }
+}
+
+class CirclePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Color(
+        int.parse('0xffFF934E'),
+      );
+    canvas.drawCircle(const Offset(20, 30), 10, paint); //左の円
+    canvas.drawCircle(const Offset(130, 130), 10, paint); //右の円
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    // TODO: implement shouldRepaint
+    throw UnimplementedError();
   }
 }
