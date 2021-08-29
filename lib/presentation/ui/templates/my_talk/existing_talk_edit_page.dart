@@ -37,7 +37,7 @@ class _ExistingTalkEditPageState extends State<ExisitingTalkEditPage> {
                   ),
                 ),
               ),
-              Text(widget.talkItem.talkTopic,
+              Text(widget.talkItem.topicName,
                   style: TextStyle(
                     fontSize: Theme.of(context).textTheme.headline2!.fontSize,
                   )),

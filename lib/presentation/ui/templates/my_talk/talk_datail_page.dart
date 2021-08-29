@@ -81,17 +81,17 @@ class TalkDetailPage extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                talkItem.talkTopic,
+                talkItem.topicName,
                 style: const TextStyle(fontSize: 24),
               ),
               const SizedBox(height: 10),
               Text(
-                talkItem.title,
+                talkItem.title ?? '無題',
                 style: const TextStyle(fontSize: 20),
               ),
               const SizedBox(height: 10),
               Text(
-                talkItem.description,
+                talkItem.description ?? '',
                 style: const TextStyle(fontSize: 18),
               ),
             ],

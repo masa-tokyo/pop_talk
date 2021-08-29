@@ -130,7 +130,7 @@ class _PopCornGridViewState extends State<PopCornGridView>
           child: FadeTransition(
             opacity: animations[entry.key],
             child: InkWell(
-              onTap: () => _openPostRecordingScreen(context),
+              onTap: () => _openPostRecordingScreen(context, entry.value.id),
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -164,10 +164,11 @@ class _PopCornGridViewState extends State<PopCornGridView>
     );
   }
 
-  void _openPostRecordingScreen(BuildContext context) {
-    //todo show the screen from the bottom
-    Navigator.push(context,
-        MaterialPageRoute<void>(builder: (_) => const PostRecordingScreen()));
+  void _openPostRecordingScreen(BuildContext context, String id) {
+
+    Navigator.push(context, MaterialPageRoute<void>
+      (builder: (_) => PostRecordingScreen(talkTopicId: id,)
+    ));
   }
 }
 
