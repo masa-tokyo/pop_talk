@@ -133,6 +133,7 @@ class _PopCornGridViewState extends State<PopCornGridView>
               onTap: () => _openPostRecordingScreen(context),
               child: Container(
                 decoration: BoxDecoration(
+                  color: Colors.white,
                   border: Border.all(
                       color: Color(
                         int.parse('0xff804B3A'),
