@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
-import 'package:pop_talk/presentation/ui/pages/preview.dart';
+import 'package:pop_talk/presentation/ui/templates/my_talk/preview_page.dart';
 
 class TalkTile extends StatelessWidget {
   const TalkTile({

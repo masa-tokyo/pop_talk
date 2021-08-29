@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pop_talk/presentation/ui/templates/my_talk/unauthorized_my_talk.dart';
-import 'package:pop_talk/presentation/ui/templates/my_talk/authorized_my_talk.dart';
+import 'package:pop_talk/presentation/ui/templates/my_talk/unauthorized_my_talk_page.dart';
+import 'package:pop_talk/presentation/ui/templates/my_talk/authorized_my_talk_page.dart';
 import 'package:pop_talk/presentation/notifier/talk_item.dart';
 import 'package:pop_talk/presentation/notifier/auth.dart';
 
@@ -26,9 +26,9 @@ class MyTalkPage extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         } else if (_authNotifier.currentUser == null) {
-          return UnauthorizedMyTalk(savedTalkItems: _savedTalkItems);
+          return UnauthorizedMyTalkPage(savedTalkItems: _savedTalkItems);
         } else {
-          return AuthorizedMyTalk(
+          return AuthorizedMyTalkPage(
             savedTalkItems: _savedTalkItems,
             postedTalkItems: _postedTalkItems,
             userData: _authNotifier.currentUser!,

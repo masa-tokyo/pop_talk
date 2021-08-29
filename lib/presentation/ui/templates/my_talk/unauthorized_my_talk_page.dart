@@ -3,8 +3,8 @@ import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/presentation/ui/organisms/talk_tile.dart';
 import 'package:pop_talk/presentation/ui/pages/resister.dart';
 
-class UnauthorizedMyTalk extends StatelessWidget {
-  const UnauthorizedMyTalk({Key? key, required this.savedTalkItems})
+class UnauthorizedMyTalkPage extends StatelessWidget {
+  const UnauthorizedMyTalkPage({Key? key, required this.savedTalkItems})
       : super(key: key);
 
   final List<TalkItem> savedTalkItems;

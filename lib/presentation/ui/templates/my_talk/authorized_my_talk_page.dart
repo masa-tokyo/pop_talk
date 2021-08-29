@@ -3,8 +3,8 @@ import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/domain/model/authed_user.dart';
 import 'package:pop_talk/presentation/ui/organisms/talk_tile.dart';
 
-class AuthorizedMyTalk extends StatefulWidget {
-  const AuthorizedMyTalk({
+class AuthorizedMyTalkPage extends StatefulWidget {
+  const AuthorizedMyTalkPage({
     Key? key,
     required this.savedTalkItems,
     required this.postedTalkItems,
@@ -16,10 +16,10 @@ class AuthorizedMyTalk extends StatefulWidget {
   final AuthedUser userData;
 
   @override
-  _AuthorizedMyTalkState createState() => _AuthorizedMyTalkState();
+  _AuthorizedMyTalkPageState createState() => _AuthorizedMyTalkPageState();
 }
 
-class _AuthorizedMyTalkState extends State<AuthorizedMyTalk> {
+class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
   int _tabIndex = 0;
 
   @override
