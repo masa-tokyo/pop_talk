@@ -104,7 +104,7 @@ class _PreviewPageState extends State<PreviewPage> {
                     color: Colors.black26,
                   ),
                   child: Text(
-                    widget.talkItem.talkTopic,
+                    widget.talkItem.description ?? '',
                     overflow: TextOverflow.clip,
                     style: Theme.of(context)
                         .textTheme
@@ -116,7 +116,7 @@ class _PreviewPageState extends State<PreviewPage> {
             ),
           ),
           Text(
-            widget.talkItem.title,
+            widget.talkItem.title ?? '無題',
             style: Theme.of(context)
                 .textTheme
                 .headline6!
@@ -129,7 +129,7 @@ class _PreviewPageState extends State<PreviewPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(widget.talkItem.description,
+                Text(widget.talkItem.description ?? '',
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.end,
                     style: Theme.of(context)

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_sound/flutter_sound.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pop_talk/presentation/ui/molecules/elevated_circle_button_with_icon.dart';
 
 class DuringRecordingPage extends StatelessWidget {
-  const DuringRecordingPage({required this.onStopButtonPressed});
+  const DuringRecordingPage({
+    required this.onStopButtonPressed,
+    required this.stream});
   final VoidCallback onStopButtonPressed;
+  final Stream<RecordingDisposition> stream;
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +36,18 @@ class DuringRecordingPage extends StatelessWidget {
           ),
           Column(
             children: [
-              //todo pass the data
-              Text(
-                '00:14',
-                style: TextStyle(
-                  fontSize: Theme.of(context).textTheme.bodyText1!.fontSize,
-                ),
-              ),
+              StreamBuilder<RecordingDisposition>(
+                initialData: RecordingDisposition.zero(),
+                stream: stream,
+                  builder: (context, snapshot){
+                  final txt = snapshot.data!.duration.toString().substring(2,7);
+                  return Text(
+                    txt,
+                    style: TextStyle(
+                      fontSize: Theme.of(context).textTheme.bodyText1!.fontSize
+                    ),
+                  );
+                  }),
               const SizedBox(
                 height: 24,
               ),

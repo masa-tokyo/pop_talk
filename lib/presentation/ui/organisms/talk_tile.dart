@@ -57,7 +57,7 @@ class TalkTile extends StatelessWidget {
                                   color: Colors.black26,
                                 ),
                                 child: Text(
-                                  talkItem.talkTopic,
+                                  talkItem.topicName,
                                   textAlign: TextAlign.center,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 2,
@@ -76,7 +76,7 @@ class TalkTile extends StatelessWidget {
                                     color: Colors.black26,
                                   ),
                                   child: Text(
-                                    '${talkItem.time}分',
+                                    '${talkItem.duration}分',
                                     textAlign: TextAlign.center,
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 2,
@@ -99,13 +99,13 @@ class TalkTile extends StatelessWidget {
                                 Row(
                                   children: [
                                     const Icon(Icons.headphones_rounded),
-                                    Text('${talkItem.view}')
+                                    Text('${talkItem.playNumber}')
                                   ],
                                 ),
                                 Row(
                                   children: [
                                     const Icon(Icons.favorite_outline),
-                                    Text('${talkItem.like}')
+                                    Text('${talkItem.likeNumber}')
                                   ],
                                 )
                               ],
@@ -120,17 +120,17 @@ class TalkTile extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Text(
-                            talkItem.title,
+                            talkItem.title ?? '無題',
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.headline3,
                           ),
                           Text(
-                            talkItem.description,
+                            talkItem.description ?? '',
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                           ),
                           Text(
-                              '${talkItem.recordedAt.year}/${talkItem.recordedAt.month}/${talkItem.recordedAt.day} 保存')
+                              '${talkItem.publishedAt.year}/${talkItem.publishedAt.month}/${talkItem.publishedAt.day} 保存')
                         ],
                       ),
                     ),

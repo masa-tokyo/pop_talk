@@ -32,7 +32,7 @@ class TalkPage extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.all(10),
                   child: GestureDetector(
-                    onTap: () => _openPostRecordingScreen(context),
+                    onTap: () => _openPostRecordingScreen(context, topic.id),
                     child: Card(
                       child: Center(child: Text(topic.name)),
                     ),
@@ -46,11 +46,10 @@ class TalkPage extends StatelessWidget {
     });
   }
 
-  void _openPostRecordingScreen(BuildContext context) {
+  void _openPostRecordingScreen(BuildContext context, String id) {
 
-    //todo show the screen from the bottom
     Navigator.push(context, MaterialPageRoute<void>
-      (builder: (_) => const PostRecordingScreen()
+      (builder: (_) => PostRecordingScreen(talkTopicId: id,)
     ));
   }
 }
