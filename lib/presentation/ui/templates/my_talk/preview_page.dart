@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
+import 'package:pop_talk/presentation/ui/molecules/detail_dialog.dart';
 import 'package:pop_talk/presentation/ui/templates/my_talk/existing_talk_edit_page.dart';
-import 'package:pop_talk/presentation/ui/templates/my_talk/talk_datail_page.dart';
 
 class PreviewPage extends StatefulWidget {
   const PreviewPage({
@@ -158,9 +158,9 @@ class _PreviewPageState extends State<PreviewPage> {
                     ),
                     textPainter.didExceedMaxLines
                         ? GestureDetector(
-                            onTap: () => _showModalBottomSheet(
+                            onTap: () => DetailDialog.show(
                               context: context,
-                              page: TalkDetailPage(talkItem: widget.talkItem),
+                              talkItem: widget.talkItem,
                             ),
                             child: Text(
                               '詳細',
