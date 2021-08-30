@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pop_talk/presentation/notifier/recording.dart';
 import 'package:pop_talk/presentation/ui/templates/talk/after_recording_page.dart';
 import 'package:pop_talk/presentation/ui/templates/talk/before_recording_page.dart';
 import 'package:pop_talk/presentation/ui/templates/talk/during_recording_page.dart';
@@ -17,7 +19,8 @@ enum ScreenState {
 }
 
 class PostRecordingScreen extends StatefulWidget {
-  const PostRecordingScreen({Key? key}) : super(key: key);
+  const PostRecordingScreen({required this.talkTopicId});
+  final String talkTopicId;
 
   @override
   _PostRecordingScreenState createState() => _PostRecordingScreenState();
@@ -42,7 +45,6 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
     _openTheRecorder().then((value) {
       _isRecorderInitiated = true;
       _setSubscriptionDuration();
-      //todo [check] maybe onProgress can be null at this moment
       _flutterSoundRecorder.onProgress!.listen((event) {
         _duration = event.duration;
       });
@@ -95,7 +97,8 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
         break;
       case ScreenState.duringRecording:
         page = DuringRecordingPage(
-            onStopButtonPressed: _onStopButtonPressed);
+            onStopButtonPressed: _onStopButtonPressed,
+            stream: _flutterSoundRecorder.onProgress!,);
         break;
       case ScreenState.afterRecording:
         page = AfterRecordingPage(
@@ -145,7 +148,17 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
     });
   }
 
-  void _onPostButtonPressed() {
+  Future<void> _onPostButtonPressed() async{
+    final recordingNotifier
+                      = context.read<RecordingNotifier>(recordingProvider);
+    await recordingNotifier.postRecording(
+      title: _titleController.text,
+      description: _descriptionController.text,
+      path: _path,
+      duration: _duration,
+      talkTopicId: widget.talkTopicId
+    );
+
     Navigator.pop(context);
   }
 

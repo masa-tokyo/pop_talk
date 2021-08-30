@@ -40,7 +40,7 @@ class ListeningTile extends StatelessWidget {
                   alignment: Alignment.topRight,
                   child: Padding(
                     padding: const EdgeInsets.only(right: 3),
-                    child: Text('${talkItem.recordedAt}配信'),
+                    child: Text('${talkItem.publishedAt}配信'),
                   )),
             ],
           ),
@@ -66,7 +66,7 @@ class ListeningTile extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(talkItem.talkTopic,
+                      Text(talkItem.topicName,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           )),

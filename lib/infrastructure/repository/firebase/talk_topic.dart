@@ -30,7 +30,7 @@ class FirestoreTalkTopicRepository implements TalkTopicRepository {
     return TalkTopic(
       id: firestore.id,
       name: firestore.name,
-      colorCode: firestore.colorCode,
+      colorCode: int.parse(firestore.colorCode),
     );
   }
 }
