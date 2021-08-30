@@ -96,69 +96,111 @@ class PopCornGridView extends StatefulWidget {
 }
 
 class _PopCornGridViewState extends State<PopCornGridView>
-    with SingleTickerProviderStateMixin {
-  static const randomDelays = [0.0, 0.2, 0.4, 0.6];
-  late final List<Animation<double>> animations;
+    with TickerProviderStateMixin {
+  //late final List<Animation<double>> animations;
 
-  late final AnimationController controller;
+  //late final AnimationController controller;
+
+  late final AnimationController controller2;
 
   @override
   void initState() {
-    controller = AnimationController(
-      duration: const Duration(milliseconds: 3000),
+    // controller = AnimationController(
+    //   duration: const Duration(milliseconds: 3000),
+    //   vsync: this,
+    // );
+    //)..forward();
+
+    controller2 = AnimationController(
+      duration: const Duration(milliseconds: 800),
       vsync: this,
     )..forward();
-    animations = widget.talkTopics.map((_) {
-      final randomDelay = ([...randomDelays]..shuffle()).first;
-      return Tween<double>(begin: 0, end: 1).animate(
-        CurvedAnimation(
-          parent: controller,
-          curve: Interval(randomDelay, randomDelay + 0.3, curve: Curves.linear),
-        ),
-      );
-    }).toList();
+
+    // animations = widget.talkTopics.map((_) {
+    //   final randomDelay = ([...randomDelays]..shuffle()).first;
+    //   return Tween<double>(begin: 0, end: 1).animate(
+    //     CurvedAnimation(
+    //       parent: controller,
+    //       curve: const Interval(
+    //         0,
+    //         0,
+    //         curve: Curves.linear,
+    //       ),
+    //       //curve: Interval(,curve: Curves.linear),
+    //     ),
+    //   );
+    // }).toList();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final offsetAnimation = Tween(
+      begin: 0.0,
+      end: 1.0,
+    )
+        .chain(
+          CurveTween(
+            curve: Curves.elasticIn,
+          ),
+        )
+        .animate(
+          controller2,
+        )..addStatusListener(
+            (status) {
+              if (status == AnimationStatus.completed) {
+                print("finish");
+              }
+            },
+          );
+
     return GridView.count(
       crossAxisCount: 2,
       children: widget.talkTopics.asMap().entries.map((entry) {
         return Padding(
           padding: const EdgeInsets.all(10),
-          child: FadeTransition(
-            opacity: animations[entry.key],
-            child: InkWell(
-              onTap: () => _openPostRecordingScreen(context),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(
-                      color: Color(
-                        int.parse('0xff804B3A'),
-                      ),
-                      width: 10),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Stack(
-                  children: [
-                    CustomPaint(
-                      painter: CirclePainter(),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Center(
-                          child: Text(entry.value.name),
+          //child: FadeTransition(
+          //opacity: animations[entry.key],
+          child: InkWell(
+            onTap: () => _openPostRecordingScreen(context),
+            child: AnimatedBuilder(
+                animation: offsetAnimation,
+                builder: (buildContext, child) {
+                  return Transform.scale(
+                    scale: controller2.value,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(
+                          color: Color(
+                            int.parse('0xff804B3A'),
+                          ),
+                          width: 10,
                         ),
-                      ],
+                        borderRadius: BorderRadius.circular(
+                          50,
+                        ),
+                      ),
+                      child: Stack(
+                        children: [
+                          CustomPaint(
+                            painter: CirclePainter(),
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Center(
+                                child: Text(entry.value.name),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-              ),
-            ),
+                  );
+                }),
           ),
+          //),
         );
       }).toList(),
     );
@@ -166,8 +208,12 @@ class _PopCornGridViewState extends State<PopCornGridView>
 
   void _openPostRecordingScreen(BuildContext context) {
     //todo show the screen from the bottom
-    Navigator.push(context,
-        MaterialPageRoute<void>(builder: (_) => const PostRecordingScreen()));
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (_) => const PostRecordingScreen(),
+      ),
+    );
   }
 }
 
