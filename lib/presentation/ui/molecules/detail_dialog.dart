@@ -38,7 +38,7 @@ class DetailDialog extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(right: 20, left: 20, bottom: 20),
                 child: Text(
-                  talkItem.description,
+                  talkItem.description ?? '',
                   style: const TextStyle(fontSize: 18),
                 ),
               ),
