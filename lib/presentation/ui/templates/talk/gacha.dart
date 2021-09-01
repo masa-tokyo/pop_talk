@@ -107,7 +107,6 @@ class _ShakeAnimationState extends State<ShakeAnimation>
                 }
                 return;
               }
-
               if (status == AnimationStatus.dismissed) {
                 shakeCount++;
                 controller.forward();
@@ -146,29 +145,26 @@ class _ShakeAnimationState extends State<ShakeAnimation>
             AnimatedBuilder(
                 animation: offsetAnimation,
                 builder: (buildContext, child) {
-                  if (shakeCount > 2) {
+                  if (shakeCount >= 3) {
                     return Transform.scale(
                       scale: controller.value * 10,
                       child: Container(
-                        width: 100,
-                        height: 100,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.white,
+                              spreadRadius: 50.0,
+                              blurRadius: 10.0,
+                              offset: Offset(10, 10),
+                            ),
+                          ],
                         ),
                       ),
                     );
                   } else {
-                    return Center(
-                      child: Container(
-                        width: 0,
-                        height: 0,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                        ),
-                      ),
-                    );
+                    return Container();
                   }
                 }),
           ],
