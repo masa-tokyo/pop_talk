@@ -22,7 +22,6 @@ class _ExistingTalkEditPageState extends State<ExisitingTalkEditPage> {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        // mainAxisSize: MainAxisSize.min,
         children: [
           Column(
             children: [
