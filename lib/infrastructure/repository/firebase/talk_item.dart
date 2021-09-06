@@ -13,7 +13,7 @@ part 'talk_item.freezed.dart';
 part 'talk_item.g.dart';
 
 class FirestoreTalkItemRepository implements TalkItemRepository {
-  final _db = FirebaseFirestore.instance;
+  final _firestore = FirebaseFirestore.instance;
   final _storage = FirebaseStorage.instance;
 
   @override
@@ -130,47 +130,48 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
 
   @override
   Future<List<TalkItem>> fetchPostedItems() async {
-    var talkItems = <TalkItem>[];
+    final talkItems = <TalkItem>[];
 
     //todo currentUserの投稿除外
     //todo [check] limit()はデータの並び順反映される？
-    await _db
+    await _firestore
         .collection('talks')
         .where('isPublic', isEqualTo: true)
         .orderBy('publishedAt', descending: true)
         .limit(50)
         .get()
         .then((value) async {
-          //todo [check] 非同期処理なくて大丈夫？ cf.Future.forEach
+      //todo [check] 非同期処理なくて大丈夫？ cf.Future.forEach
       value.docs.map((doc) async {
         final firestoreTalk = FirestoreTalk.fromJson(
             <String, dynamic>{'id': doc.id, ...doc.data()});
 
-        //fetch data form talkTopic collection
-        final talkTopic = await _db
-            .collection('talkTopic')
+        //fetch data form talkTopics collection
+        final talkTopic = await _firestore
+            .collection('talkTopics')
             .doc(firestoreTalk.talkTopicId)
             .get();
 
-        //fetch data form user collection
-        final user =
-            await _db.collection('user').doc(firestoreTalk.createdUserId).get();
+        //fetch data form users collection
+        final user = await _firestore
+            .collection('users')
+            .doc(firestoreTalk.createdUserId)
+            .get();
 
         talkItems.add(_toTalkItem(
-          talkTopic: talkTopic,
-          createdUser: user,
-          firestoreTalk: firestoreTalk
-        ));
+            talkTopic: talkTopic,
+            createdUser: user,
+            firestoreTalk: firestoreTalk));
       });
     });
 
     return talkItems;
   }
 
-  TalkItem _toTalkItem({
-    required DocumentSnapshot<Map<String,dynamic>> talkTopic,
-    required DocumentSnapshot<Map<String,dynamic>> createdUser,
-    required  FirestoreTalk firestoreTalk}) {
+  TalkItem _toTalkItem(
+      {required DocumentSnapshot<Map<String, dynamic>> talkTopic,
+      required DocumentSnapshot<Map<String, dynamic>> createdUser,
+      required FirestoreTalk firestoreTalk}) {
     return TalkItem(
         id: firestoreTalk.id,
         topicName: talkTopic['name'].toString(),
@@ -232,7 +233,7 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
         .then((TaskSnapshot snapshot) => snapshot.ref.getDownloadURL());
 
     final id = const Uuid().v1();
-    await _db.collection('talks').doc(id).set(<String, dynamic>{
+    await _firestore.collection('talks').doc(id).set(<String, dynamic>{
       //todo [check] need id?
       'talkTopicId': talkTopicId,
       'createdUserId': createdUserId,

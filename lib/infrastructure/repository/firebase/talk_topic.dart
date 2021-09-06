@@ -15,7 +15,7 @@ class FirestoreTalkTopicRepository implements TalkTopicRepository {
     // @see https://stackoverflow.com/questions/46798981/firestore-how-to-get-random-documents-in-a-collection
     const firestoreLimit = 50;
     final snapshot =
-        await firestore.collection('talkTopic').limit(firestoreLimit).get();
+        await firestore.collection('talkTopics').limit(firestoreLimit).get();
     final documents = snapshot.docs..shuffle();
     return documents.take(limit).map((doc) {
       return _firestoreToModel(
