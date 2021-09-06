@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
+import 'package:pop_talk/presentation/ui/molecules/detail_dialog.dart';
 import 'package:pop_talk/presentation/ui/templates/my_talk/existing_talk_edit_page.dart';
-import 'package:pop_talk/presentation/ui/templates/my_talk/talk_datail_page.dart';
 
 class PreviewPage extends StatefulWidget {
   const PreviewPage({
@@ -128,31 +128,50 @@ class _PreviewPageState extends State<PreviewPage> {
             width: width * 0.85,
             alignment: Alignment.center,
             padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(widget.talkItem.description ?? '',
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.end,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline2!
-                        .copyWith(fontWeight: FontWeight.normal)),
-                GestureDetector(
-                  onTap: () => _showModalBottomSheet(
-                    context: context,
-                    page: TalkDetailPage(talkItem: widget.talkItem),
-                  ),
-                  child: Text(
-                    '詳細',
-                    textAlign: TextAlign.end,
-                    style: Theme.of(context).textTheme.headline2!.copyWith(
+            child: LayoutBuilder(
+              builder: (_, constraints) {
+                final descriptionStyle =
+                    Theme.of(context).textTheme.headline2!.copyWith(
                           fontWeight: FontWeight.normal,
                           color: Colors.black54,
-                        ),
-                  ),
-                ),
-              ],
+                        );
+                final textSpan = TextSpan(
+                  text: widget.talkItem.description,
+                  style: descriptionStyle,
+                );
+                final textPainter = TextPainter(
+                  text: textSpan,
+                  textDirection: TextDirection.ltr,
+                  maxLines: 1,
+                )..layout(maxWidth: constraints.maxWidth);
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      widget.talkItem.description ?? '',
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.end,
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline2!
+                          .copyWith(fontWeight: FontWeight.normal),
+                    ),
+                    textPainter.didExceedMaxLines
+                        ? GestureDetector(
+                            onTap: () => DetailDialog.show(
+                              context: context,
+                              talkItem: widget.talkItem,
+                            ),
+                            child: Text(
+                              '詳細',
+                              textAlign: TextAlign.end,
+                              style: descriptionStyle,
+                            ),
+                          )
+                        : const Text(''),
+                  ],
+                );
+              },
             ),
           ),
           const SizedBox(height: 60),
