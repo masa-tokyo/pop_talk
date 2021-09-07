@@ -13,7 +13,6 @@ class AuthNotifier with ChangeNotifier {
 
   Future<void> implicitLogin() async {
     currentUser = await _repository.implicitLogin();
-    print('currentUser.id: ${currentUser!.id}');
     notifyListeners();
   }
 
@@ -23,5 +22,5 @@ class AuthNotifier with ChangeNotifier {
 final authProvider = ChangeNotifierProvider<AuthNotifier>(
   (ref) => AuthNotifier(
     GetIt.instance.get<AuthedUserRepository>(),
-  )..implicitLogin(),
+  ),
 );

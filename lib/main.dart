@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pop_talk/presentation/notifier/auth.dart';
 import 'package:pop_talk/presentation/ui/pages/service/privacy.dart';
 import 'package:pop_talk/presentation/ui/pages/service/term_of_use.dart';
 import 'package:pop_talk/presentation/ui/pages/top.dart';
@@ -17,8 +18,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SetUp(
-      child: ProviderScope(
+    return ProviderScope(
+      child: SetUp(
         child: MaterialApp(
           title: 'PopTalk',
           debugShowCheckedModeBanner: false,
@@ -120,20 +121,23 @@ class SetUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: setUp(),
+      future: setUp(context),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return child;
         }
-        return Container();
+        return Container(
+        );
       },
     );
   }
 
-  Future<void> setUp() {
-    return Future.wait<void>([
+  Future<void> setUp(BuildContext context) async{
+    await registerDIContainer();
+    final _authNotifier = context.read(authProvider);
+    await Future.wait<void>([
       Firebase.initializeApp(),
-      registerDIContainer(),
+      _authNotifier.implicitLogin(),
     ]);
   }
 
