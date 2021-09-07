@@ -23,11 +23,6 @@ class RecordingNotifier extends ChangeNotifier {
     final durationInt = duration.inSeconds;
     final audioFile = File(path);
 
-    print('talkTopicId: $talkTopicId');
-    print('durationInt: $durationInt');
-    print('audioFile: $audioFile');
-    // print('createdUserId: ${authedUser!.id}');
-
    await repository!.postRecording(
         talkTopicId: talkTopicId,
         title: title,

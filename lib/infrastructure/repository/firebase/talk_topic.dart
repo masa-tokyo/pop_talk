@@ -14,8 +14,9 @@ class FirestoreTalkTopicRepository implements TalkTopicRepository {
     // TODO(any): この方法だとテーマが固定の50個からランダムに選ばれてしまうのでテーマが50個超えた場合は別の方法でランダムに取得する
     // @see https://stackoverflow.com/questions/46798981/firestore-how-to-get-random-documents-in-a-collection
     const firestoreLimit = 50;
+
     final snapshot =
-        await firestore.collection('talkTopic').limit(firestoreLimit).get();
+        await firestore.collection('talkTopics').limit(firestoreLimit).get();
     final documents = snapshot.docs..shuffle();
     return documents.take(limit).map((doc) {
       return _firestoreToModel(
