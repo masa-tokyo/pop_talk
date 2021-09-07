@@ -133,12 +133,12 @@ class SetUp extends StatelessWidget {
   }
 
   Future<void> setUp(BuildContext context) async{
+    await Firebase.initializeApp();
     await registerDIContainer();
+
     final _authNotifier = context.read(authProvider);
-    await Future.wait<void>([
-      Firebase.initializeApp(),
-      _authNotifier.implicitLogin(),
-    ]);
+    await _authNotifier.implicitLogin();
+
   }
 
 }
