@@ -234,7 +234,6 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
 
     final id = const Uuid().v1();
     await _firestore.collection('talks').doc(id).set(<String, dynamic>{
-      //todo [check] need id?
       'talkTopicId': talkTopicId,
       'createdUserId': createdUserId,
       'createdAt': DateTime.now(),

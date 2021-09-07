@@ -13,6 +13,7 @@ class AuthNotifier with ChangeNotifier {
 
   Future<void> implicitLogin() async {
     currentUser = await _repository.implicitLogin();
+    print('currentUser.id: ${currentUser!.id}');
     notifyListeners();
   }
 
