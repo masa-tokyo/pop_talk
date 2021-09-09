@@ -249,6 +249,33 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
       'likeNumber': 0,
     });
   }
+
+  @override
+  Future<void> saveDraft({
+    required String talkTopicId,
+    required String title,
+    required String description,
+    required String localPath,
+    required int duration,
+    required String createdUserId,
+  }) async {
+    final id = const Uuid().v1();
+    await _firestore.collection('talks').doc(id).set(<String, dynamic>{
+      'talkTopicId': talkTopicId,
+      'createdUserId': createdUserId,
+      'createdAt': DateTime.now(),
+      'publishedAt': null,
+      'isPublic': false,
+      'title': title,
+      'description': description,
+      'url': null,
+      'storagePath': null,
+      'localUrl': localPath,
+      'duration': duration,
+      'playNumber': 0,
+      'likeNumber': 0,
+    });
+  }
 }
 
 @freezed

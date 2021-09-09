@@ -5,10 +5,12 @@ import 'package:pop_talk/presentation/ui/molecules/elevated_circle_button_with_i
 class AfterRecordingPage extends StatelessWidget {
   const AfterRecordingPage({
     required this.onAgainButtonPressed,
-    required this.onEditButtonPressed});
+    required this.onEditButtonPressed,
+    required this.talkTopicName});
 
   final VoidCallback onAgainButtonPressed;
   final VoidCallback onEditButtonPressed;
+  final String talkTopicName;
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +25,7 @@ class AfterRecordingPage extends StatelessWidget {
               const SizedBox(
                 height: 100,
               ),
-              //todo pass the data of the topic
-              Text('最近ハマってるYouTuberは？',
+              Text(talkTopicName,
                   style: TextStyle(
                     fontSize: Theme.of(context).textTheme.headline2!.fontSize,
                   )),
