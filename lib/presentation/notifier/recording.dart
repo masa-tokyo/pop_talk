@@ -23,13 +23,33 @@ class RecordingNotifier extends ChangeNotifier {
     final durationInt = duration.inSeconds;
     final audioFile = File(path);
 
-   await repository!.postRecording(
+    await repository!.postRecording(
         talkTopicId: talkTopicId,
         title: title,
         description: description,
         audioFile: audioFile,
         duration: durationInt,
-        createdUserId: authedUser != null ? authedUser!.id : '0000');
+        createdUserId: authedUser != null ? authedUser!.id : 'unknownUser');
+  }
+
+  Future<void> saveDraft({
+    required String title,
+    required String description,
+    required String path,
+    required Duration duration,
+    required String talkTopicId,
+  }) async {
+    final durationInt = duration.inSeconds;
+
+    await repository!.saveDraft(
+      talkTopicId: talkTopicId,
+      title: title,
+      description: description,
+      localPath: path,
+      duration: durationInt,
+      createdUserId: authedUser != null ? authedUser!.id : 'unknownUser'
+    );
+
   }
 }
 

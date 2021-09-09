@@ -3,9 +3,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pop_talk/presentation/ui/molecules/elevated_circle_button_with_icon.dart';
 
 class BeforeRecordingPage extends StatelessWidget {
-  const BeforeRecordingPage({required this.onRecordingButtonPressed});
+  const BeforeRecordingPage({
+    required this.onRecordingButtonPressed,
+    required this.talkTopicName});
 
   final VoidCallback onRecordingButtonPressed;
+  final String talkTopicName;
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +21,7 @@ class BeforeRecordingPage extends StatelessWidget {
               const SizedBox(
                 height: 100,
               ),
-              //todo pass the data of the topic
-              Text('最近ハマってるYouTuberは？',
+              Text(talkTopicName,
                   style: TextStyle(
                     fontSize: Theme.of(context).textTheme.headline2!.fontSize,
                   )),

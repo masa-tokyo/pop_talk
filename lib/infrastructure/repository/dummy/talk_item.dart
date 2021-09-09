@@ -181,4 +181,17 @@ class DummyTalkItemRepository implements TalkItemRepository {
   }) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> saveDraft(
+  {required String talkTopicId,
+    required String title,
+    required String description,
+    required String localPath,
+    required int duration,
+    required String createdUserId,}
+      ) async{
+    throw UnimplementedError();
+
+  }
 }

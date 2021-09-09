@@ -5,6 +5,7 @@ import 'package:pop_talk/domain/model/talk_topic.dart';
 import 'package:pop_talk/presentation/notifier/gacha_timer.dart';
 import 'package:pop_talk/presentation/notifier/talk_topics.dart';
 import 'package:pop_talk/presentation/ui/pages/talk/post_recording_screen.dart';
+import 'package:pop_talk/presentation/ui/utils/routes.dart';
 
 class TalkTopicsView extends StatelessWidget {
   const TalkTopicsView({
@@ -130,7 +131,10 @@ class _PopCornGridViewState extends State<PopCornGridView>
           child: FadeTransition(
             opacity: animations[entry.key],
             child: InkWell(
-              onTap: () => _openPostRecordingScreen(context, entry.value.id),
+              onTap: () => _openPostRecordingScreen(
+                  context,
+                  entry.value.id,
+                  entry.value.name),
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -164,11 +168,10 @@ class _PopCornGridViewState extends State<PopCornGridView>
     );
   }
 
-  void _openPostRecordingScreen(BuildContext context, String id) {
+  void _openPostRecordingScreen(BuildContext context, String id, String name) {
 
-    Navigator.push(context, MaterialPageRoute<void>
-      (builder: (_) => PostRecordingScreen(talkTopicId: id,)
-    ));
+    Navigator.push(context, createRouteFromBottom(context,
+        PostRecordingScreen(talkTopicId: id, talkTopicName: name,)));
   }
 }
 
