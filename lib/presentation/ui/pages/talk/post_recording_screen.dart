@@ -120,7 +120,7 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
             titleController: _titleController,
             descriptionController: _descriptionController,
             onPostButtonPressed: _onPostButtonPressed,
-            onDraftSaveButtonPressed: _draftSaveButtonPressed,
+            onDraftSaveButtonPressed: _onDraftSaveButtonPressed,
             talkTopicName: widget.talkTopicName,);
         break;
     }
@@ -177,7 +177,7 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
     Navigator.pop(context);
   }
 
-  Future<void> _draftSaveButtonPressed() async{
+  Future<void> _onDraftSaveButtonPressed() async{
     final recordingNotifier
                     = context.read<RecordingNotifier>(recordingProvider);
     await recordingNotifier.saveDraft(

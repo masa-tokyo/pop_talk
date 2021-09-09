@@ -8,10 +8,10 @@ import 'package:pop_talk/domain/repository/talk_item.dart';
 import 'package:pop_talk/presentation/notifier/auth.dart';
 
 class RecordingNotifier extends ChangeNotifier {
-  RecordingNotifier({this.repository, this.authedUser});
+  RecordingNotifier({required this.repository, required this.authedUser});
 
-  final TalkItemRepository? repository;
-  final AuthedUser? authedUser;
+  final TalkItemRepository repository;
+  final AuthedUser authedUser;
 
   Future<void> postRecording({
     required String title,
@@ -23,13 +23,13 @@ class RecordingNotifier extends ChangeNotifier {
     final durationInt = duration.inSeconds;
     final audioFile = File(path);
 
-    await repository!.postRecording(
+    await repository.postRecording(
         talkTopicId: talkTopicId,
         title: title,
         description: description,
         audioFile: audioFile,
         duration: durationInt,
-        createdUserId: authedUser != null ? authedUser!.id : 'unknownUser');
+        createdUserId: authedUser.id);
   }
 
   Future<void> saveDraft({
@@ -41,22 +41,25 @@ class RecordingNotifier extends ChangeNotifier {
   }) async {
     final durationInt = duration.inSeconds;
 
-    await repository!.saveDraft(
+    await repository.saveDraft(
       talkTopicId: talkTopicId,
       title: title,
       description: description,
       localPath: path,
       duration: durationInt,
-      createdUserId: authedUser != null ? authedUser!.id : 'unknownUser'
+      createdUserId: authedUser.id
     );
-
   }
 }
 
 final recordingProvider = ChangeNotifierProvider<RecordingNotifier>((ref) {
   final authNotifier = ref.watch(authProvider);
+
+  if(authNotifier.currentUser == null) {
+    throw ArgumentError('recordingNotifier生成時にはcurrentUserを渡してください');}
+
   return RecordingNotifier(
     repository: GetIt.instance.get<TalkItemRepository>(),
-    authedUser: authNotifier.currentUser,
+    authedUser: authNotifier.currentUser!,
   );
 });
