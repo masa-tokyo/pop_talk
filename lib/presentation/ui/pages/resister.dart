@@ -33,6 +33,7 @@ class _ResisterPageState extends State<ResisterPage> {
   bool isAnonymous = false;
   List<String> followingUserIds = [];
   List<String> likeTalkIds = [];
+  List<String> myTalkIds = [];
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +88,6 @@ class _ResisterPageState extends State<ResisterPage> {
                 ),
                 onPressed: () async {
                   await _signInWithGoogle();
-                  Navigator.pop(context);
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -270,11 +270,12 @@ class _ResisterPageState extends State<ResisterPage> {
               'isisAnonymous': isAnonymous,
               'followingUserIds': followingUserIds,
               'likeTalkIds': likeTalkIds,
-              'myTalkIds': [uid],
+              'myTalkIds': myTalkIds,
               'photoUrl': value.user!.photoURL,
             });
           }
         });
+        Navigator.pop(context);
       }
     } on PlatformException catch (e) {
       print(e.toString());
