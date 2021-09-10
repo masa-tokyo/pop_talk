@@ -250,9 +250,7 @@ class _ResisterPageState extends State<ResisterPage> {
   Future _signInWithGoogle() async {
     final googleUser = await googleSignIn.signIn();
     try {
-      if (googleUser == null) {
-        return;
-      } else {
+      if (googleUser != null) {
         final googleAuth = await googleUser.authentication;
         final credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,

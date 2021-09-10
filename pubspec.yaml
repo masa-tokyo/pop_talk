@@ -42,7 +42,6 @@ dependencies:
   uuid: ^3.0.4
   google_sign_in: ^5.1.0
 
-
 dev_dependencies:
   build_runner: ^1.11.1
   flutter_test:
