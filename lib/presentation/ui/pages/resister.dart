@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class ResisterPage extends StatefulWidget {
   const ResisterPage({
@@ -21,6 +25,14 @@ class ResisterPage extends StatefulWidget {
 class _ResisterPageState extends State<ResisterPage> {
   bool? isMember;
   bool isInit = true;
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final googleSignIn = GoogleSignIn();
+  String uid = '';
+  // String name = '';
+  bool isAnonymous = false;
+  List<String> followingUserIds = [];
+  List<String> likeTalkIds = [];
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +85,10 @@ class _ResisterPageState extends State<ResisterPage> {
                   ),
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                onPressed: () {},
+                onPressed: () async {
+                  await _signInWithGoogle();
+                  Navigator.pop(context);
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -230,5 +245,39 @@ class _ResisterPageState extends State<ResisterPage> {
               ),
       ],
     );
+  }
+
+  Future _signInWithGoogle() async {
+    final googleUser = await googleSignIn.signIn();
+    try {
+      if (googleUser == null) {
+        return;
+      } else {
+        final googleAuth = await googleUser.authentication;
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        await _auth.signInWithCredential(credential).then((value) async {
+          uid = value.user!.uid;
+          if (value.additionalUserInfo!.isNewUser != false) {
+            await FirebaseFirestore.instance
+                .collection('user')
+                .doc(uid)
+                .set(<String, dynamic>{
+              'name': value.user!.displayName,
+              'isisAnonymous': isAnonymous,
+              'followingUserIds': followingUserIds,
+              'likeTalkIds': likeTalkIds,
+              'myTalkIds': [uid],
+              'photoUrl': value.user!.photoURL,
+            });
+          }
+        });
+      }
+    } on PlatformException catch (e) {
+      print(e.toString());
+    }
   }
 }
