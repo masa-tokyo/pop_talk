@@ -8,8 +8,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class ResisterPage extends StatefulWidget {
-  const ResisterPage({
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({
     Key? key,
     required this.isMember,
     required this.modalSetState,
@@ -19,10 +19,10 @@ class ResisterPage extends StatefulWidget {
   final StateSetter modalSetState;
 
   @override
-  _ResisterPageState createState() => _ResisterPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _ResisterPageState extends State<ResisterPage> {
+class _RegisterPageState extends State<RegisterPage> {
   bool? isMember;
   bool isInit = true;
 
