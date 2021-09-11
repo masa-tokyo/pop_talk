@@ -7,7 +7,7 @@ class TalkTopic extends Object {
 
   final String id;
   final String name;
-  final String colorCode;
+  final int colorCode;
 
   @override
   bool operator ==(Object other) =>

@@ -2,12 +2,15 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pop_talk/presentation/notifier/recording.dart';
 import 'package:pop_talk/presentation/ui/templates/talk/after_recording_page.dart';
 import 'package:pop_talk/presentation/ui/templates/talk/before_recording_page.dart';
 import 'package:pop_talk/presentation/ui/templates/talk/during_recording_page.dart';
 import 'package:pop_talk/presentation/ui/templates/talk/talk_edit_page.dart';
+import 'package:uuid/uuid.dart';
 
 enum ScreenState {
   beforeRecording,
@@ -17,7 +20,11 @@ enum ScreenState {
 }
 
 class PostRecordingScreen extends StatefulWidget {
-  const PostRecordingScreen({Key? key}) : super(key: key);
+  const PostRecordingScreen({
+    required this.talkTopicId,
+    required this.talkTopicName});
+  final String talkTopicId;
+  final String talkTopicName;
 
   @override
   _PostRecordingScreenState createState() => _PostRecordingScreenState();
@@ -34,6 +41,7 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
   String _path = '';
   bool _isRecorderInitiated = false;
   Duration _duration = Duration();
+  bool _isSaveFile = false;
 
   @override
   void initState() {
@@ -42,7 +50,6 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
     _openTheRecorder().then((value) {
       _isRecorderInitiated = true;
       _setSubscriptionDuration();
-      //todo [check] maybe onProgress can be null at this moment
       _flutterSoundRecorder.onProgress!.listen((event) {
         _duration = event.duration;
       });
@@ -54,9 +61,12 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
     _stopRecording();
     _flutterSoundRecorder.closeAudioSession();
 
-    final outputFile = File(_path);
-    if (outputFile.existsSync()) {
-      outputFile.delete();
+    if(!_isSaveFile){
+      final outputFile = File(_path);
+      if (outputFile.existsSync()) {
+        outputFile.delete();
+      }
+
     }
 
     if (_recorderSubscription != null) {
@@ -67,7 +77,6 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //todo single child scroll view for when keyboard pops up
 
     return Scaffold(
       body: Stack(alignment: AlignmentDirectional.topStart, children: [
@@ -91,23 +100,28 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
     switch (_screenState) {
       case ScreenState.beforeRecording:
         page = BeforeRecordingPage(
-            onRecordingButtonPressed: _onRecordingButtonPressed);
+            onRecordingButtonPressed: _onRecordingButtonPressed,
+            talkTopicName: widget.talkTopicName,);
         break;
       case ScreenState.duringRecording:
         page = DuringRecordingPage(
-            onStopButtonPressed: _onStopButtonPressed);
+            onStopButtonPressed: _onStopButtonPressed,
+            stream: _flutterSoundRecorder.onProgress!,
+            talkTopicName: widget.talkTopicName,);
         break;
       case ScreenState.afterRecording:
         page = AfterRecordingPage(
             onAgainButtonPressed: _onAgainButtonPressed,
-            onEditButtonPressed: _onEditButtonPressed,);
+            onEditButtonPressed: _onEditButtonPressed,
+            talkTopicName: widget.talkTopicName,);
         break;
       case ScreenState.edit:
         page = TalkEditPage(
             titleController: _titleController,
             descriptionController: _descriptionController,
             onPostButtonPressed: _onPostButtonPressed,
-            onDraftSaveButtonPressed: _draftSaveButtonPressed,);
+            onDraftSaveButtonPressed: _onDraftSaveButtonPressed,
+            talkTopicName: widget.talkTopicName,);
         break;
     }
     return page;
@@ -145,11 +159,36 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
     });
   }
 
-  void _onPostButtonPressed() {
+  Future<void> _onPostButtonPressed() async{
+    final recordingNotifier
+                      = context.read<RecordingNotifier>(recordingProvider);
+
+    //todo prompt login/signup if not done yet
+
+    await recordingNotifier.postRecording(
+      title: _titleController.text,
+      description: _descriptionController.text,
+      path: _path,
+      duration: _duration,
+      talkTopicId: widget.talkTopicId
+    );
+
+
     Navigator.pop(context);
   }
 
-  void _draftSaveButtonPressed() {
+  Future<void> _onDraftSaveButtonPressed() async{
+    final recordingNotifier
+                    = context.read<RecordingNotifier>(recordingProvider);
+    await recordingNotifier.saveDraft(
+      title: _titleController.text,
+      description: _descriptionController.text,
+      path: _path,
+      duration: _duration,
+      talkTopicId: widget.talkTopicId,
+    );
+
+    _isSaveFile = true;
     Navigator.pop(context);
 
   }
@@ -157,28 +196,22 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
 
   //-----------------------------------------------------------Recording Methods
   Future<void> _openTheRecorder() async {
-    //upgraded the minimum SDK version of Android(23) to encode AAC ADTS
-    //todo [check] upgrade minimum OS version of iOS(10.0)?
-
     //todo permission
 
-    final temDir = await getTemporaryDirectory();
-    _path = '${temDir.path}/flutter_sound_example.aac';
-    final outputFile = File(_path);
-    if (outputFile.existsSync()) {
-      await outputFile.delete();
-    }
+    final docDir = await getApplicationDocumentsDirectory();
+    final fileName = const Uuid().v1();
+    _path = '${docDir.path}/$fileName.aac';
+
     await _flutterSoundRecorder.openAudioSession();
   }
 
   Future<void> _setSubscriptionDuration() async {
-    //todo [check] can be less than 1 second?
     await _flutterSoundRecorder
-        .setSubscriptionDuration(const Duration(seconds: 1));
+        .setSubscriptionDuration(const Duration(milliseconds: 1));
   }
 
   Future<void> _startRecording() async {
-    if (!_isRecorderInitiated) return; //todo [check] maybe assert?
+    assert(_isRecorderInitiated);
     await _flutterSoundRecorder.startRecorder(
       toFile: _path,
       codec: Codec.aacADTS,

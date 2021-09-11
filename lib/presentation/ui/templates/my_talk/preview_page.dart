@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
+import 'package:pop_talk/presentation/ui/molecules/detail_dialog.dart';
+import 'package:pop_talk/presentation/ui/templates/my_talk/existing_talk_edit_page.dart';
 
 class PreviewPage extends StatefulWidget {
   const PreviewPage({
@@ -104,7 +106,7 @@ class _PreviewPageState extends State<PreviewPage> {
                     color: Colors.black26,
                   ),
                   child: Text(
-                    widget.talkItem.talkTopic,
+                    widget.talkItem.description ?? '',
                     overflow: TextOverflow.clip,
                     style: Theme.of(context)
                         .textTheme
@@ -116,7 +118,7 @@ class _PreviewPageState extends State<PreviewPage> {
             ),
           ),
           Text(
-            widget.talkItem.title,
+            widget.talkItem.title ?? '無題',
             style: Theme.of(context)
                 .textTheme
                 .headline6!
@@ -126,30 +128,50 @@ class _PreviewPageState extends State<PreviewPage> {
             width: width * 0.85,
             alignment: Alignment.center,
             padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(widget.talkItem.description,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.end,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline2!
-                        .copyWith(fontWeight: FontWeight.normal)),
-                GestureDetector(
-                  onTap: () {
-                    // MBS表示
-                  },
-                  child: Text(
-                    '詳細',
-                    textAlign: TextAlign.end,
-                    style: Theme.of(context).textTheme.headline2!.copyWith(
+            child: LayoutBuilder(
+              builder: (_, constraints) {
+                final descriptionStyle =
+                    Theme.of(context).textTheme.headline2!.copyWith(
                           fontWeight: FontWeight.normal,
                           color: Colors.black54,
-                        ),
-                  ),
-                ),
-              ],
+                        );
+                final textSpan = TextSpan(
+                  text: widget.talkItem.description,
+                  style: descriptionStyle,
+                );
+                final textPainter = TextPainter(
+                  text: textSpan,
+                  textDirection: TextDirection.ltr,
+                  maxLines: 1,
+                )..layout(maxWidth: constraints.maxWidth);
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      widget.talkItem.description ?? '',
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.end,
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline2!
+                          .copyWith(fontWeight: FontWeight.normal),
+                    ),
+                    textPainter.didExceedMaxLines
+                        ? GestureDetector(
+                            onTap: () => DetailDialog.show(
+                              context: context,
+                              talkItem: widget.talkItem,
+                            ),
+                            child: Text(
+                              '詳細',
+                              textAlign: TextAlign.end,
+                              style: descriptionStyle,
+                            ),
+                          )
+                        : const Text(''),
+                  ],
+                );
+              },
             ),
           ),
           const SizedBox(height: 60),
@@ -201,9 +223,10 @@ class _PreviewPageState extends State<PreviewPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ElevatedButton(
-                      onPressed: () {
-                        // 編集画面へ
-                      },
+                      onPressed: () => _showModalBottomSheet(
+                        context: context,
+                        page: ExisitingTalkEditPage(talkItem: widget.talkItem),
+                      ),
                       style: ElevatedButton.styleFrom(
                         primary: Theme.of(context).primaryColor,
                         shape: RoundedRectangleBorder(
@@ -253,4 +276,20 @@ class _PreviewPageState extends State<PreviewPage> {
       ),
     );
   }
+}
+
+void _showModalBottomSheet({
+  required BuildContext context,
+  required Widget page,
+}) {
+  showModalBottomSheet<void>(
+    context: context,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    isScrollControlled: true,
+    builder: (context) {
+      return page;
+    },
+  );
 }

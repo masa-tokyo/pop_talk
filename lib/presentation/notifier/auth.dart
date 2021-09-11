@@ -22,5 +22,5 @@ class AuthNotifier with ChangeNotifier {
 final authProvider = ChangeNotifierProvider<AuthNotifier>(
   (ref) => AuthNotifier(
     GetIt.instance.get<AuthedUserRepository>(),
-  )..implicitLogin(),
+  ),
 );

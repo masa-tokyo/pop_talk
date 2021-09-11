@@ -1,28 +1,35 @@
+
 class TalkItem extends Object {
   TalkItem({
     required this.id,
-    required this.talkTopic,
+    required this.topicName,
     required this.title,
     required this.description,
-    required this.time,
-    required this.recordedAt,
-    required this.colorCode,
+    required this.url,
+    required this.localUrl,
+    required this.duration,
+    required this.createdAt,
+    required this.publishedAt,
     required this.isPublic,
-    this.like = 0,
-    this.view = 0,
+    required this.colorCode,
+    this.playNumber = 0,
+    this.likeNumber = 0,
     required this.createdUser,
   });
 
   final String id;
-  final String talkTopic;
-  final String title;
-  final String description;
-  final int time;
-  final DateTime recordedAt;
-  final int colorCode;
+  final String topicName;
+  final String? title;
+  final String? description;
+  final String? url;
+  final String? localUrl;
+  final int duration;
+  final DateTime createdAt;
+  final DateTime publishedAt;
   final bool isPublic;
-  int like;
-  int view;
+  final int colorCode;
+  int playNumber;
+  int likeNumber;
   final TalkUser createdUser;
 
   @override
