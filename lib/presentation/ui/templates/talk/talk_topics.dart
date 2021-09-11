@@ -97,110 +97,169 @@ class PopCornGridView extends StatefulWidget {
 
 class _PopCornGridViewState extends State<PopCornGridView>
     with TickerProviderStateMixin {
-  //late final List<Animation<double>> animations;
+  double fadedelayTime = 0;
+  double expanddelayTime = 0;
+  double shrinkdelayTime = 0;
 
-  //late final AnimationController controller;
+  late final List<Animation<double>> fadeAnimations;
+  late final List<Animation<double>> expandAnimations;
+  late final List<Animation<double>> shrinkAnimations;
+  late final List<Animation<double>> scaleAnimations;
 
+  late final AnimationController fadeController;
+  late final AnimationController expandcontroller;
+  late final AnimationController shrinkcontroller;
   late final AnimationController controller2;
+  late final AnimationController scalecontroller;
 
   @override
   void initState() {
-    // controller = AnimationController(
-    //   duration: const Duration(milliseconds: 3000),
-    //   vsync: this,
-    // );
-    //)..forward();
-
-    controller2 = AnimationController(
-      duration: const Duration(milliseconds: 800),
+    //フェードアニメーション
+    fadeController = AnimationController(
+      duration: const Duration(milliseconds: 3000),
       vsync: this,
+    )
+      ..forward()
+      ..addStatusListener((status) {});
+
+    fadeAnimations = widget.talkTopics.map((_) {
+      fadedelayTime = fadedelayTime + 0.15;
+      return Tween(
+        begin: 0.0,
+        end: 1.0,
+      ).animate(
+        CurvedAnimation(
+          parent: fadeController,
+          curve: Interval(fadedelayTime, fadedelayTime + 0.1,
+              curve: Curves.linear),
+        )..addStatusListener(
+            (status) {
+              if (status == AnimationStatus.completed) {
+                setState(() {});
+              }
+            },
+          ),
+      );
+    }).toList();
+
+    //拡大アニメーション
+    expandcontroller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 3000),
     )..forward();
 
-    // animations = widget.talkTopics.map((_) {
-    //   final randomDelay = ([...randomDelays]..shuffle()).first;
-    //   return Tween<double>(begin: 0, end: 1).animate(
-    //     CurvedAnimation(
-    //       parent: controller,
-    //       curve: const Interval(
-    //         0,
-    //         0,
-    //         curve: Curves.linear,
-    //       ),
-    //       //curve: Interval(,curve: Curves.linear),
-    //     ),
-    //   );
-    // }).toList();
+    expandAnimations = widget.talkTopics.map((_) {
+      expanddelayTime = expanddelayTime + 0.15;
+
+      return Tween(
+        begin: 0.0,
+        end: 1.3,
+      ).animate(CurvedAnimation(
+        parent: expandcontroller,
+        curve: Interval(expanddelayTime, expanddelayTime + 0.1,
+            curve: Curves.decelerate),
+      )..addStatusListener(
+          (status) {},
+        ));
+    }).toList();
+
+    //縮小コントローラー
+    shrinkcontroller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )..forward();
+
+    shrinkAnimations = widget.talkTopics.map((_) {
+      shrinkdelayTime = shrinkdelayTime + 0.15;
+      return Tween(
+        begin: 1.3,
+        end: 1.0,
+      ).animate(CurvedAnimation(
+        parent: shrinkcontroller,
+        curve: Interval(
+          shrinkdelayTime,
+          shrinkdelayTime + 0.1,
+          curve: Curves.decelerate,
+        ),
+      )..addStatusListener(
+          (status) {},
+        ));
+    }).toList();
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final offsetAnimation = Tween(
-      begin: 0.0,
-      end: 1.0,
-    )
-        .chain(
-          CurveTween(
-            curve: Curves.elasticIn,
-          ),
-        )
-        .animate(
-          controller2,
-        )..addStatusListener(
-            (status) {
-              if (status == AnimationStatus.completed) {
-                print("finish");
-              }
-            },
-          );
-
     return GridView.count(
       crossAxisCount: 2,
       children: widget.talkTopics.asMap().entries.map((entry) {
         return Padding(
           padding: const EdgeInsets.all(10),
-          //child: FadeTransition(
-          //opacity: animations[entry.key],
           child: InkWell(
             onTap: () => _openPostRecordingScreen(context),
-            child: AnimatedBuilder(
-                animation: offsetAnimation,
-                builder: (buildContext, child) {
-                  return Transform.scale(
-                    scale: controller2.value,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(
-                          color: Color(
-                            int.parse('0xff804B3A'),
+            child: FadeTransition(
+              opacity: fadeAnimations[entry.key],
+              child: AnimatedBuilder(
+                  animation: expandcontroller,
+                  builder: (buildContext, child) {
+                    return Transform.scale(
+                      scale: expandAnimations[entry.key].value != 1.3
+                          ? expandAnimations[entry.key].value
+                          : shrinkAnimations[entry.key].value,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(
+                            color: const Color(0xff804B3A),
+                            width: 10,
                           ),
-                          width: 10,
-                        ),
-                        borderRadius: BorderRadius.circular(
-                          50,
-                        ),
-                      ),
-                      child: Stack(
-                        children: [
-                          CustomPaint(
-                            painter: CirclePainter(),
+                          borderRadius: BorderRadius.circular(
+                            50,
                           ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Center(
-                                child: Text(entry.value.name),
+                        ),
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              left: 20,
+                              top: 20,
+                              child: Container(
+                                height: 20,
+                                width: 20,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Color(0xffFF934E),
+                                ),
                               ),
-                            ],
-                          ),
-                        ],
+                            ),
+                            Positioned(
+                              right: 20,
+                              bottom: 20,
+                              child: Container(
+                                height: 20,
+                                width: 20,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  // ignore: lines_longer_than_80_chars
+                                  color: Color(0xffFF934E),
+                                ),
+                              ),
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: Text(entry.value.name),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                }),
+                    );
+                  }),
+            ),
           ),
-          //),
         );
       }).toList(),
     );
@@ -214,23 +273,5 @@ class _PopCornGridViewState extends State<PopCornGridView>
         builder: (_) => const PostRecordingScreen(),
       ),
     );
-  }
-}
-
-class CirclePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Color(
-        int.parse('0xffFF934E'),
-      );
-    canvas.drawCircle(const Offset(20, 30), 10, paint); //左の円
-    canvas.drawCircle(const Offset(130, 130), 10, paint); //右の円
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    // TODO: implement shouldRepaint
-    throw UnimplementedError();
   }
 }

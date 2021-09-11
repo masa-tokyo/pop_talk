@@ -149,15 +149,18 @@ class _ShakeAnimationState extends State<ShakeAnimation>
                     return Transform.scale(
                       scale: controller.value * 10,
                       child: Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.white,
                           boxShadow: [
                             BoxShadow(
                               color: Colors.white,
-                              spreadRadius: 50.0,
-                              blurRadius: 10.0,
-                              offset: Offset(10, 10),
+                              spreadRadius: 50,
+                              blurRadius: 10,
+                              offset: Offset(
+                                10,
+                                10,
+                              ),
                             ),
                           ],
                         ),
