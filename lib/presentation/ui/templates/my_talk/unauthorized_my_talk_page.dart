@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/presentation/ui/organisms/talk_tile.dart';
-import 'package:pop_talk/presentation/ui/pages/resister.dart';
+import 'package:pop_talk/presentation/ui/pages/register.dart';
 
 class UnauthorizedMyTalkPage extends StatelessWidget {
   const UnauthorizedMyTalkPage({Key? key, required this.savedTalkItems})
@@ -111,7 +111,7 @@ void _showModalBottomSheet({
     builder: (context) {
       return StatefulBuilder(
         builder: (BuildContext context, StateSetter modalSetState) {
-          return ResisterPage(
+          return RegisterPage(
             isMember: isMember,
             modalSetState: modalSetState,
           );
