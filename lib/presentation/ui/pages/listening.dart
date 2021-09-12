@@ -22,7 +22,7 @@ class ListeningPage extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         } else {
-          return ListeningTemplete(
+          return ListeningTemplate(
             recommendLists: _recommendLists,
             followLists: _followLists,
             likeLists: _likeLists,
