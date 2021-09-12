@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pop_talk/presentation/notifier/recording.dart';
+import 'package:pop_talk/presentation/ui/pages/register.dart';
 import 'package:pop_talk/presentation/ui/templates/talk/after_recording_page.dart';
 import 'package:pop_talk/presentation/ui/templates/talk/before_recording_page.dart';
 import 'package:pop_talk/presentation/ui/templates/talk/during_recording_page.dart';
@@ -163,18 +164,34 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
     final recordingNotifier
                       = context.read<RecordingNotifier>(recordingProvider);
 
-    //todo prompt login/signup if not done yet
+    if(recordingNotifier.authedUser.isAnonymous){
 
-    await recordingNotifier.postRecording(
-      title: _titleController.text,
-      description: _descriptionController.text,
-      path: _path,
-      duration: _duration,
-      talkTopicId: widget.talkTopicId
-    );
+      await showModalBottomSheet<void>(
+          context: context,
+          isScrollControlled: true,
+          builder: (context){
+            return StatefulBuilder(
+                builder: (context, setState){
+              return RegisterPage(
+                  isMember: false,
+                  modalSetState: setState);
+            }
+            );
+          });
+
+    } else{
+      await recordingNotifier.postRecording(
+          title: _titleController.text,
+          description: _descriptionController.text,
+          path: _path,
+          duration: _duration,
+          talkTopicId: widget.talkTopicId
+      );
 
 
-    Navigator.pop(context);
+      Navigator.pop(context);
+    }
+
   }
 
   Future<void> _onDraftSaveButtonPressed() async{
