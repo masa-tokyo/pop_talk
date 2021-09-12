@@ -24,21 +24,18 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
       child: Align(
         alignment: Alignment.center,
         child: Column(
           children: [
             Container(
-              margin: const EdgeInsets.only(top: 8),
+              margin: const EdgeInsets.only(top: 8, right: 12, left: 12),
               decoration: BoxDecoration(
                 border: Border.all(color: Theme.of(context).primaryColor),
                 borderRadius: BorderRadius.circular(12),
               ),
-              height: height * 0.20,
-              width: width * 0.90,
+              constraints: const BoxConstraints(minHeight: 160, maxWidth: 565),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -62,8 +59,9 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: width * 0.50,
+                  ConstrainedBox(
+                    constraints:
+                        const BoxConstraints(minHeight: 160, maxWidth: 200),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -131,11 +129,11 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    Container(
                       height: _tabIndex == 0
-                          ? height * 0.20 * widget.savedTalkItems.length
-                          : height * 0.22 * widget.postedTalkItems.length,
-                      width: width * 0.90,
+                          ? (200 * widget.savedTalkItems.length).toDouble()
+                          : (220 * widget.postedTalkItems.length).toDouble(),
+                      constraints: const BoxConstraints(maxWidth: 600),
                       child: TabBarView(
                         children: [
                           ListView.builder(
