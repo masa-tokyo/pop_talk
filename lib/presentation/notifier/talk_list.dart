@@ -7,65 +7,42 @@ import 'package:pop_talk/domain/repository/talk_item.dart';
 import 'package:pop_talk/presentation/notifier/auth.dart';
 
 class TalkListNotifier with ChangeNotifier {
-  TalkListNotifier(this._repository, this._authedUser) {
-    init();
-  }
+  TalkListNotifier(this._repository, this._authedUser);
 
-  final AuthedUser? _authedUser;
+  final AuthedUser _authedUser;
   final TalkItemRepository _repository;
 
-  bool isLoading = false;
-  List<TalkItem> recommendLists = [];
-  List<TalkItem> followLists = [];
-  List<TalkItem> likeLists = [];
-
-  void startLoading() {
-    isLoading = true;
-    notifyListeners();
-  }
-
-  void endLoading() {
-    isLoading = false;
-    notifyListeners();
-  }
-
-  Future<void> init() async {
-    startLoading();
-    await Future.wait([
-      fetchRecommendLists(),
-      fetchLikeLists(),
-      fetchFollowLists(),
-    ]);
-    endLoading();
-  }
+  List<TalkItem>? recommendLists;
+  List<TalkItem>? followLists;
+  List<TalkItem>? likeLists;
 
   Future<void> fetchRecommendLists() async {
     recommendLists = await _repository.fetchRecommendLists();
+    notifyListeners();
   }
 
   Future<void> fetchFollowLists() async {
-    if (_authedUser == null) {
-      return;
-    }
-    final followUserIds = _authedUser!.followingUserIds;
+    final followUserIds = _authedUser.followingUserIds;
     followLists = await _repository.fetchByCreatedUserIds(followUserIds);
+    notifyListeners();
   }
 
   Future<void> fetchLikeLists() async {
-    if (_authedUser == null) {
-      return;
-    }
-    final likeTalkIds = _authedUser!.likeTalkIds;
+    final likeTalkIds = _authedUser.likeTalkIds;
     likeLists = await _repository.fetchByIds(likeTalkIds);
+    notifyListeners();
   }
 }
 
 final talkListProvider = ChangeNotifierProvider<TalkListNotifier>(
   (ref) {
     final authNotifier = ref.watch(authProvider);
+    if (authNotifier.currentUser == null) {
+      throw ArgumentError('currentUserが作成される前にtalkListProviderを作成できません.');
+    }
     return TalkListNotifier(
       GetIt.instance.get<TalkItemRepository>(),
-      authNotifier.currentUser,
+      authNotifier.currentUser!,
     );
   },
 );

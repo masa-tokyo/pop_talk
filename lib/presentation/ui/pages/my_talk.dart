@@ -25,7 +25,7 @@ class MyTalkPage extends StatelessWidget {
           return const Center(
             child: CircularProgressIndicator(),
           );
-        } else if (_authNotifier.currentUser == null) {
+        } else if (_authNotifier.currentUser!.isAnonymous) {
           return UnauthorizedMyTalkPage(savedTalkItems: _savedTalkItems);
         } else {
           return AuthorizedMyTalkPage(

@@ -5,6 +5,8 @@ class AuthedUser {
     required this.isAnonymous,
     required this.followingUserIds,
     required this.likeTalkIds,
+    required this.followerNumber,
+    required this.likeNumber,
   });
 
   final String id;
@@ -12,4 +14,6 @@ class AuthedUser {
   final bool isAnonymous;
   final List<String> followingUserIds;
   final List<String> likeTalkIds;
+  final int followerNumber;
+  final int likeNumber;
 }
