@@ -22,7 +22,6 @@ double _currentValue = 50;
 class _PreviewPageState extends State<PreviewPage> {
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -51,8 +50,8 @@ class _PreviewPageState extends State<PreviewPage> {
           ),
           Container(
             height: 240,
-            width: width * 0.90,
-            margin: const EdgeInsets.symmetric(vertical: 16),
+            constraints: const BoxConstraints(maxWidth: 600),
+            margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
             decoration: BoxDecoration(
               color: Color(widget.talkItem.colorCode),
               borderRadius: BorderRadius.circular(12),
@@ -106,7 +105,7 @@ class _PreviewPageState extends State<PreviewPage> {
                     color: Colors.black26,
                   ),
                   child: Text(
-                    widget.talkItem.description ?? '',
+                    widget.talkItem.topicName,
                     overflow: TextOverflow.clip,
                     style: Theme.of(context)
                         .textTheme
@@ -125,7 +124,8 @@ class _PreviewPageState extends State<PreviewPage> {
                 .copyWith(fontWeight: FontWeight.w600),
           ),
           Container(
-            width: width * 0.85,
+            constraints: const BoxConstraints(maxWidth: 600),
+            margin: const EdgeInsets.symmetric(horizontal: 12),
             alignment: Alignment.center,
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: LayoutBuilder(
@@ -175,8 +175,9 @@ class _PreviewPageState extends State<PreviewPage> {
             ),
           ),
           const SizedBox(height: 60),
-          SizedBox(
-            width: width * 0.90,
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 12),
+            constraints: const BoxConstraints(maxWidth: 600),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -193,25 +194,21 @@ class _PreviewPageState extends State<PreviewPage> {
                   activeColor: Theme.of(context).primaryColor,
                   inactiveColor: Colors.grey[300],
                 ),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: width * 0.90,
-                      child: Row(
-                        children: const [
-                          Text(
-                            '2分30秒',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          Spacer(),
-                          Text(
-                            '2分30秒',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                        ],
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 600),
+                  child: Row(
+                    children: const [
+                      Text(
+                        '2分30秒',
+                        style: TextStyle(fontSize: 20),
                       ),
-                    ),
-                  ],
+                      Spacer(),
+                      Text(
+                        '2分30秒',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ],
+                  ),
                 ),
                 Icon(
                   Icons.play_circle_fill_outlined,
@@ -220,7 +217,7 @@ class _PreviewPageState extends State<PreviewPage> {
                 ),
                 const SizedBox(height: 20),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     ElevatedButton(
                       onPressed: () => _showModalBottomSheet(
@@ -234,7 +231,7 @@ class _PreviewPageState extends State<PreviewPage> {
                         ),
                         padding: const EdgeInsets.symmetric(
                           vertical: 8,
-                          horizontal: 40,
+                          horizontal: 32,
                         ),
                       ),
                       child: Text(
@@ -256,7 +253,7 @@ class _PreviewPageState extends State<PreviewPage> {
                         ),
                         padding: const EdgeInsets.symmetric(
                           vertical: 8,
-                          horizontal: 40,
+                          horizontal: 32,
                         ),
                       ),
                       child: Text(
@@ -269,6 +266,9 @@ class _PreviewPageState extends State<PreviewPage> {
                     ),
                   ],
                 ),
+                const SizedBox(
+                  height: 24,
+                )
               ],
             ),
           )
