@@ -75,7 +75,7 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
         const SizedBox(height: 100),
         SizedBox(
-          width: MediaQuery.of(context).size.width * 0.70,
+          width: 256,
           child: Column(
             children: [
               ElevatedButton(
