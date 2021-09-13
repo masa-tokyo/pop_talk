@@ -17,10 +17,9 @@ _$_FirestoreTalk _$_$_FirestoreTalkFromJson(Map<String, dynamic> json) {
     localUrl: json['localUrl'] as String?,
     duration: json['duration'] as int,
     createdAt:
-        const TimestampConverter().fromJson(json['createdAt'] as Timestamp),
-    publishedAt: json['publishedAt'] == null
-        ? null
-        : DateTime.parse(json['publishedAt'] as String),
+        const TimestampConverter().fromJson(json['createdAt'] as Timestamp?),
+    publishedAt:
+        const TimestampConverter().fromJson(json['publishedAt'] as Timestamp?),
     isPublic: json['isPublic'] as bool,
     playNumber: json['playNumber'] as int,
     likeNumber: json['likeNumber'] as int,
@@ -38,7 +37,7 @@ Map<String, dynamic> _$_$_FirestoreTalkToJson(_$_FirestoreTalk instance) =>
       'localUrl': instance.localUrl,
       'duration': instance.duration,
       'createdAt': const TimestampConverter().toJson(instance.createdAt),
-      'publishedAt': instance.publishedAt?.toIso8601String(),
+      'publishedAt': const TimestampConverter().toJson(instance.publishedAt),
       'isPublic': instance.isPublic,
       'playNumber': instance.playNumber,
       'likeNumber': instance.likeNumber,

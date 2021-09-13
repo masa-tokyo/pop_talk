@@ -29,7 +29,7 @@ class _$FirestoreTalkTearOff {
       String? url,
       String? localUrl,
       required int duration,
-      @TimestampConverter() required DateTime createdAt,
+      @TimestampConverter() DateTime? createdAt,
       @TimestampConverter() DateTime? publishedAt,
       required bool isPublic,
       required int playNumber,
@@ -70,7 +70,7 @@ mixin _$FirestoreTalk {
   String? get localUrl => throw _privateConstructorUsedError;
   int get duration => throw _privateConstructorUsedError;
   @TimestampConverter()
-  DateTime get createdAt => throw _privateConstructorUsedError;
+  DateTime? get createdAt => throw _privateConstructorUsedError;
   @TimestampConverter()
   DateTime? get publishedAt => throw _privateConstructorUsedError;
   bool get isPublic => throw _privateConstructorUsedError;
@@ -97,7 +97,7 @@ abstract class $FirestoreTalkCopyWith<$Res> {
       String? url,
       String? localUrl,
       int duration,
-      @TimestampConverter() DateTime createdAt,
+      @TimestampConverter() DateTime? createdAt,
       @TimestampConverter() DateTime? publishedAt,
       bool isPublic,
       int playNumber,
@@ -165,7 +165,7 @@ class _$FirestoreTalkCopyWithImpl<$Res>
       createdAt: createdAt == freezed
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
       publishedAt: publishedAt == freezed
           ? _value.publishedAt
           : publishedAt // ignore: cast_nullable_to_non_nullable
@@ -202,7 +202,7 @@ abstract class _$FirestoreTalkCopyWith<$Res>
       String? url,
       String? localUrl,
       int duration,
-      @TimestampConverter() DateTime createdAt,
+      @TimestampConverter() DateTime? createdAt,
       @TimestampConverter() DateTime? publishedAt,
       bool isPublic,
       int playNumber,
@@ -272,7 +272,7 @@ class __$FirestoreTalkCopyWithImpl<$Res>
       createdAt: createdAt == freezed
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
       publishedAt: publishedAt == freezed
           ? _value.publishedAt
           : publishedAt // ignore: cast_nullable_to_non_nullable
@@ -306,7 +306,7 @@ class _$_FirestoreTalk with DiagnosticableTreeMixin implements _FirestoreTalk {
       this.url,
       this.localUrl,
       required this.duration,
-      @TimestampConverter() required this.createdAt,
+      @TimestampConverter() this.createdAt,
       @TimestampConverter() this.publishedAt,
       required this.isPublic,
       required this.playNumber,
@@ -333,7 +333,7 @@ class _$_FirestoreTalk with DiagnosticableTreeMixin implements _FirestoreTalk {
   final int duration;
   @override
   @TimestampConverter()
-  final DateTime createdAt;
+  final DateTime? createdAt;
   @override
   @TimestampConverter()
   final DateTime? publishedAt;
@@ -449,7 +449,7 @@ abstract class _FirestoreTalk implements FirestoreTalk {
       String? url,
       String? localUrl,
       required int duration,
-      @TimestampConverter() required DateTime createdAt,
+      @TimestampConverter() DateTime? createdAt,
       @TimestampConverter() DateTime? publishedAt,
       required bool isPublic,
       required int playNumber,
@@ -476,7 +476,7 @@ abstract class _FirestoreTalk implements FirestoreTalk {
   int get duration => throw _privateConstructorUsedError;
   @override
   @TimestampConverter()
-  DateTime get createdAt => throw _privateConstructorUsedError;
+  DateTime? get createdAt => throw _privateConstructorUsedError;
   @override
   @TimestampConverter()
   DateTime? get publishedAt => throw _privateConstructorUsedError;
