@@ -35,7 +35,7 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
                 border: Border.all(color: Theme.of(context).primaryColor),
                 borderRadius: BorderRadius.circular(12),
               ),
-              constraints: const BoxConstraints(minHeight: 160, maxWidth: 565),
+              constraints: const BoxConstraints(minHeight: 140, maxWidth: 565),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -61,7 +61,7 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
                   ),
                   ConstrainedBox(
                     constraints:
-                        const BoxConstraints(minHeight: 160, maxWidth: 200),
+                        const BoxConstraints(minHeight: 140, maxWidth: 200),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -131,8 +131,8 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
                     ),
                     Container(
                       height: _tabIndex == 0
-                          ? (200 * widget.savedTalkItems.length).toDouble()
-                          : (220 * widget.postedTalkItems.length).toDouble(),
+                          ? (175 * widget.savedTalkItems.length).toDouble()
+                          : (195 * widget.postedTalkItems.length).toDouble(),
                       constraints: const BoxConstraints(maxWidth: 600),
                       child: TabBarView(
                         children: [

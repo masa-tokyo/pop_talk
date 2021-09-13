@@ -14,7 +14,7 @@ class TalkTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(right: 12, left: 12),
+      margin: const EdgeInsets.symmetric(horizontal: 12),
       padding: const EdgeInsets.only(top: 4),
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -31,91 +31,93 @@ class TalkTile extends StatelessWidget {
               ),
               borderRadius: BorderRadius.circular(12)),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+            padding: const EdgeInsets.all(16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Column(
-                  children: [
-                    Container(
-                      constraints:
-                          const BoxConstraints(minHeight: 140, maxWidth: 180),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black38),
-                        borderRadius: BorderRadius.circular(12),
-                        color: Color(talkItem.colorCode),
-                      ),
-                      child: Stack(
-                        alignment: AlignmentDirectional.center,
-                        children: [
-                          Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              color: Colors.black26,
-                            ),
-                            child: Text(
-                              talkItem.topicName,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline3
-                                  ?.copyWith(color: Colors.white),
-                            ),
-                          ),
-                          Positioned(
-                            right: 10,
-                            bottom: 5,
-                            child: Container(
+                Expanded(
+                  child: Column(
+                    children: [
+                      Container(
+                        constraints:
+                            const BoxConstraints(minHeight: 120, maxWidth: 200),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black38),
+                          borderRadius: BorderRadius.circular(12),
+                          color: Color(talkItem.colorCode),
+                        ),
+                        child: Stack(
+                          alignment: AlignmentDirectional.center,
+                          children: [
+                            Container(
+                              width: double.infinity,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(4),
                                 color: Colors.black26,
                               ),
                               child: Text(
-                                '${talkItem.duration}分',
+                                talkItem.topicName,
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 2,
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline5
+                                    .headline3
                                     ?.copyWith(color: Colors.white),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (isPublic)
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 180),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Row(
-                              children: [
-                                const Icon(Icons.headphones_rounded),
-                                Text('${talkItem.playNumber}')
-                              ],
+                            Positioned(
+                              right: 10,
+                              bottom: 5,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color: Colors.black26,
+                                ),
+                                child: Text(
+                                  '${talkItem.duration}分',
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline5
+                                      ?.copyWith(color: Colors.white),
+                                ),
+                              ),
                             ),
-                            Row(
-                              children: [
-                                const Icon(Icons.favorite_outline),
-                                Text('${talkItem.likeNumber}')
-                              ],
-                            )
                           ],
                         ),
                       ),
-                  ],
+                      if (isPublic)
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 200),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(Icons.headphones_rounded),
+                                  Text('${talkItem.playNumber}')
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Icon(Icons.favorite_outline),
+                                  Text('${talkItem.likeNumber}')
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
                 Expanded(
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    padding: const EdgeInsets.only(left: 12),
                     constraints:
-                        const BoxConstraints(maxWidth: 180, minHeight: 140),
+                        const BoxConstraints(maxWidth: 200, minHeight: 120),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
