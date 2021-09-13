@@ -10,6 +10,8 @@ class DummyAuthedUserRepository implements AuthedUserRepository {
       isAnonymous: false,
       followingUserIds: ['5', '2', '8'],
       likeTalkIds: ['1', '3', '5', '6'],
+      likeNumber: 5,
+      followerNumber: 2,
     );
   }
 }
