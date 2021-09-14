@@ -9,7 +9,7 @@ class TalkItem extends Object {
     required this.localUrl,
     required this.duration,
     required this.createdAt,
-    required this.publishedAt,
+    this.publishedAt,
     required this.isPublic,
     required this.colorCode,
     this.playNumber = 0,
@@ -25,7 +25,7 @@ class TalkItem extends Object {
   final String? localUrl;
   final int duration;
   final DateTime createdAt;
-  final DateTime publishedAt;
+  final DateTime? publishedAt;
   final bool isPublic;
   final int colorCode;
   int playNumber;

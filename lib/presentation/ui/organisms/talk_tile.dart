@@ -134,8 +134,7 @@ class TalkTile extends StatelessWidget {
                         Text(
                             '${talkItem.publishedAt.year}/${talkItem.publishedAt.month}/${talkItem.publishedAt.day} 保存')
                       ],
-                    ),
-                  ),
+                    ), main
                 ),
               ],
             ),

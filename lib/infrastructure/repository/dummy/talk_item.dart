@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:pop_talk/domain/model/authed_user.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/domain/repository/talk_item.dart';
 
@@ -138,12 +139,12 @@ final _talkItems = [
 
 class DummyTalkItemRepository implements TalkItemRepository {
   @override
-  Future<List<TalkItem>> fetchSavedItems() async {
+  Future<List<TalkItem>> fetchSavedItems(AuthedUser authedUser) async {
     return _talkItems.where((item) => item.isPublic == false).toList();
   }
 
   @override
-  Future<List<TalkItem>> fetchPostedItems() async {
+  Future<List<TalkItem>> fetchPostedItems(AuthedUser authedUser) async {
     return _talkItems.where((item) => item.isPublic == true).toList();
   }
 
@@ -163,11 +164,6 @@ class DummyTalkItemRepository implements TalkItemRepository {
     return _talkItems
         .where((item) => createdUserIds.contains(item.createdUser.id))
         .toList();
-  }
-
-  @override
-  Future<List<TalkItem>> fetchPlayerLists() {
-    throw UnimplementedError();
   }
 
   @override

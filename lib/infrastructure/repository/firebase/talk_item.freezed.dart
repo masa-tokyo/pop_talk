@@ -29,8 +29,8 @@ class _$FirestoreTalkTearOff {
       String? url,
       String? localUrl,
       required int duration,
-      required DateTime createdAt,
-      required DateTime publishedAt,
+      @TimestampConverter() DateTime? createdAt,
+      @TimestampConverter() DateTime? publishedAt,
       required bool isPublic,
       required int playNumber,
       required int likeNumber}) {
@@ -69,8 +69,10 @@ mixin _$FirestoreTalk {
   String? get url => throw _privateConstructorUsedError;
   String? get localUrl => throw _privateConstructorUsedError;
   int get duration => throw _privateConstructorUsedError;
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  DateTime get publishedAt => throw _privateConstructorUsedError;
+  @TimestampConverter()
+  DateTime? get createdAt => throw _privateConstructorUsedError;
+  @TimestampConverter()
+  DateTime? get publishedAt => throw _privateConstructorUsedError;
   bool get isPublic => throw _privateConstructorUsedError;
   int get playNumber => throw _privateConstructorUsedError;
   int get likeNumber => throw _privateConstructorUsedError;
@@ -95,8 +97,8 @@ abstract class $FirestoreTalkCopyWith<$Res> {
       String? url,
       String? localUrl,
       int duration,
-      DateTime createdAt,
-      DateTime publishedAt,
+      @TimestampConverter() DateTime? createdAt,
+      @TimestampConverter() DateTime? publishedAt,
       bool isPublic,
       int playNumber,
       int likeNumber});
@@ -163,11 +165,11 @@ class _$FirestoreTalkCopyWithImpl<$Res>
       createdAt: createdAt == freezed
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
       publishedAt: publishedAt == freezed
           ? _value.publishedAt
           : publishedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
       isPublic: isPublic == freezed
           ? _value.isPublic
           : isPublic // ignore: cast_nullable_to_non_nullable
@@ -200,8 +202,8 @@ abstract class _$FirestoreTalkCopyWith<$Res>
       String? url,
       String? localUrl,
       int duration,
-      DateTime createdAt,
-      DateTime publishedAt,
+      @TimestampConverter() DateTime? createdAt,
+      @TimestampConverter() DateTime? publishedAt,
       bool isPublic,
       int playNumber,
       int likeNumber});
@@ -270,11 +272,11 @@ class __$FirestoreTalkCopyWithImpl<$Res>
       createdAt: createdAt == freezed
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
       publishedAt: publishedAt == freezed
           ? _value.publishedAt
           : publishedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
       isPublic: isPublic == freezed
           ? _value.isPublic
           : isPublic // ignore: cast_nullable_to_non_nullable
@@ -304,8 +306,8 @@ class _$_FirestoreTalk with DiagnosticableTreeMixin implements _FirestoreTalk {
       this.url,
       this.localUrl,
       required this.duration,
-      required this.createdAt,
-      required this.publishedAt,
+      @TimestampConverter() this.createdAt,
+      @TimestampConverter() this.publishedAt,
       required this.isPublic,
       required this.playNumber,
       required this.likeNumber});
@@ -330,9 +332,11 @@ class _$_FirestoreTalk with DiagnosticableTreeMixin implements _FirestoreTalk {
   @override
   final int duration;
   @override
-  final DateTime createdAt;
+  @TimestampConverter()
+  final DateTime? createdAt;
   @override
-  final DateTime publishedAt;
+  @TimestampConverter()
+  final DateTime? publishedAt;
   @override
   final bool isPublic;
   @override
@@ -445,8 +449,8 @@ abstract class _FirestoreTalk implements FirestoreTalk {
       String? url,
       String? localUrl,
       required int duration,
-      required DateTime createdAt,
-      required DateTime publishedAt,
+      @TimestampConverter() DateTime? createdAt,
+      @TimestampConverter() DateTime? publishedAt,
       required bool isPublic,
       required int playNumber,
       required int likeNumber}) = _$_FirestoreTalk;
@@ -471,9 +475,11 @@ abstract class _FirestoreTalk implements FirestoreTalk {
   @override
   int get duration => throw _privateConstructorUsedError;
   @override
-  DateTime get createdAt => throw _privateConstructorUsedError;
+  @TimestampConverter()
+  DateTime? get createdAt => throw _privateConstructorUsedError;
   @override
-  DateTime get publishedAt => throw _privateConstructorUsedError;
+  @TimestampConverter()
+  DateTime? get publishedAt => throw _privateConstructorUsedError;
   @override
   bool get isPublic => throw _privateConstructorUsedError;
   @override
