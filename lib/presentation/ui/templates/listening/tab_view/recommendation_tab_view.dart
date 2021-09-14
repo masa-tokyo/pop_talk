@@ -1,4 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pop_talk/domain/model/talk_item.dart';
+import 'package:pop_talk/presentation/notifier/player.dart';
+import 'package:pop_talk/presentation/notifier/talk_list.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pop_talk/presentation/ui/utils/functions.dart';
 
 class RecommendationTabView extends StatelessWidget {
   const RecommendationTabView({Key? key}) : super(key: key);
@@ -7,43 +15,56 @@ class RecommendationTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).primaryColor;
 
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(30),
-            child: Container(
-              decoration: _decoration(primaryColor),
-              child: Column(
-                children: [
-                  _topicCard(context),
-                  _aboutTopicItem(),
-                  _audioPlayer(),
-                  const SizedBox(
-                    height: 40,
+    Future(() => _init(context));
+
+    return Consumer(
+        builder: (_, watch, __) {
+          final talkListNotifier = watch(talkListProvider);
+          final playerNotifier = watch(playerProvider);
+
+          if (talkListNotifier.recommendLists == null) {
+            return
+                  const Center(child: CircularProgressIndicator())
+            ;
+          }
+          final talkItem =
+          talkListNotifier.recommendLists![talkListNotifier.currentIndex];
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(26),
+                child: Container(
+                  decoration: _decoration(primaryColor),
+                  child: Column(
+                    children: [
+                      _topicCard(context, talkItem),
+                      _aboutTopicItem(talkItem),
+                      _audioPlayer(context, playerNotifier, talkListNotifier),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            _followButton(),
+                            const SizedBox(
+                              width: 15,
+                            ),
+                            _likeButton(),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        _followButton(),
-                        const SizedBox(width: 15,),
-                        _likeButton(),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          _miniPlayer(),
-        ],
-      ),
-    );
+              //_miniPlayer(),
+            ],
+          );
+        },
+      );
   }
 
   BoxDecoration _decoration(Color primaryColor) {
@@ -63,7 +84,7 @@ class RecommendationTabView extends StatelessWidget {
     );
   }
 
-  Widget _topicCard(BuildContext context) {
+  Widget _topicCard(BuildContext context, TalkItem talkItem) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
@@ -78,12 +99,11 @@ class RecommendationTabView extends StatelessWidget {
         ),
         child: Column(
           children: [
-            _userImage(),
-            const Center(
-              // TODO(any): pass topicName data
+            _userImage(talkItem),
+            Center(
               child: Text(
-                '面白かったこと',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                talkItem.topicName,
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             )
           ],
@@ -92,7 +112,7 @@ class RecommendationTabView extends StatelessWidget {
     );
   }
 
-  Widget _userImage() {
+  Widget _userImage(TalkItem talkItem) {
     return Align(
       alignment: Alignment.topRight,
       child: Padding(
@@ -105,15 +125,12 @@ class RecommendationTabView extends StatelessWidget {
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.orange),
                   shape: BoxShape.circle,
-                  image: const DecorationImage(
+                  image: DecorationImage(
                       fit: BoxFit.fill,
-
-                      // TODO(any): pass the data about createdUser
-                      image:
-                          NetworkImage('https://picsum.photos/250?image=9'))),
+                      image: NetworkImage(talkItem.createdUser.photoUrl))),
             ),
-            const Text('山田太郎',
-                style: TextStyle(
+            Text(talkItem.createdUser.name,
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                 )),
           ],
@@ -122,77 +139,156 @@ class RecommendationTabView extends StatelessWidget {
     );
   }
 
-  Widget _aboutTopicItem() {
+  Widget _aboutTopicItem(TalkItem talkItem) {
     return Column(
-      children: const [
+      children: [
         Center(
             child: Text(
-          'ヒカルについて',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          talkItem.title ?? '無題',
+          style: const TextStyle(fontWeight: FontWeight.bold),
         )),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
+        // TODO(any): 詳細表示
         Center(
             child: Text(
-          'テキストテキストテキスト',
+          talkItem.description ?? '',
         )),
       ],
     );
   }
 
-  Widget _audioPlayer() {
-    double _currentValue = 45;
+  Widget _audioPlayer(BuildContext context, PlayerNotifier playerNotifier,
+      TalkListNotifier talkListNotifier) {
+    final primaryColor = Theme.of(context).primaryColor;
 
     return Column(
       children: [
-        Slider(
-          value: _currentValue,
-          min: 0,
-          max: 100,
-          label: _currentValue.round().toString(),
-          onChanged: (double value) {
-            // setState(() {
-            //   _currentValue = value.roundToDouble();
-            // });
-          },
-          activeColor: Colors.deepOrangeAccent,
-          inactiveColor: Colors.grey[300],
-        ),
-        const SizedBox(
-          height: 15,
-        ),
+        _slider(context, playerNotifier),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 3),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
+                  onPressed: () {
+                    talkListNotifier.toPreviousTalk();
+                    playerNotifier.seekToPrevious();
+                  },
+                  icon: Icon(
                     Icons.arrow_back_ios,
                     size: 50,
-                    color: Colors.deepOrangeAccent,
+                    color: talkListNotifier.currentIndex > 0
+                        ? primaryColor
+                        : Colors.grey,
                   )),
+              _playButton(context, playerNotifier),
               IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.play_circle_fill_outlined,
-                    size: 50,
-                    color: Colors.deepOrangeAccent,
-                  )),
-              IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
+                  onPressed: () {
+                    talkListNotifier.toNextTalk();
+                    playerNotifier.seekToNext();
+                  },
+                  icon: Icon(
                     Icons.arrow_forward_ios,
                     size: 50,
-                    color: Colors.deepOrangeAccent,
+                    color: talkListNotifier.currentIndex <
+                            talkListNotifier.recommendLists!.length - 1
+                        ? primaryColor
+                        : Colors.grey,
                   )),
             ],
           ),
         ),
       ],
     );
+  }
+
+  Widget _slider(BuildContext context, PlayerNotifier playerNotifier) {
+    final primaryColor = Theme.of(context).primaryColor;
+    final position = playerNotifier.position;
+    final duration = playerNotifier.duration;
+
+    return Column(children: [
+      Slider(
+        value: duration.inSeconds == 0
+            ? 0
+            : position.inSeconds / duration.inSeconds,
+        onChanged: (value) {
+          final newPosition = value * duration.inSeconds;
+          playerNotifier.seek(newPosition.toInt());
+        },
+        activeColor: primaryColor,
+        inactiveColor: Colors.grey[300],
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              convertDurationToString(position),
+              style: TextStyle(
+                  fontSize: Theme.of(context).textTheme.headline5!.fontSize),
+            ),
+            Text(
+              convertDurationToString(duration),
+              style: TextStyle(
+                  fontSize: Theme.of(context).textTheme.headline5!.fontSize),
+            ),
+          ],
+        ),
+      )
+    ]);
+  }
+
+  Widget _playButton(BuildContext context, PlayerNotifier playerNotifier) {
+    final buttonState = playerNotifier.playerButtonState;
+    final primaryColor = Theme.of(context).primaryColor;
+
+    Widget icon;
+    switch (buttonState) {
+      case PlayerButtonState.loading:
+        icon = const SizedBox(
+          width: 24,
+          height: 24,
+          child: Center(
+            child: CircularProgressIndicator(
+              color: Colors.white,
+            ),
+          ),
+        );
+        break;
+      case PlayerButtonState.playing:
+        icon = const FaIcon(
+          FontAwesomeIcons.pause,
+          size: 24,
+        );
+        break;
+      case PlayerButtonState.paused:
+        icon = const FaIcon(
+          FontAwesomeIcons.play,
+          size: 24,
+        );
+    }
+
+    return SizedBox(
+        width: 80,
+        height: 80,
+        child: ElevatedButton(
+          onPressed: () {
+            if (buttonState == PlayerButtonState.paused) {
+              playerNotifier.play();
+            } else if (buttonState == PlayerButtonState.playing) {
+              playerNotifier.pause();
+            }
+          },
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(primaryColor),
+              shape: MaterialStateProperty.all(
+                  CircleBorder(side: BorderSide(color: primaryColor)))),
+          child: icon,
+        ));
   }
 
   Widget _followButton() {
@@ -232,69 +328,86 @@ class RecommendationTabView extends StatelessWidget {
   }
 
   // TODO(any): グローバルナビまたいで全箇所（PostRecordingScreen以外)で表示
-  Widget _miniPlayer() {
-    return Column(
-      children: [
-        const Divider(
-          color: Colors.black26,
-          thickness: 1,
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            children: [
-              Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.orange),
-                    shape: BoxShape.circle,
-                    image: const DecorationImage(
-                        fit: BoxFit.fill,
-                        image:
-                            NetworkImage('https://picsum.photos/250?image=9'))),
-              ),
-              Expanded(
-                child: Column(
-                  children: const [
-                    Text('山田太郎',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        )),
-                    Icon(
-                      Icons.clear_outlined,
-                      color: Color(0xFFBDBDBD),
-                      size: 10,
-                    ),
-                    Text('人生で一番恥ずかしかったこと',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        )),
-                  ],
-                ),
-              ),
-              Row(
-                children: [
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.pause,
-                        size: 25,
-                        color: Color(0xFFBDBDBD),
-                      )),
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.favorite,
-                        size: 25,
-                        color: Color(0xFFBDBDBD),
-                      )),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
+  // Widget _miniPlayer() {
+  //   return Column(
+  //     children: [
+  //       const Divider(
+  //         color: Colors.black26,
+  //         thickness: 1,
+  //       ),
+  //       Padding(
+  //         padding: const EdgeInsets.all(8),
+  //         child: Row(
+  //           children: [
+  //             Container(
+  //               width: 50,
+  //               height: 50,
+  //               decoration: BoxDecoration(
+  //                   border: Border.all(color: Colors.orange),
+  //                   shape: BoxShape.circle,
+  //                   image: const DecorationImage(
+  //                       fit: BoxFit.fill,
+  //                       image:
+  //                           NetworkImage('https://picsum.photos/250?image=9'))),
+  //             ),
+  //             Expanded(
+  //               child: Column(
+  //                 children: const [
+  //                   Text('山田太郎',
+  //                       style: TextStyle(
+  //                         fontWeight: FontWeight.bold,
+  //                       )),
+  //                   Icon(
+  //                     Icons.clear_outlined,
+  //                     color: Color(0xFFBDBDBD),
+  //                     size: 10,
+  //                   ),
+  //                   Text('人生で一番恥ずかしかったこと',
+  //                       style: TextStyle(
+  //                         fontWeight: FontWeight.bold,
+  //                       )),
+  //                 ],
+  //               ),
+  //             ),
+  //             Row(
+  //               children: [
+  //                 IconButton(
+  //                     onPressed: () {},
+  //                     icon: const Icon(
+  //                       Icons.pause,
+  //                       size: 25,
+  //                       color: Color(0xFFBDBDBD),
+  //                     )),
+  //                 IconButton(
+  //                     onPressed: () {},
+  //                     icon: const Icon(
+  //                       Icons.favorite,
+  //                       size: 25,
+  //                       color: Color(0xFFBDBDBD),
+  //                     )),
+  //               ],
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+
+  Future<void> _init(BuildContext context) async {
+    final talkListNotifier = context.read(talkListProvider);
+    final recommendedTalks = talkListNotifier.recommendLists;
+    if (recommendedTalks == null) {
+      await talkListNotifier.fetchRecommendLists();
+    }
+
+    final playerNotifier = context.read(playerProvider);
+    final urls = await talkListNotifier.returnUrls();
+    await playerNotifier.initPlayer(
+        playType: AudioPlayType.playlist, urls: urls);
+
+    playerNotifier.addListener(() {
+      talkListNotifier.updateCurrentIndex(playerNotifier.currentIndex);
+    });
   }
 }
