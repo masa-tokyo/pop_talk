@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pop_talk/domain/model/talk_topic.dart';
 import 'package:pop_talk/presentation/notifier/recording.dart';
 import 'package:pop_talk/presentation/ui/pages/register.dart';
 import 'package:pop_talk/presentation/ui/templates/talk/after_recording_page.dart';
@@ -23,9 +24,9 @@ enum ScreenState {
 class PostRecordingScreen extends StatefulWidget {
   const PostRecordingScreen({
     required this.talkTopicId,
-    required this.talkTopicName});
+    required this.talkTopic});
   final String talkTopicId;
-  final String talkTopicName;
+  final TalkTopic talkTopic;
 
   @override
   _PostRecordingScreenState createState() => _PostRecordingScreenState();
@@ -102,19 +103,20 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
       case ScreenState.beforeRecording:
         page = BeforeRecordingPage(
             onRecordingButtonPressed: _onRecordingButtonPressed,
-            talkTopicName: widget.talkTopicName,);
+            talkTopicName: widget.talkTopic.name,);
         break;
       case ScreenState.duringRecording:
         page = DuringRecordingPage(
             onStopButtonPressed: _onStopButtonPressed,
             stream: _flutterSoundRecorder.onProgress!,
-            talkTopicName: widget.talkTopicName,);
+            talkTopicName: widget.talkTopic.name,);
         break;
       case ScreenState.afterRecording:
         page = AfterRecordingPage(
             onAgainButtonPressed: _onAgainButtonPressed,
             onEditButtonPressed: _onEditButtonPressed,
-            talkTopicName: widget.talkTopicName,);
+            talkTopic: widget.talkTopic,
+            path: _path,);
         break;
       case ScreenState.edit:
         page = TalkEditPage(
@@ -122,7 +124,7 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
             descriptionController: _descriptionController,
             onPostButtonPressed: _onPostButtonPressed,
             onDraftSaveButtonPressed: _onDraftSaveButtonPressed,
-            talkTopicName: widget.talkTopicName,);
+            talkTopicName: widget.talkTopic.name,);
         break;
     }
     return page;
