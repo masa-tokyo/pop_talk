@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
+import 'package:pop_talk/presentation/notifier/auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pop_talk/presentation/notifier/talk_list.dart';
 
 class ListeningTile extends StatelessWidget {
   const ListeningTile({
@@ -10,13 +13,10 @@ class ListeningTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
     return Container(
-      width: width * 0.97,
-      height: height * 0.1,
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
       decoration: BoxDecoration(
-        border: Border.all(width: 1, color: Colors.deepOrangeAccent),
+        border: Border.all(width: 1, color: Theme.of(context).primaryColor),
         color: Colors.white,
         borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(10),
@@ -79,13 +79,29 @@ class ListeningTile extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.favorite_border,
+                    Consumer(builder: (context, watch, _) {
+                      final _authNotifier = watch(authProvider);
+                      final _currentUser = _authNotifier.currentUser!;
+                      if (_currentUser.alreadyLikeTalk(talkItem.id)) {
+                        return Icon(
+                          Icons.favorite,
                           size: 20,
-                          color: Color(0xFFBDBDBD),
-                        )),
+                          color: Theme.of(context).primaryColor,
+                        );
+                      } else {
+                        return InkWell(
+                          onTap: () {
+                            _authNotifier.likeTalk(talkItem);
+                            context.read(talkListProvider).fetchLikeLists();
+                          },
+                          child: const Icon(
+                            Icons.favorite_border,
+                            size: 20,
+                            color: Color(0xFFBDBDBD),
+                          ),
+                        );
+                      }
+                    }),
                   ],
                 ),
               ],

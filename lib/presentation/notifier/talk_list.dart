@@ -72,7 +72,7 @@ class TalkListNotifier with ChangeNotifier {
 
 final talkListProvider = ChangeNotifierProvider<TalkListNotifier>(
   (ref) {
-    final authNotifier = ref.watch(authProvider);
+    final authNotifier = ref.read(authProvider);
     if (authNotifier.currentUser == null) {
       throw ArgumentError('currentUserが作成される前にtalkListProviderを作成できません.');
     }

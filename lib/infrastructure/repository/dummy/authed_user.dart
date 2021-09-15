@@ -14,4 +14,15 @@ class DummyAuthedUserRepository implements AuthedUserRepository {
       followerNumber: 2,
     );
   }
+
+  @override
+  Future<void> likeTalk(AuthedUser user, String talkId) async {
+    return;
+  }
+
+  @override
+  Future<void> followUser(AuthedUser user, String userId) async {
+    return;
+  }
+
 }

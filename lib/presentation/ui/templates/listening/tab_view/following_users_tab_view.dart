@@ -23,11 +23,10 @@ class _FollowingUsersTabViewState extends State<FollowingUsersTabView> {
           return const Center(child: Text('まだフォローしたユーザーのトークがありません.'));
         }
         return ListView.builder(
-          physics: const NeverScrollableScrollPhysics(),
           itemCount: talks.length,
           itemBuilder: (BuildContext context, int i) {
             return Padding(
-              padding: const EdgeInsets.all(15),
+              padding: const EdgeInsets.all(10),
               child: ListeningTile(
                 talkItem: talks[i],
               ),
