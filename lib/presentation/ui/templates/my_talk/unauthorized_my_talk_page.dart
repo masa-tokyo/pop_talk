@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/presentation/ui/organisms/talk_tile.dart';
 import 'package:pop_talk/presentation/ui/pages/register.dart';
@@ -10,17 +11,15 @@ class UnauthorizedMyTalkPage extends StatelessWidget {
   final List<TalkItem> savedTalkItems;
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
       child: SizedBox(
-        width: width,
+        width: double.infinity,
         child: Column(
           children: [
             Container(
               margin: const EdgeInsets.only(bottom: 16),
               color: Colors.white,
-              height: height * 0.20,
+              constraints: const BoxConstraints(minHeight: 140, maxWidth: 565),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -33,10 +32,8 @@ class UnauthorizedMyTalkPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       ConstrainedBox(
-                        constraints: BoxConstraints.tightFor(
-                          width: width * 0.36,
-                          height: height * 0.06,
-                        ),
+                        constraints:
+                            const BoxConstraints(maxWidth: 150, minHeight: 20),
                         child: ElevatedButton(
                           onPressed: () => _showModalBottomSheet(
                             context: context,
@@ -46,8 +43,11 @@ class UnauthorizedMyTalkPage extends StatelessWidget {
                               .elevatedButtonTheme
                               .style
                               ?.copyWith(
-                                padding:
-                                    MaterialStateProperty.all(EdgeInsets.zero),
+                                padding: MaterialStateProperty.all(
+                                    const EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal: 32,
+                                )),
                                 backgroundColor: MaterialStateProperty.all(
                                     Theme.of(context).primaryColor),
                               ),
@@ -55,10 +55,8 @@ class UnauthorizedMyTalkPage extends StatelessWidget {
                         ),
                       ),
                       ConstrainedBox(
-                        constraints: BoxConstraints.tightFor(
-                          width: width * 0.36,
-                          height: height * 0.06,
-                        ),
+                        constraints:
+                            const BoxConstraints(maxWidth: 150, minHeight: 20),
                         child: ElevatedButton(
                             onPressed: () => _showModalBottomSheet(
                                   context: context,
@@ -69,7 +67,10 @@ class UnauthorizedMyTalkPage extends StatelessWidget {
                                 .style
                                 ?.copyWith(
                                   padding: MaterialStateProperty.all(
-                                      EdgeInsets.zero),
+                                      const EdgeInsets.symmetric(
+                                    vertical: 8,
+                                    horizontal: 32,
+                                  )),
                                   backgroundColor: MaterialStateProperty.all(
                                       Theme.of(context).primaryColor),
                                 ),
@@ -80,9 +81,9 @@ class UnauthorizedMyTalkPage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(
-              height: height * 0.20 * savedTalkItems.length,
-              width: width * 0.90,
+            Container(
+              height: (175 * savedTalkItems.length).toDouble(),
+              constraints: const BoxConstraints(maxWidth: 600),
               child: ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: savedTalkItems.length,
