@@ -132,7 +132,7 @@ class TalkTile extends StatelessWidget {
                             maxLines: 2,
                           ),
                           Text(
-                              '${talkItem.publishedAt?.year}/${talkItem.publishedAt?.month}/${talkItem.publishedAt?.day} 保存')
+                              '${talkItem.createdAt.year}/${talkItem.createdAt.month}/${talkItem.createdAt.day} 保存')
                         ],
                       ),
                     ),
