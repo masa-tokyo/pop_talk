@@ -16,6 +16,10 @@ class TalkListNotifier with ChangeNotifier {
   List<TalkItem>? followLists;
   List<TalkItem>? likeLists;
 
+  List<String> urls = <String>[];
+
+  int currentIndex = 0;
+
   Future<void> fetchRecommendLists() async {
     recommendLists = await _repository.fetchRecommendLists();
     notifyListeners();
@@ -32,6 +36,38 @@ class TalkListNotifier with ChangeNotifier {
     likeLists = await _repository.fetchByIds(likeTalkIds);
     notifyListeners();
   }
+
+  Future<List<String>> returnUrls() async{
+    recommendLists!.forEach((element) {
+      if(element.url == null) {
+        ArgumentError('url is null');
+      } else {
+        urls.add(element.url!);
+      }
+    });
+    return urls;
+  }
+
+  Future<void> toNextTalk() async{
+    if(currentIndex < recommendLists!.length - 1){
+      currentIndex ++;
+      notifyListeners();
+    }
+
+  }
+
+  Future<void> toPreviousTalk() async{
+    if(currentIndex > 0) {
+      currentIndex = currentIndex - 1;
+      notifyListeners();
+    }
+  }
+
+  Future<void> updateCurrentIndex(int index) async{
+    currentIndex = index;
+    notifyListeners();
+  }
+
 }
 
 final talkListProvider = ChangeNotifierProvider<TalkListNotifier>(
