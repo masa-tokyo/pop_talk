@@ -14,10 +14,6 @@ class RecordingPreviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).primaryColor;
-    final playerNotifier = context.read(playerProvider);
-
-    Future(() =>
-        playerNotifier.initPlayer(playType: AudioPlayType.file, path: path));
 
     return Container(
       decoration: _decoration(primaryColor),
@@ -166,21 +162,22 @@ class RecordingPreviewCard extends StatelessWidget {
     }
 
     return SizedBox(
-        width: 80,
-        height: 80,
-        child: ElevatedButton(
-          onPressed: () {
-            if (buttonState == PlayerButtonState.paused) {
-              playerNotifier.play();
-            } else if (buttonState == PlayerButtonState.playing) {
-              playerNotifier.pause();
-            }
-          },
-          style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(primaryColor),
-              shape: MaterialStateProperty.all(
-                  CircleBorder(side: BorderSide(color: primaryColor)))),
-          child: icon,
-        ));
+      width: 80,
+      height: 80,
+      child: ElevatedButton(
+        onPressed: () {
+          if (buttonState == PlayerButtonState.paused) {
+            playerNotifier.play();
+          } else if (buttonState == PlayerButtonState.playing) {
+            playerNotifier.pause();
+          }
+        },
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(primaryColor),
+            shape: MaterialStateProperty.all(
+                CircleBorder(side: BorderSide(color: primaryColor)))),
+        child: icon,
+      ),
+    );
   }
 }

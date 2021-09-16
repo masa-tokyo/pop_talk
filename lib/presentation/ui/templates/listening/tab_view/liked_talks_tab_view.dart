@@ -26,7 +26,7 @@ class _LikedTalksTabViewState extends State<LikedTalksTabView> {
           itemCount: talks.length,
           itemBuilder: (BuildContext context, int i) {
             return Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(6),
               child: ListeningTile(
                 talkItem: talks[i],
               ),
