@@ -27,6 +27,7 @@ class _TopPageState extends State<TopPage> {
         child: _pageList[_selectedIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Theme.of(context).primaryColor,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.headphones),

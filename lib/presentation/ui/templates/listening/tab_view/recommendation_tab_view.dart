@@ -3,68 +3,75 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
+import 'package:pop_talk/presentation/notifier/auth.dart';
 import 'package:pop_talk/presentation/notifier/player.dart';
 import 'package:pop_talk/presentation/notifier/talk_list.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pop_talk/presentation/ui/utils/functions.dart';
 
-class RecommendationTabView extends StatelessWidget {
+class RecommendationTabView extends StatefulWidget {
   const RecommendationTabView({Key? key}) : super(key: key);
+
+  @override
+  _RecommendationTabViewState createState() => _RecommendationTabViewState();
+}
+
+class _RecommendationTabViewState extends State<RecommendationTabView> {
+  @override
+  void initState() {
+    _init();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).primaryColor;
 
-    Future(() => _init(context));
-
     return Consumer(
-        builder: (_, watch, __) {
-          final talkListNotifier = watch(talkListProvider);
-          final playerNotifier = watch(playerProvider);
+      builder: (_, watch, __) {
+        final talkListNotifier = watch(talkListProvider);
+        final playerNotifier = watch(playerProvider);
 
-          if (talkListNotifier.recommendLists == null) {
-            return
-                  const Center(child: CircularProgressIndicator())
-            ;
-          }
-          final talkItem =
-          talkListNotifier.recommendLists![talkListNotifier.currentIndex];
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(26),
-                child: Container(
-                  decoration: _decoration(primaryColor),
-                  child: Column(
-                    children: [
-                      _topicCard(context, talkItem),
-                      _aboutTopicItem(talkItem),
-                      _audioPlayer(context, playerNotifier, talkListNotifier),
-                      const SizedBox(
-                        height: 30,
+        if (talkListNotifier.recommendLists == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        final talkItem =
+            talkListNotifier.recommendLists![playerNotifier.currentIndex];
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(26),
+              child: Container(
+                decoration: _decoration(primaryColor),
+                child: Column(
+                  children: [
+                    _topicCard(context, talkItem),
+                    _aboutTopicItem(talkItem),
+                    _audioPlayer(context, playerNotifier, talkListNotifier),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          _followButton(talkItem),
+                          const SizedBox(width: 15),
+                          _likeButton(talkItem),
+                          const SizedBox(width: 15),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            _followButton(),
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            _likeButton(),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-              //_miniPlayer(),
-            ],
-          );
-        },
-      );
+            ),
+            //_miniPlayer(),
+          ],
+        );
+      },
+    );
   }
 
   BoxDecoration _decoration(Color primaryColor) {
@@ -123,16 +130,20 @@ class RecommendationTabView extends StatelessWidget {
               width: 50,
               height: 50,
               decoration: BoxDecoration(
-                  border: Border.all(color: Colors.orange),
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                      fit: BoxFit.fill,
-                      image: NetworkImage(talkItem.createdUser.photoUrl))),
+                border: Border.all(color: Colors.orange),
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: NetworkImage(talkItem.createdUser.photoUrl),
+                ),
+              ),
             ),
-            Text(talkItem.createdUser.name,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                )),
+            Text(
+              talkItem.createdUser.name,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ],
         ),
       ),
@@ -159,8 +170,11 @@ class RecommendationTabView extends StatelessWidget {
     );
   }
 
-  Widget _audioPlayer(BuildContext context, PlayerNotifier playerNotifier,
-      TalkListNotifier talkListNotifier) {
+  Widget _audioPlayer(
+    BuildContext context,
+    PlayerNotifier playerNotifier,
+    TalkListNotifier talkListNotifier,
+  ) {
     final primaryColor = Theme.of(context).primaryColor;
 
     return Column(
@@ -171,32 +185,33 @@ class RecommendationTabView extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              IconButton(
-                  onPressed: () {
-                    talkListNotifier.toPreviousTalk();
-                    playerNotifier.seekToPrevious();
-                  },
-                  icon: Icon(
-                    Icons.arrow_back_ios,
-                    size: 50,
-                    color: talkListNotifier.currentIndex > 0
-                        ? primaryColor
-                        : Colors.grey,
-                  )),
-              _playButton(context, playerNotifier),
-              IconButton(
-                  onPressed: () {
-                    talkListNotifier.toNextTalk();
-                    playerNotifier.seekToNext();
-                  },
-                  icon: Icon(
+              InkWell(
+                onTap: () {
+                  playerNotifier.seekToPrevious();
+                },
+                // なぜかarrow_back_iosを使うと左に寄るのでforwardを180度反転
+                child: RotatedBox(
+                  quarterTurns: 2,
+                  child: Icon(
                     Icons.arrow_forward_ios,
                     size: 50,
-                    color: talkListNotifier.currentIndex <
-                            talkListNotifier.recommendLists!.length - 1
+                    color: playerNotifier.hasPrevious()
                         ? primaryColor
                         : Colors.grey,
-                  )),
+                  ),
+                ),
+              ),
+              _playButton(context, playerNotifier),
+              InkWell(
+                onTap: () {
+                  playerNotifier.seekToNext();
+                },
+                child: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 50,
+                  color: playerNotifier.hasNext() ? primaryColor : Colors.grey,
+                ),
+              ),
             ],
           ),
         ),
@@ -273,128 +288,117 @@ class RecommendationTabView extends StatelessWidget {
     }
 
     return SizedBox(
-        width: 80,
-        height: 80,
-        child: ElevatedButton(
-          onPressed: () {
-            if (buttonState == PlayerButtonState.paused) {
-              playerNotifier.play();
-            } else if (buttonState == PlayerButtonState.playing) {
-              playerNotifier.pause();
-            }
-          },
-          style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(primaryColor),
-              shape: MaterialStateProperty.all(
-                  CircleBorder(side: BorderSide(color: primaryColor)))),
-          child: icon,
-        ));
-  }
-
-  Widget _followButton() {
-    return OutlinedButton.icon(
-      onPressed: () {},
-      style: OutlinedButton.styleFrom(
-        side: const BorderSide(width: 1, color: Colors.black),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+      width: 80,
+      height: 80,
+      child: ElevatedButton(
+        onPressed: () {
+          if (buttonState == PlayerButtonState.paused) {
+            playerNotifier.play();
+          } else if (buttonState == PlayerButtonState.playing) {
+            playerNotifier.pause();
+          }
+        },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(primaryColor),
+          shape: MaterialStateProperty.all(
+              CircleBorder(side: BorderSide(color: primaryColor))),
         ),
-        primary: Colors.black,
-      ),
-      label: const Text('フォロー'),
-      icon: const Icon(
-        Icons.person_add,
+        child: icon,
       ),
     );
   }
 
-  Widget _likeButton() {
-    return Padding(
-      padding: const EdgeInsets.only(right: 15),
-      child: OutlinedButton.icon(
-        onPressed: () {},
-        style: OutlinedButton.styleFrom(
-            side: const BorderSide(width: 1, color: Colors.black),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            primary: Colors.black),
-        label: const Text('いいね'),
-        icon: const Icon(
-          Icons.favorite,
-        ),
-      ),
+  Widget _followButton(TalkItem talk) {
+    return Consumer(
+      builder: (context, watch, _) {
+        final _authNotifier = watch(authProvider);
+        return _authNotifier.currentUser!.alreadyFollowUser(talk.createdUser.id)
+            ? ElevatedButton.icon(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                ),
+                label: const Text('フォロー中'),
+                icon: const Icon(
+                  Icons.person_add,
+                  color: Colors.white,
+                ),
+              )
+            : OutlinedButton.icon(
+                onPressed: () async {
+                  await _authNotifier.followUser(talk.createdUser);
+                  await context.read(talkListProvider).fetchFollowLists();
+                },
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(
+                    width: 1,
+                    color: Colors.grey[800]!,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  primary: Colors.grey[800],
+                ),
+                label: const Text('フォロー'),
+                icon: Icon(
+                  Icons.person_add,
+                  color: Colors.grey[800],
+                ),
+              );
+      },
     );
   }
 
-  // TODO(any): グローバルナビまたいで全箇所（PostRecordingScreen以外)で表示
-  // Widget _miniPlayer() {
-  //   return Column(
-  //     children: [
-  //       const Divider(
-  //         color: Colors.black26,
-  //         thickness: 1,
-  //       ),
-  //       Padding(
-  //         padding: const EdgeInsets.all(8),
-  //         child: Row(
-  //           children: [
-  //             Container(
-  //               width: 50,
-  //               height: 50,
-  //               decoration: BoxDecoration(
-  //                   border: Border.all(color: Colors.orange),
-  //                   shape: BoxShape.circle,
-  //                   image: const DecorationImage(
-  //                       fit: BoxFit.fill,
-  //                       image:
-  //                           NetworkImage('https://picsum.photos/250?image=9'))),
-  //             ),
-  //             Expanded(
-  //               child: Column(
-  //                 children: const [
-  //                   Text('山田太郎',
-  //                       style: TextStyle(
-  //                         fontWeight: FontWeight.bold,
-  //                       )),
-  //                   Icon(
-  //                     Icons.clear_outlined,
-  //                     color: Color(0xFFBDBDBD),
-  //                     size: 10,
-  //                   ),
-  //                   Text('人生で一番恥ずかしかったこと',
-  //                       style: TextStyle(
-  //                         fontWeight: FontWeight.bold,
-  //                       )),
-  //                 ],
-  //               ),
-  //             ),
-  //             Row(
-  //               children: [
-  //                 IconButton(
-  //                     onPressed: () {},
-  //                     icon: const Icon(
-  //                       Icons.pause,
-  //                       size: 25,
-  //                       color: Color(0xFFBDBDBD),
-  //                     )),
-  //                 IconButton(
-  //                     onPressed: () {},
-  //                     icon: const Icon(
-  //                       Icons.favorite,
-  //                       size: 25,
-  //                       color: Color(0xFFBDBDBD),
-  //                     )),
-  //               ],
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
+  Widget _likeButton(TalkItem talk) {
+    return Consumer(
+      builder: (context, watch, _) {
+        final _authNotifier = watch(authProvider);
+        return _authNotifier.currentUser!.alreadyLikeTalk(talk.id)
+            ? ElevatedButton.icon(
+                onPressed: () {},
+                style: OutlinedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                ),
+                label: const Text('いいね'),
+                icon: const Icon(
+                  Icons.favorite,
+                  color: Colors.white,
+                ),
+              )
+            : OutlinedButton.icon(
+                onPressed: () async {
+                  await _authNotifier.likeTalk(talk);
+                  await context.read(talkListProvider).fetchLikeLists();
+                },
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(
+                    width: 1,
+                    color: Colors.grey[800]!,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  primary: Colors.grey[800],
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                ),
+                label: const Text('いいね'),
+                icon: Icon(
+                  Icons.favorite_border,
+                  color: Colors.grey[800],
+                ),
+              );
+      },
+    );
+  }
 
-  Future<void> _init(BuildContext context) async {
+  Future<void> _init() async {
     final talkListNotifier = context.read(talkListProvider);
     final recommendedTalks = talkListNotifier.recommendLists;
     if (recommendedTalks == null) {
@@ -402,12 +406,8 @@ class RecommendationTabView extends StatelessWidget {
     }
 
     final playerNotifier = context.read(playerProvider);
-    final urls = await talkListNotifier.returnUrls();
     await playerNotifier.initPlayer(
-        playType: AudioPlayType.playlist, urls: urls);
-
-    playerNotifier.addListener(() {
-      talkListNotifier.updateCurrentIndex(playerNotifier.currentIndex);
-    });
+      talks: talkListNotifier.recommendLists!,
+    );
   }
 }

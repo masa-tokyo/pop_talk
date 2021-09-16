@@ -23,11 +23,10 @@ class _LikedTalksTabViewState extends State<LikedTalksTabView> {
           return const Center(child: Text('まだライクしたトークがありません.'));
         }
         return ListView.builder(
-          physics: const NeverScrollableScrollPhysics(),
           itemCount: talks.length,
           itemBuilder: (BuildContext context, int i) {
             return Padding(
-              padding: const EdgeInsets.all(15),
+              padding: const EdgeInsets.all(6),
               child: ListeningTile(
                 talkItem: talks[i],
               ),

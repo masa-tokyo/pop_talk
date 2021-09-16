@@ -38,6 +38,11 @@ class TalkItem extends Object {
 
   @override
   int get hashCode => id.hashCode;
+
+  Uri get uri {
+    return isPublic ? Uri.parse(url!) : Uri.file(localUrl!);
+  }
+
 }
 
 class TalkUser {

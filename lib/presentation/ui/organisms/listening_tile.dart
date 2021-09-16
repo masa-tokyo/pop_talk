@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
+import 'package:pop_talk/presentation/notifier/auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pop_talk/presentation/notifier/talk_list.dart';
 
 class ListeningTile extends StatelessWidget {
   const ListeningTile({
@@ -10,88 +13,94 @@ class ListeningTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
-    return Container(
-      width: width * 0.97,
-      height: height * 0.1,
-      decoration: BoxDecoration(
-        border: Border.all(width: 1, color: Colors.deepOrangeAccent),
-        color: Colors.white,
-        borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(10),
-            topRight: Radius.circular(10),
-            bottomLeft: Radius.circular(10),
-            bottomRight: Radius.circular(10)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 5,
-            blurRadius: 7,
-            offset: const Offset(0, 3), // changes position of shadow
-          ),
-        ],
+    return Card(
+      shape: RoundedRectangleBorder(
+        side: BorderSide(
+          color: Theme.of(context).primaryColor,
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(12),
       ),
-      child: Column(
-        children: [
-          Stack(
-            children: [
-              Align(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                Align(
                   alignment: Alignment.topRight,
                   child: Padding(
                     padding: const EdgeInsets.only(right: 3),
                     child: Text('${talkItem.publishedAt}配信'),
-                  )),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.orange),
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            fit: BoxFit.fill,
-                            image:
-                                NetworkImage(talkItem.createdUser.photoUrl))),
                   ),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(talkItem.topicName,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          )),
-                      Text(talkItem.createdUser.name,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          )),
-                    ],
-                  ),
-                ),
-                Row(
-                  children: [
-                    IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.favorite_border,
-                          size: 20,
-                          color: Color(0xFFBDBDBD),
-                        )),
-                  ],
                 ),
               ],
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.orange),
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image:
+                                  NetworkImage(talkItem.createdUser.photoUrl))),
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(talkItem.topicName,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            )),
+                        Text(talkItem.createdUser.name,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Consumer(builder: (context, watch, _) {
+                        final _authNotifier = watch(authProvider);
+                        final _currentUser = _authNotifier.currentUser!;
+                        if (_currentUser.alreadyLikeTalk(talkItem.id)) {
+                          return Icon(
+                            Icons.favorite,
+                            size: 24,
+                            color: Theme.of(context).primaryColor,
+                          );
+                        } else {
+                          return InkWell(
+                            onTap: () {
+                              _authNotifier.likeTalk(talkItem);
+                              context.read(talkListProvider).fetchLikeLists();
+                            },
+                            child: const Icon(
+                              Icons.favorite_border,
+                              size: 24,
+                              color: Color(0xFFBDBDBD),
+                            ),
+                          );
+                        }
+                      }),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

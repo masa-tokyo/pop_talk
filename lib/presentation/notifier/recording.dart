@@ -53,7 +53,7 @@ class RecordingNotifier extends ChangeNotifier {
 }
 
 final recordingProvider = ChangeNotifierProvider<RecordingNotifier>((ref) {
-  final authNotifier = ref.watch(authProvider);
+  final authNotifier = ref.read(authProvider);
 
   if(authNotifier.currentUser == null) {
     throw ArgumentError('recordingNotifier生成時にはcurrentUserを渡してください');}

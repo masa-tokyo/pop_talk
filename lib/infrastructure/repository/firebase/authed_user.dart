@@ -39,6 +39,20 @@ class FirestoreAuthedUserRepository implements AuthedUserRepository {
     });
   }
 
+  @override
+  Future<void> likeTalk(AuthedUser user, String talkId) async {
+    await _userCollection.doc(user.id).update({
+      'likeTalkIds': FieldValue.arrayUnion(<dynamic>[talkId]),
+    });
+  }
+
+  @override
+  Future<void> followUser(AuthedUser user, String userId) async {
+    await _userCollection.doc(user.id).update({
+      'followingUserIds': FieldValue.arrayUnion(<dynamic>[userId]),
+    });
+  }
+
   AuthedUser _toAuthedUser(Map<String, dynamic> json) {
     final firestoreUser = FirestoreAuthedUser.fromJson(json);
     return AuthedUser(
