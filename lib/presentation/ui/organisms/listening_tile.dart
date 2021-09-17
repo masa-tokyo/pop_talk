@@ -7,99 +7,110 @@ import 'package:pop_talk/presentation/notifier/talk_list.dart';
 class ListeningTile extends StatelessWidget {
   const ListeningTile({
     required this.talkItem,
+    this.onTap,
   });
 
   final TalkItem talkItem;
+  final void Function(TalkItem talk)? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        side: BorderSide(
-          color: Theme.of(context).primaryColor,
-          width: 1,
+    return InkWell(
+      onTap: onTap == null
+          ? () {}
+          : () {
+              onTap!(talkItem);
+            },
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+            color: Theme.of(context).primaryColor,
+            width: 1,
+          ),
+          borderRadius: BorderRadius.circular(12),
         ),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 3),
-                    child: Text('${talkItem.publishedAt}配信'),
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Row(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
+          child: Column(
+            children: [
+              Stack(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.orange),
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              fit: BoxFit.fill,
-                              image:
-                                  NetworkImage(talkItem.createdUser.photoUrl))),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 3),
+                      child: Text('${talkItem.publishedAt}配信'),
                     ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(talkItem.topicName,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                            )),
-                        Text(talkItem.createdUser.name,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                            )),
-                      ],
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Consumer(builder: (context, watch, _) {
-                        final _authNotifier = watch(authProvider);
-                        final _currentUser = _authNotifier.currentUser!;
-                        if (_currentUser.alreadyLikeTalk(talkItem.id)) {
-                          return Icon(
-                            Icons.favorite,
-                            size: 24,
-                            color: Theme.of(context).primaryColor,
-                          );
-                        } else {
-                          return InkWell(
-                            onTap: () {
-                              _authNotifier.likeTalk(talkItem);
-                              context.read(talkListProvider).fetchLikeLists();
-                            },
-                            child: const Icon(
-                              Icons.favorite_border,
-                              size: 24,
-                              color: Color(0xFFBDBDBD),
-                            ),
-                          );
-                        }
-                      }),
-                    ],
                   ),
                 ],
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.orange),
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            fit: BoxFit.fill,
+                            image: NetworkImage(talkItem.createdUser.photoUrl),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(talkItem.topicName,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              )),
+                          Text(talkItem.createdUser.name,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              )),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Consumer(builder: (context, watch, _) {
+                          final _authNotifier = watch(authProvider);
+                          final _currentUser = _authNotifier.currentUser!;
+                          if (_currentUser.alreadyLikeTalk(talkItem.id)) {
+                            return Icon(
+                              Icons.favorite,
+                              size: 24,
+                              color: Theme.of(context).primaryColor,
+                            );
+                          } else {
+                            return InkWell(
+                              onTap: () {
+                                _authNotifier.likeTalk(talkItem);
+                                context.read(talkListProvider).fetchLikeLists();
+                              },
+                              child: const Icon(
+                                Icons.favorite_border,
+                                size: 24,
+                                color: Color(0xFFBDBDBD),
+                              ),
+                            );
+                          }
+                        }),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
