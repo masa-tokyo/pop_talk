@@ -9,36 +9,51 @@ enum PlayerButtonState {
   loading,
 }
 
+enum AudioPlayType {
+  file,
+  playlist,
+}
+
 class PlayerNotifier extends ChangeNotifier {
+  AudioPlayType? playType;
+  AudioPlayer? _audioPlayer;
+  List<TalkItem>? _talks;
   PlayerButtonState playerButtonState = PlayerButtonState.paused;
   Duration position = Duration.zero;
   Duration duration = Duration.zero;
 
-  int currentIndex = 0;
-
-  AudioPlayer? _audioPlayer;
+  TalkItem? get currentTalk {
+    if (_audioPlayer == null || playType != AudioPlayType.playlist) {
+      return null;
+    }
+    return _talks![_audioPlayer!.currentIndex ?? 0];
+  }
 
   Future<void> reset() async {
     await _audioPlayer?.dispose();
     _audioPlayer = null;
+    _talks = null;
+    playType = null;
     playerButtonState = PlayerButtonState.paused;
     position = Duration.zero;
     duration = Duration.zero;
     notifyListeners();
   }
 
-  Future<void> initPlayer({
+  Future<void> initPlayer(
+    AudioPlayType playType, {
     List<TalkItem>? talks,
     String? path,
   }) async {
-    assert(talks != null || path != null);
     await reset();
     final currentPlayer = _audioPlayer = AudioPlayer();
-    if (talks != null) {
+    this.playType = playType;
+    if (playType == AudioPlayType.playlist) {
+      _talks = talks;
       await currentPlayer.setAudioSource(
         ConcatenatingAudioSource(
           useLazyPreparation: true,
-          children: talks.map((talk) {
+          children: talks!.map((talk) {
             return AudioSource.uri(talk.uri);
           }).toList(),
         ),
@@ -73,13 +88,6 @@ class PlayerNotifier extends ChangeNotifier {
             ..seek(Duration.zero)
             ..pause();
         }
-      }
-      notifyListeners();
-    });
-
-    currentPlayer.currentIndexStream.listen((event) {
-      if (event != null) {
-        currentIndex = event;
       }
       notifyListeners();
     });
@@ -131,8 +139,21 @@ class PlayerNotifier extends ChangeNotifier {
     }
     await _audioPlayer!.seekToNext();
   }
+
+  bool hasPlayer() {
+    return _audioPlayer != null;
+  }
+
 }
 
 final playerProvider = ChangeNotifierProvider<PlayerNotifier>((ref) {
   return PlayerNotifier();
 });
+
+final playerFamilyProvider =
+    ChangeNotifierProvider.family<PlayerNotifier, String>(
+  (ref, category) {
+    final notifier = PlayerNotifier();
+    return notifier;
+  },
+);

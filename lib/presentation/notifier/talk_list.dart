@@ -35,7 +35,7 @@ class TalkListNotifier with ChangeNotifier {
 
 }
 
-final talkListProvider = ChangeNotifierProvider<TalkListNotifier>(
+final talkListProvider = ChangeNotifierProvider.autoDispose<TalkListNotifier>(
   (ref) {
     final authNotifier = ref.read(authProvider);
     if (authNotifier.currentUser == null) {
