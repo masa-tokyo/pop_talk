@@ -1,12 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/src/provider.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pop_talk/presentation/notifier/auth.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({
@@ -26,17 +25,10 @@ class _RegisterPageState extends State<RegisterPage> {
   bool? isMember;
   bool isInit = true;
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final googleSignIn = GoogleSignIn();
-  String uid = '';
-  // String name = '';
-  bool isAnonymous = false;
-  List<String> followingUserIds = [];
-  List<String> likeTalkIds = [];
-  List<String> myTalkIds = [];
-
   @override
   Widget build(BuildContext context) {
+    final authNotifier = context.read(authProvider);
+
     isMember = isInit ? widget.isMember : !widget.isMember;
     return Column(
       children: [
@@ -87,7 +79,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
                 onPressed: () async {
-                  await _signInWithGoogle();
+                  isMember!
+                      ? await authNotifier.signInWithGoogle()
+                      : await authNotifier.signUpWithGoogle();
+                  Navigator.pop(context);
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -114,7 +109,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                onPressed: () {},
+                onPressed: () async {
+                  // try {
+                  isMember!
+                      ? await authNotifier.signInWithApple()
+                      : await authNotifier.signUpWithApple();
+                  Navigator.pop(context);
+                  // } PlatformException;
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -245,38 +247,5 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
       ],
     );
-  }
-
-  Future _signInWithGoogle() async {
-    final googleUser = await googleSignIn.signIn();
-    try {
-      if (googleUser != null) {
-        final googleAuth = await googleUser.authentication;
-        final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
-        );
-
-        await _auth.signInWithCredential(credential).then((value) async {
-          uid = value.user!.uid;
-          if (value.additionalUserInfo!.isNewUser != false) {
-            await FirebaseFirestore.instance
-                .collection('user')
-                .doc(uid)
-                .set(<String, dynamic>{
-              'name': value.user!.displayName,
-              'isisAnonymous': isAnonymous,
-              'followingUserIds': followingUserIds,
-              'likeTalkIds': likeTalkIds,
-              'myTalkIds': myTalkIds,
-              'photoUrl': value.user!.photoURL,
-            });
-          }
-        });
-        Navigator.pop(context);
-      }
-    } on PlatformException catch (e) {
-      print(e.toString());
-    }
   }
 }

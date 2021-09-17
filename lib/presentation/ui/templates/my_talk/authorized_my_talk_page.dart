@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/src/provider.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/domain/model/authed_user.dart';
+import 'package:pop_talk/presentation/notifier/auth.dart';
 import 'package:pop_talk/presentation/ui/organisms/talk_tile.dart';
 
 class AuthorizedMyTalkPage extends StatefulWidget {
@@ -24,6 +27,8 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
 
   @override
   Widget build(BuildContext context) {
+    final _authNotifier = context.read(authProvider);
+
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
@@ -81,7 +86,14 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ],
-                        )
+                        ),
+                        InkWell(
+                          onTap: () async {
+                            await FirebaseAuth.instance.signOut();
+                            await _authNotifier.implicitLogin();
+                          },
+                          child: Text('ログアウト'),
+                        ),
                       ],
                     ),
                   ),
