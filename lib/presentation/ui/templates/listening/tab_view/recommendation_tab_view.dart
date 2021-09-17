@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:pop_talk/presentation/notifier/player.dart';
 import 'package:pop_talk/presentation/notifier/talk_list.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,12 +39,14 @@ class _RecommendationTabViewState extends State<RecommendationTabView> {
         return Padding(
           padding: const EdgeInsets.all(26),
           child: Center(
-            child: TalkPlayerCard(
-              recommendPlayerNotifier.currentTalk!,
-              recommendPlayerNotifier,
-              onPlay: (_) {
-                context.read(playerProvider).reset();
-              },
+            child: FittedBox(
+              child: TalkPlayerCard(
+                recommendPlayerNotifier.currentTalk!,
+                recommendPlayerNotifier,
+                onPlay: (_) {
+                  context.read(playerProvider).reset();
+                },
+              ),
             ),
           ),
         );

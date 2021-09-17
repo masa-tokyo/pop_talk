@@ -105,6 +105,7 @@ class PlayerNotifier extends ChangeNotifier {
 
   Future<void> play() async {
     await _audioPlayer!.play();
+    notifyListeners();
   }
 
   Future<void> pause() async {
@@ -127,6 +128,7 @@ class PlayerNotifier extends ChangeNotifier {
       return;
     }
     await _audioPlayer!.seekToPrevious();
+    notifyListeners();
   }
 
   bool hasNext() {
@@ -138,6 +140,7 @@ class PlayerNotifier extends ChangeNotifier {
       return;
     }
     await _audioPlayer!.seekToNext();
+    notifyListeners();
   }
 
   bool hasPlayer() {
