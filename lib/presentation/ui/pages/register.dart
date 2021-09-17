@@ -7,6 +7,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pop_talk/presentation/ui/pages/service/privacy.dart';
+import 'package:pop_talk/presentation/ui/pages/service/term_of_use.dart';
+import 'package:pop_talk/presentation/ui/utils/modal_bottom_sheet.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({
@@ -44,9 +47,10 @@ class _RegisterPageState extends State<RegisterPage> {
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.only(top: 30, left: 10),
+              padding: const EdgeInsets.only(top: 36),
               alignment: Alignment.topLeft,
               child: IconButton(
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 onPressed: () => Navigator.pop(context),
                 icon: const Icon(
                   Icons.close,
@@ -187,7 +191,9 @@ class _RegisterPageState extends State<RegisterPage> {
                             color: Colors.blue.shade800,
                             decoration: TextDecoration.underline,
                           ),
-                          recognizer: TapGestureRecognizer()..onTap = () {},
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => showBottomSheetPage(
+                                context: context, page: ServiceTermOfUsePage()),
                         ),
                         const TextSpan(
                             text: ' | ',
@@ -200,7 +206,9 @@ class _RegisterPageState extends State<RegisterPage> {
                             color: Colors.blue.shade800,
                             decoration: TextDecoration.underline,
                           ),
-                          recognizer: TapGestureRecognizer()..onTap = () {},
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => showBottomSheetPage(
+                                context: context, page: ServicePrivacyPage()),
                         ),
                         const TextSpan(
                             text: ' | ',
@@ -232,7 +240,9 @@ class _RegisterPageState extends State<RegisterPage> {
                             color: Colors.blue.shade800,
                             decoration: TextDecoration.underline,
                           ),
-                          recognizer: TapGestureRecognizer()..onTap = () {},
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => showBottomSheetPage(
+                                context: context, page: ServiceTermOfUsePage()),
                         ),
                         const TextSpan(
                           text: 'と',
@@ -245,7 +255,9 @@ class _RegisterPageState extends State<RegisterPage> {
                             color: Colors.blue.shade800,
                             decoration: TextDecoration.underline,
                           ),
-                          recognizer: TapGestureRecognizer()..onTap = () {},
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => showBottomSheetPage(
+                                context: context, page: ServicePrivacyPage()),
                         ),
                         const TextSpan(
                           text: 'に同意することになります\n',
@@ -299,4 +311,20 @@ class _RegisterPageState extends State<RegisterPage> {
       print(e.toString());
     }
   }
+}
+
+void _showModalBottomSheet({
+  required BuildContext context,
+  required Widget page,
+}) {
+  showModalBottomSheet<void>(
+    context: context,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    isScrollControlled: true,
+    builder: (context) {
+      return page;
+    },
+  );
 }

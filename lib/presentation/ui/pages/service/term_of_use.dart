@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pop_talk/presentation/ui/atoms/poptalk_logo.dart';
 import 'package:pop_talk/presentation/ui/molecules/list_with_number.dart';
 import 'package:pop_talk/presentation/ui/templates/simple_scaffold.dart';
@@ -11,16 +12,46 @@ class ServiceTermOfUsePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SimpleScaffold(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.all(20),
-            child: PopTalkLogo(),
+          Container(
+            width: MediaQuery.of(context).size.width * 1 / 2 + 75,
+            padding: const EdgeInsets.only(top: 40, bottom: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                IconButton(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(
+                    Icons.close,
+                    size: 30,
+                  ),
+                ),
+                const Spacer(),
+                Row(
+                  children: [
+                    const PopTalkLogo(),
+                    const SizedBox(width: 8),
+                    Text(
+                      'PopTalk',
+                      style: GoogleFonts.mPlusRounded1c(
+                        letterSpacing: 0.5,
+                        textStyle: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w800,
+                          color: Color(0xFF804B3A),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
           Expanded(
             child: SingleChildScrollView(
               child: Container(
-                color: Theme.of(context).canvasColor,
-                padding: const EdgeInsets.symmetric(vertical: 20),
                 alignment: Alignment.topCenter,
                 child: Container(
                   constraints: const BoxConstraints(
@@ -28,6 +59,7 @@ class ServiceTermOfUsePage extends StatelessWidget {
                     maxWidth: 1000,
                   ),
                   child: Card(
+                    color: Theme.of(context).scaffoldBackgroundColor,
                     child: Padding(
                       padding: const EdgeInsets.all(20),
                       child: Column(
@@ -37,7 +69,7 @@ class ServiceTermOfUsePage extends StatelessWidget {
                           SizedBox(height: 10),
                           Content(
                               content:
-                                  '''この利用規約（以下，「本規約」といいます。）は，プラスラボ（以下，「本運営」といいます。）がこのウェブサイト上で提供するサービス「actice」（以下，「本サービス」といいます。）の利用条件を定めるものです。登録ユーザーの皆さま（以下，「ユーザー」といいます。）には，本規約に従って，本サービスをご利用いただきます。'''),
+                                  '''この利用規約（以下，「本規約」といいます。）は，PopTalk（以下，「本運営」といいます。）は，本アプリ上で提供するサービス「PopTalk」（以下，「本サービス」といいます。）の利用条件を定めるものです。登録ユーザーの皆さま（以下，「ユーザー」といいます。）には，本規約に従って，本サービスをご利用いただきます。'''),
                           SizedBox(height: 30),
                           Title(title: '第1条（適用）'),
                           SizedBox(height: 10),
@@ -72,8 +104,10 @@ class ServiceTermOfUsePage extends StatelessWidget {
                             ListWithNumber(
                               children: [
                                 Content(content: '''利用登録の申請に際して虚偽の事項を届け出た場合'''),
-                                Content(content: '''本規約に違反したことがある者からの申請である場合'''),
-                                Content(content: '''その他，本運営が利用登録を相当でないと判断した場合'''),
+                                Content(
+                                    content: '''本規約に違反したことがある者からの申請である場合'''),
+                                Content(
+                                    content: '''その他，本運営が利用登録を相当でないと判断した場合'''),
                               ],
                             ),
                           ]),
@@ -109,7 +143,9 @@ class ServiceTermOfUsePage extends StatelessWidget {
                           SizedBox(height: 30),
                           Title(title: '第5条（禁止事項）'),
                           SizedBox(height: 10),
-                          Content(content: '''ユーザーは，本サービスの利用にあたり，以下の行為をしてはなりません。'''),
+                          Content(
+                              content:
+                                  '''ユーザーは，本サービスの利用にあたり，以下の行為をしてはなりません。'''),
                           ListWithNumber(
                             children: <Widget>[
                               Content(content: '''法令または公序良俗に違反する行為'''),
@@ -118,7 +154,8 @@ class ServiceTermOfUsePage extends StatelessWidget {
                                   content:
                                       '''本運営，本サービスの他のユーザー，または第三者のサーバーまたはネットワークの機能を破壊したり，妨害したりする行為'''),
                               Content(content: '''本運営のサービスの運営を妨害するおそれのある行為'''),
-                              Content(content: '''他のユーザーに関する個人情報等を収集または蓄積する行為'''),
+                              Content(
+                                  content: '''他のユーザーに関する個人情報等を収集または蓄積する行為'''),
                               Content(content: '''不正アクセスをし，またはこれを試みる行為'''),
                               Content(content: '''他のユーザーに成りすます行為'''),
                               Content(
@@ -137,19 +174,25 @@ class ServiceTermOfUsePage extends StatelessWidget {
                                   Content(
                                       content:
                                           '''人種，国籍，信条，性別，社会的身分，門地等による差別につながる表現'''),
-                                  Content(content: '''自殺，自傷行為，薬物乱用を誘引または助長する表現'''),
-                                  Content(content: '''その他反社会的な内容を含み他人に不快感を与える表現'''),
+                                  Content(
+                                      content: '''自殺，自傷行為，薬物乱用を誘引または助長する表現'''),
+                                  Content(
+                                      content: '''その他反社会的な内容を含み他人に不快感を与える表現'''),
                                 ],
                               ),
-                              Content(content: '''以下を目的とし，または目的とすると本運営が判断する行為'''),
+                              Content(
+                                  content: '''以下を目的とし，または目的とすると本運営が判断する行為'''),
                               ListWithNumber(
                                 children: <Widget>[
                                   Content(
                                       content:
                                           '''営業，宣伝，広告，勧誘，その他営利を目的とする行為（本運営の認めたものを除きます。）'''),
                                   Content(content: '''性行為やわいせつな行為を目的とする行為'''),
-                                  Content(content: '''面識のない異性との出会いや交際を目的とする行為'''),
-                                  Content(content: '''他のユーザーに対する嫌がらせや誹謗中傷を目的とする行為'''),
+                                  Content(
+                                      content: '''面識のない異性との出会いや交際を目的とする行為'''),
+                                  Content(
+                                      content:
+                                          '''他のユーザーに対する嫌がらせや誹謗中傷を目的とする行為'''),
                                   Content(
                                       content:
                                           '''本運営，本サービスの他のユーザー，または第三者に不利益，損害または不快感を与えることを目的とする行為'''),
@@ -178,8 +221,12 @@ class ServiceTermOfUsePage extends StatelessWidget {
                                   Content(
                                       content:
                                           '''地震，落雷，火災，停電または天災などの不可抗力により，本サービスの提供が困難となった場合'''),
-                                  Content(content: '''コンピュータまたは通信回線等が事故により停止した場合'''),
-                                  Content(content: '''その他，本運営が本サービスの提供が困難と判断した場合'''),
+                                  Content(
+                                      content:
+                                          '''コンピュータまたは通信回線等が事故により停止した場合'''),
+                                  Content(
+                                      content:
+                                          '''その他，本運営が本サービスの提供が困難と判断した場合'''),
                                 ],
                               ),
                               Content(
@@ -214,16 +261,20 @@ class ServiceTermOfUsePage extends StatelessWidget {
                               ListWithNumber(
                                 children: <Widget>[
                                   Content(content: '''本規約のいずれかの条項に違反した場合'''),
-                                  Content(content: '''登録事項に虚偽の事実があることが判明した場合'''),
+                                  Content(
+                                      content: '''登録事項に虚偽の事実があることが判明した場合'''),
                                   Content(
                                       content:
                                           '''決済手段として当該ユーザーが届け出たクレジットカードが利用停止となった場合'''),
                                   Content(content: '''料金等の支払債務の不履行があった場合'''),
-                                  Content(content: '''本運営からの連絡に対し，一定期間返答がない場合'''),
                                   Content(
-                                      content: '''本サービスについて，最終の利用から一定期間利用がない場合'''),
+                                      content: '''本運営からの連絡に対し，一定期間返答がない場合'''),
                                   Content(
-                                      content: '''その他，本運営が本サービスの利用を適当でないと判断した場合'''),
+                                      content:
+                                          '''本サービスについて，最終の利用から一定期間利用がない場合'''),
+                                  Content(
+                                      content:
+                                          '''その他，本運営が本サービスの利用を適当でないと判断した場合'''),
                                 ],
                               ),
                               Content(
