@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pop_talk/presentation/notifier/auth.dart';
@@ -114,19 +115,24 @@ class MiniPlayer extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(currentTalk.topicName,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        )),
+                    Text(
+                      currentTalk.topicName,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     Text(
                       currentTalk.createdUser.name,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
+              const SizedBox(width: 16),
               Row(
                 children: [
                   if (playerNotifier.playerButtonState ==
