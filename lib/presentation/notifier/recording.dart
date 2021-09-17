@@ -47,16 +47,18 @@ class RecordingNotifier extends ChangeNotifier {
       description: description,
       localPath: path,
       duration: durationInt,
-      createdUserId: authedUser.id
+      createdUserId: authedUser.id,
     );
   }
 }
 
-final recordingProvider = ChangeNotifierProvider<RecordingNotifier>((ref) {
-  final authNotifier = ref.watch(authProvider);
+final recordingProvider =
+    ChangeNotifierProvider.autoDispose<RecordingNotifier>((ref) {
+  final authNotifier = ref.read(authProvider);
 
-  if(authNotifier.currentUser == null) {
-    throw ArgumentError('recordingNotifier生成時にはcurrentUserを渡してください');}
+  if (authNotifier.currentUser == null) {
+    throw ArgumentError('recordingNotifier生成時にはcurrentUserを渡してください');
+  }
 
   return RecordingNotifier(
     repository: GetIt.instance.get<TalkItemRepository>(),

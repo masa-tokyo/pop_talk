@@ -7,8 +7,8 @@ import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/domain/repository/talk_item.dart';
 import 'package:pop_talk/presentation/notifier/auth.dart';
 
-class TalkItemNotifier with ChangeNotifier {
-  TalkItemNotifier(this._repository, this._authedUser) {
+class MyTalkNotifier with ChangeNotifier {
+  MyTalkNotifier(this._repository, this._authedUser) {
     init();
   }
 
@@ -45,13 +45,13 @@ class TalkItemNotifier with ChangeNotifier {
   }
 }
 
-final talkItemProvider = ChangeNotifierProvider<TalkItemNotifier>(
+final myTalkProvider = ChangeNotifierProvider<MyTalkNotifier>(
   (ref) {
-    final authNotifier = ref.watch(authProvider);
+    final authNotifier = ref.read(authProvider);
     if (authNotifier.currentUser == null) {
       throw ArgumentError('currentUserが作成される前にtalkListProviderを作成できません.');
     }
-    return TalkItemNotifier(
+    return MyTalkNotifier(
       GetIt.instance.get<TalkItemRepository>(),
       authNotifier.currentUser!,
     );

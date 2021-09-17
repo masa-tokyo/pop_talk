@@ -126,6 +126,7 @@ class SetUp extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           return child;
         }
+        // TODO(any): いい感じのスプラッシュスクリーンを作る
         return Container(
         );
       },
@@ -138,7 +139,6 @@ class SetUp extends StatelessWidget {
 
     final _authNotifier = context.read(authProvider);
     await _authNotifier.implicitLogin();
-
   }
 
 }

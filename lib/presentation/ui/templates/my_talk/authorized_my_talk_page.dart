@@ -34,6 +34,7 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
               decoration: BoxDecoration(
                 border: Border.all(color: Theme.of(context).primaryColor),
                 borderRadius: BorderRadius.circular(12),
+                color: Colors.white,
               ),
               constraints: const BoxConstraints(minHeight: 140, maxWidth: 565),
               child: Row(

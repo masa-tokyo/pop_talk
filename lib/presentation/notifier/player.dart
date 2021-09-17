@@ -1,160 +1,159 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:pop_talk/domain/model/talk_item.dart';
 
 enum PlayerButtonState {
-  playing, paused, loading,
+  playing,
+  paused,
+  loading,
 }
 
 enum AudioPlayType {
-  url, file, playlist,
+  file,
+  playlist,
 }
-class PlayerNotifier extends ChangeNotifier {
 
+class PlayerNotifier extends ChangeNotifier {
+  AudioPlayType? playType;
+  AudioPlayer? _audioPlayer;
+  List<TalkItem>? _talks;
   PlayerButtonState playerButtonState = PlayerButtonState.paused;
   Duration position = Duration.zero;
   Duration duration = Duration.zero;
 
-  int currentIndex = 0;
+  TalkItem? get currentTalk {
+    if (_audioPlayer == null || playType != AudioPlayType.playlist) {
+      return null;
+    }
+    return _talks![_audioPlayer!.currentIndex ?? 0];
+  }
 
-  late AudioPlayer _audioPlayer;
+  Future<void> reset() async {
+    await _audioPlayer?.dispose();
+    _audioPlayer = null;
+    _talks = null;
+    playType = null;
+    playerButtonState = PlayerButtonState.paused;
+    position = Duration.zero;
+    duration = Duration.zero;
+    notifyListeners();
+  }
 
   Future<void> initPlayer(
-  {required AudioPlayType playType,
-  String? path,
-  List<String>? urls}
-      ) async {
-
-    switch (playType) {
-      case AudioPlayType.url:
-      // TODO(any): マイトークのプレビュー画面の投稿再生に使用
-        _audioPlayer = AudioPlayer();
-
-        break;
-      case AudioPlayType.file:
-        _audioPlayer = AudioPlayer();
-        await _audioPlayer.setFilePath(path!);
-        break;
-      case AudioPlayType.playlist:
-        _audioPlayer = AudioPlayer();
-        await _audioPlayer.setAudioSource(
+    AudioPlayType playType, {
+    List<TalkItem>? talks,
+    String? path,
+  }) async {
+    await reset();
+    final currentPlayer = _audioPlayer = AudioPlayer();
+    this.playType = playType;
+    if (playType == AudioPlayType.playlist) {
+      _talks = talks;
+      await currentPlayer.setAudioSource(
         ConcatenatingAudioSource(
-            useLazyPreparation: true,
-            children: _convertToAudioSources(urls)),
-        initialIndex: 0,
+          useLazyPreparation: true,
+          children: talks!.map((talk) {
+            return AudioSource.uri(talk.uri);
+          }).toList(),
+        ),
         initialPosition: Duration.zero,
+        preload: false,
       );
-        break;
+    } else {
+      await currentPlayer.setFilePath(path!);
     }
 
-
-    _audioPlayer.playerStateStream.listen((playerState) {
+    currentPlayer.playerStateStream.listen((playerState) {
       final isPlaying = playerState.playing;
       final processingState = playerState.processingState;
 
+      // プレイヤーステータスの変更
       if (processingState == ProcessingState.loading ||
-          processingState == ProcessingState.buffering){
-        print('loading');
+          processingState == ProcessingState.buffering) {
         playerButtonState = PlayerButtonState.loading;
-      } else if (!isPlaying){
-        playerButtonState = PlayerButtonState.paused;
-      } else if (processingState != ProcessingState.completed){
-        playerButtonState = PlayerButtonState.playing;
       } else {
-        //completed
+        playerButtonState =
+            isPlaying ? PlayerButtonState.playing : PlayerButtonState.paused;
+      }
 
-        if(playType == AudioPlayType.playlist){
-          if (currentIndex < urls!.length - 1){
-            _audioPlayer
-              ..seekToNext()
-              ..play();
-          } else {
-            // the last track
-            _audioPlayer
-                ..seek(Duration.zero)
-                ..pause();
-          }
-
+      // 挙動の変更
+      if (isPlaying && processingState == ProcessingState.completed) {
+        if (currentPlayer.hasNext) {
+          currentPlayer
+            ..seekToNext()
+            ..play();
         } else {
-          // AudioPlayType is file or url
-          _audioPlayer
-              ..seek(Duration.zero)
-              ..pause();
+          currentPlayer
+            ..seek(Duration.zero)
+            ..pause();
         }
       }
       notifyListeners();
     });
 
-    _audioPlayer.currentIndexStream.listen((event) {
-      currentIndex = event!;
-      notifyListeners();
-    });
-
-    _audioPlayer.positionStream.listen((event) {
+    currentPlayer.positionStream.listen((event) {
       position = event;
       notifyListeners();
     });
 
-    _audioPlayer.durationStream.listen((event) {
+    currentPlayer.durationStream.listen((event) {
       duration = event ?? Duration.zero;
       notifyListeners();
     });
   }
 
-  List<AudioSource> _convertToAudioSources(List<String>? urls) {
-    final  audioSources = <AudioSource>[];
-    urls!.forEach((element) {
-      audioSources.add(AudioSource.uri(Uri.parse(element)));
-    });
-    return audioSources;
-
+  Future<void> play() async {
+    await _audioPlayer!.play();
   }
 
-
-  Future<void> play() async{
-    await _audioPlayer.play();
-
+  Future<void> pause() async {
+    await _audioPlayer!.pause();
   }
 
-  Future<void> pause() async{
-
-    await _audioPlayer.pause();
-
-
-
-  }
-
-
-  Future<void> seek(int newPosition) async{
+  Future<void> seek(int newPosition) async {
     position = Duration(seconds: newPosition);
     notifyListeners();
 
-    await _audioPlayer.seek(Duration(seconds: newPosition));
+    await _audioPlayer!.seek(Duration(seconds: newPosition));
+  }
 
+  bool hasPrevious() {
+    return _audioPlayer != null && _audioPlayer!.hasPrevious;
   }
 
   Future<void> seekToPrevious() async {
-    await _audioPlayer.seekToPrevious();
+    if (_audioPlayer == null || !_audioPlayer!.hasPrevious) {
+      return;
+    }
+    await _audioPlayer!.seekToPrevious();
   }
 
-  Future<void> seekToNext() async{
-    await _audioPlayer.seekToNext();
-
+  bool hasNext() {
+    return _audioPlayer != null && _audioPlayer!.hasNext;
   }
 
+  Future<void> seekToNext() async {
+    if (_audioPlayer == null || !_audioPlayer!.hasNext) {
+      return;
+    }
+    await _audioPlayer!.seekToNext();
+  }
 
-
-
-
-
-
-
-
-
+  bool hasPlayer() {
+    return _audioPlayer != null;
+  }
 
 }
 
-final playerProvider = ChangeNotifierProvider<PlayerNotifier>((ref){
-
+final playerProvider = ChangeNotifierProvider<PlayerNotifier>((ref) {
   return PlayerNotifier();
 });
+
+final playerFamilyProvider =
+    ChangeNotifierProvider.family<PlayerNotifier, String>(
+  (ref, category) {
+    final notifier = PlayerNotifier();
+    return notifier;
+  },
+);

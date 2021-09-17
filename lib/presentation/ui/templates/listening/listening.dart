@@ -9,7 +9,6 @@ class ListeningTemplate extends StatefulWidget {
 }
 
 class _ListeningTemplateState extends State<ListeningTemplate> {
-
   @override
   void initState() {
     super.initState();
@@ -57,18 +56,16 @@ class _ListeningTemplateState extends State<ListeningTemplate> {
             ],
           ),
           Expanded(
-              child: TabBarView(
-            children: [
-              const RecommendationTabView(),
-              FollowingUsersTabView(),
-              LikedTalksTabView(),
-            ],
-          ))
+            child: TabBarView(
+              children: [
+                const RecommendationTabView(),
+                FollowingUsersTabView(),
+                LikedTalksTabView(),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
-
-
-
 }
