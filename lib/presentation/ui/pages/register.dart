@@ -7,6 +7,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pop_talk/presentation/ui/pages/service/privacy.dart';
+import 'package:pop_talk/presentation/ui/pages/service/term_of_use.dart';
+import 'package:pop_talk/presentation/ui/utils/modal_bottom_sheet.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({
@@ -38,213 +41,240 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     isMember = isInit ? widget.isMember : !widget.isMember;
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.only(top: 30, left: 10),
-            alignment: Alignment.topLeft,
-            child: IconButton(
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(
-                Icons.close,
-                size: 30,
+    return SizedBox(
+      height: MediaQuery.of(context).size.height,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.only(top: 36),
+              alignment: Alignment.topLeft,
+              child: IconButton(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(
+                  Icons.close,
+                  size: 30,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 100),
-          Column(
-            children: [
-              SvgPicture.asset(
-                'assets/images/poptalk_logo.svg',
-                fit: BoxFit.cover,
-                height: 90,
-                width: 90,
-              ),
-              Text(
-                'PopTalk',
-                style: GoogleFonts.mPlusRounded1c(
-                  letterSpacing: 0.5,
-                  textStyle: const TextStyle(
-                    fontSize: 56,
-                    fontWeight: FontWeight.w800,
-                    color: Color(0xFF804B3A),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 100),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.70,
-            child: Column(
+            const SizedBox(height: 100),
+            Column(
               children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                SvgPicture.asset(
+                  'assets/images/poptalk_logo.svg',
+                  fit: BoxFit.cover,
+                  height: 90,
+                  width: 90,
+                ),
+                Text(
+                  'PopTalk',
+                  style: GoogleFonts.mPlusRounded1c(
+                    letterSpacing: 0.5,
+                    textStyle: const TextStyle(
+                      fontSize: 56,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF804B3A),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  onPressed: () async {
-                    await _signInWithGoogle();
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Image.asset(
-                        'assets/images/google_logo.png',
-                        height: 20,
-                        width: 20,
-                        fit: BoxFit.cover,
-                      ),
-                      Text(
-                        isMember! ? 'Googleでログインする' : 'Googleで始める',
-                        style: const TextStyle(color: Colors.black),
-                      ),
-                    ],
                   ),
                 ),
-                const SizedBox(height: 8),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+              ],
+            ),
+            const SizedBox(height: 100),
+            ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 180, maxWidth: 300),
+              child: Column(
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  onPressed: () {},
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const Icon(
-                        FontAwesomeIcons.apple,
-                        size: 20,
-                      ),
-                      Text(
-                        isMember! ? 'Appleでログインする' : 'Appleで始める',
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  alignment: Alignment.centerRight,
-                  child: RichText(
-                    overflow: TextOverflow.clip,
-                    text: TextSpan(
+                    onPressed: () async {
+                      await _signInWithGoogle();
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        TextSpan(
-                          text: isMember! ? 'アカウントをお持ちでない方は' : 'アカウントをお持ちの方は',
-                          style: TextStyle(color: Colors.grey[800]),
+                        Image.asset(
+                          'assets/images/google_logo.png',
+                          height: 30,
+                          width: 30,
+                          fit: BoxFit.cover,
                         ),
-                        TextSpan(
-                          text: 'こちら',
+                        const SizedBox(width: 12),
+                        Text(
+                          isMember! ? 'Googleでログインする' : 'Googleで始める',
                           style: const TextStyle(
                             color: Colors.black,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
                           ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              widget.modalSetState(() {
-                                isInit = !isInit;
-                              });
-                            },
                         ),
                       ],
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-              ],
+                  const SizedBox(height: 12),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    onPressed: () {
+                      // TODO(MyTalk): Apple signin
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          FontAwesomeIcons.apple,
+                          size: 30,
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          isMember! ? 'Appleでログインする' : 'Appleで始める',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    alignment: Alignment.centerRight,
+                    child: RichText(
+                      overflow: TextOverflow.clip,
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: isMember! ? 'アカウントをお持ちでない方は' : 'アカウントをお持ちの方は',
+                            style: TextStyle(color: Colors.grey[800]),
+                          ),
+                          TextSpan(
+                            text: 'こちら',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                widget.modalSetState(() {
+                                  isInit = !isInit;
+                                });
+                              },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
             ),
-          ),
-          isMember!
-              ? RichText(
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.clip,
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: '利用規約',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.blue.shade800,
-                          decoration: TextDecoration.underline,
+            isMember!
+                ? RichText(
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.clip,
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '利用規約',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.blue.shade800,
+                            decoration: TextDecoration.underline,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => showBottomSheetPage(
+                                context: context, page: ServiceTermOfUsePage()),
                         ),
-                        recognizer: TapGestureRecognizer()..onTap = () {},
-                      ),
-                      const TextSpan(
-                          text: ' | ',
-                          style: TextStyle(fontSize: 12, color: Colors.black)),
-                      TextSpan(
-                        text: 'プライバシーポリシー',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.blue.shade800,
-                          decoration: TextDecoration.underline,
+                        const TextSpan(
+                            text: ' | ',
+                            style:
+                                TextStyle(fontSize: 12, color: Colors.black)),
+                        TextSpan(
+                          text: 'プライバシーポリシー',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.blue.shade800,
+                            decoration: TextDecoration.underline,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => showBottomSheetPage(
+                                context: context, page: ServicePrivacyPage()),
                         ),
-                        recognizer: TapGestureRecognizer()..onTap = () {},
-                      ),
-                      const TextSpan(
-                          text: ' | ',
-                          style: TextStyle(fontSize: 12, color: Colors.black)),
-                      TextSpan(
-                        text: 'お問い合わせ',
-                        style: const TextStyle(fontSize: 12, color: Colors.black),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () => Navigator.pop(context),
-                      ),
-                    ],
-                  ),
-                )
-              : RichText(
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.clip,
-                  text: TextSpan(
-                    children: [
-                      const TextSpan(
-                        text: 'アカウント登録により\n',
-                        style: TextStyle(fontSize: 12, color: Colors.black),
-                      ),
-                      TextSpan(
-                        text: '利用規約',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.blue.shade800,
-                          decoration: TextDecoration.underline,
+                        const TextSpan(
+                            text: ' | ',
+                            style:
+                                TextStyle(fontSize: 12, color: Colors.black)),
+                        TextSpan(
+                          text: 'お問い合わせ',
+                          style: const TextStyle(
+                              fontSize: 12, color: Colors.black),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => Navigator.pop(context),
                         ),
-                        recognizer: TapGestureRecognizer()..onTap = () {},
-                      ),
-                      const TextSpan(
-                        text: 'と',
-                        style: TextStyle(fontSize: 12, color: Colors.black),
-                      ),
-                      TextSpan(
-                        text: 'プライバシーポリシー',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.blue.shade800,
-                          decoration: TextDecoration.underline,
+                      ],
+                    ),
+                  )
+                : RichText(
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.clip,
+                    text: TextSpan(
+                      children: [
+                        const TextSpan(
+                          text: 'アカウント登録により\n',
+                          style: TextStyle(fontSize: 12, color: Colors.black),
                         ),
-                        recognizer: TapGestureRecognizer()..onTap = () {},
-                      ),
-                      const TextSpan(
+                        TextSpan(
+                          text: '利用規約',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.blue.shade800,
+                            decoration: TextDecoration.underline,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => showBottomSheetPage(
+                                context: context, page: ServiceTermOfUsePage()),
+                        ),
+                        const TextSpan(
+                          text: 'と',
+                          style: TextStyle(fontSize: 12, color: Colors.black),
+                        ),
+                        TextSpan(
+                          text: 'プライバシーポリシー',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.blue.shade800,
+                            decoration: TextDecoration.underline,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => showBottomSheetPage(
+                                context: context, page: ServicePrivacyPage()),
+                        ),
+                        const TextSpan(
                           text: 'に同意することになります\n',
-                          style: TextStyle(fontSize: 12, color: Colors.black)),
-                      TextSpan(
-                        text: 'お問い合わせ',
-                        style: const TextStyle(fontSize: 12, color: Colors.black),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () => Navigator.pop(context),
-                      ),
-                    ],
+                          style: TextStyle(fontSize: 12, color: Colors.black),
+                        ),
+                        TextSpan(
+                          text: 'お問い合わせ',
+                          style: const TextStyle(
+                              fontSize: 12, color: Colors.black),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => Navigator.pop(context),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -281,4 +311,20 @@ class _RegisterPageState extends State<RegisterPage> {
       print(e.toString());
     }
   }
+}
+
+void _showModalBottomSheet({
+  required BuildContext context,
+  required Widget page,
+}) {
+  showModalBottomSheet<void>(
+    context: context,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    isScrollControlled: true,
+    builder: (context) {
+      return page;
+    },
+  );
 }

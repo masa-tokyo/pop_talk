@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class PopTalkLogo extends StatelessWidget {
   const PopTalkLogo({
@@ -7,10 +8,10 @@ class PopTalkLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(
-      'assets/images/logo.png',
+    return SvgPicture.asset(
+      'assets/images/poptalk_logo.svg',
       fit: BoxFit.fill,
-      width: 40 * 1001 / 667,
+      width: 40,
       height: 40,
     );
   }
