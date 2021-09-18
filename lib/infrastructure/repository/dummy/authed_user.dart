@@ -18,22 +18,22 @@ class DummyAuthedUserRepository implements AuthedUserRepository {
   }
 
   @override
-  Future signUpWithGoogle() async {
+  Future<AuthedUser> signUpWithGoogle() async {
     return authedUser;
   }
 
   @override
-  Future signInWithGoogle() async {
+  Future<AuthedUser> signInWithGoogle() async {
     return authedUser;
   }
 
   @override
-  Future signUpWithApple() async {
+  Future<AuthedUser> signUpWithApple() async {
     return authedUser;
   }
 
   @override
-  Future signInWithApple() async {
+  Future<AuthedUser> signInWithApple() async {
     return authedUser;
   }
 
@@ -46,5 +46,4 @@ class DummyAuthedUserRepository implements AuthedUserRepository {
   Future<void> followUser(AuthedUser user, String userId) async {
     return;
   }
-
 }

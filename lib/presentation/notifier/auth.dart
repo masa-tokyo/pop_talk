@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
@@ -18,22 +19,38 @@ class AuthNotifier with ChangeNotifier {
   }
 
   Future<void> signUpWithGoogle() async {
-    await _repository.signUpWithGoogle();
+    final googleUser = await _repository.signUpWithGoogle();
+    if (googleUser == null) {
+      return;
+    }
+    currentUser = googleUser;
     notifyListeners();
   }
 
   Future<void> signInWithGoogle() async {
-    await _repository.signInWithGoogle();
+    final googleUser = await _repository.signInWithGoogle();
+    if (googleUser == null) {
+      return;
+    }
+    currentUser = googleUser;
     notifyListeners();
   }
 
   Future<void> signUpWithApple() async {
-    await _repository.signUpWithApple();
+    final appleUser = await _repository.signUpWithApple();
+    if (appleUser == null) {
+      return;
+    }
+    currentUser = appleUser;
     notifyListeners();
   }
 
   Future<void> signInWithApple() async {
-    await _repository.signInWithApple();
+    final appleUser = await _repository.signInWithApple();
+    if (appleUser == null) {
+      return;
+    }
+    currentUser = appleUser;
     notifyListeners();
   }
 

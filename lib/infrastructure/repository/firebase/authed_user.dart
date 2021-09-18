@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -73,37 +74,34 @@ class FirestoreAuthedUserRepository implements AuthedUserRepository {
   }
 
   @override
-  Future signUpWithGoogle() async {
+  Future<AuthedUser> signUpWithGoogle() async {
     final googleUser = await googleSignIn.signIn();
-    if (googleUser != null) {
-      final googleAuth = await googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
+    final googleAuth = await googleUser!.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
 
-      await _auth.currentUser!.linkWithCredential(credential);
-      await implicitLogin();
-    }
+    await _auth.currentUser!.linkWithCredential(credential);
+    return _getFirebaseUser();
   }
 
   @override
-  Future signInWithGoogle() async {
+  Future<AuthedUser> signInWithGoogle() async {
     final googleUser = await googleSignIn.signIn();
-    if (googleUser != null) {
-      final googleAuth = await googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
+    // if (googleUser != null) {
+    final googleAuth = await googleUser!.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
 
-      await _auth.signInWithCredential(credential);
-      await implicitLogin();
-    }
+    await _auth.signInWithCredential(credential);
+    return _getFirebaseUser();
   }
 
   @override
-  Future signUpWithApple() async {
+  Future<AuthedUser> signUpWithApple() async {
     final appleCredential = await SignInWithApple.getAppleIDCredential(
       scopes: [
         AppleIDAuthorizationScopes.email,
@@ -118,11 +116,11 @@ class FirestoreAuthedUserRepository implements AuthedUserRepository {
     );
 
     await _auth.currentUser!.linkWithCredential(credential);
-    await implicitLogin();
+    return _getFirebaseUser();
   }
 
   @override
-  Future signInWithApple() async {
+  Future<AuthedUser> signInWithApple() async {
     final appleCredential = await SignInWithApple.getAppleIDCredential(
       scopes: [
         AppleIDAuthorizationScopes.email,
@@ -136,7 +134,20 @@ class FirestoreAuthedUserRepository implements AuthedUserRepository {
     );
 
     await _auth.signInWithCredential(credential);
-    await implicitLogin();
+    return _getFirebaseUser();
+  }
+
+  Future<AuthedUser> _getFirebaseUser() async {
+    final firebaseUser = _auth.currentUser;
+    if (firebaseUser == null) {
+      throw Exception('userの情報が何らかの理由で取得できませんでした.');
+    }
+    final firestoreUser = await _userCollection.doc(firebaseUser.uid).get();
+    return _toAuthedUser(<String, dynamic>{
+      'id': firebaseUser.uid,
+      'isAnonymous': firebaseUser.isAnonymous,
+      ...firestoreUser.data()!,
+    });
   }
 }
 
