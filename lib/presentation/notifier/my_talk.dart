@@ -46,7 +46,9 @@ class MyTalkNotifier with ChangeNotifier {
 
   Future<void> deleteTalkItemById({required TalkItem talkItem}) async {
     if (!talkItem.isPublic) {
-      await File(talkItem.localUrl!).delete();
+      if (talkItem.localUrl != null) {
+        await File(talkItem.localUrl!).delete();
+      }
       savedTalkItems.removeWhere((value) => value.id == talkItem.id);
     }
     postedTalkItems.removeWhere((value) => value.id == talkItem.id);
