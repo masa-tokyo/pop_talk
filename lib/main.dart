@@ -127,20 +127,18 @@ class SetUp extends StatelessWidget {
           return child;
         }
         // TODO(any): いい感じのスプラッシュスクリーンを作る
-        return Container(
-        );
+        return Container();
       },
     );
   }
 
-  Future<void> setUp(BuildContext context) async{
+  Future<void> setUp(BuildContext context) async {
     await Firebase.initializeApp();
     await registerDIContainer();
 
     final _authNotifier = context.read(authProvider);
     await _authNotifier.implicitLogin();
   }
-
 }
 
 class MyHomePage extends StatefulWidget {

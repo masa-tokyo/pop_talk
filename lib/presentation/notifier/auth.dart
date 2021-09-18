@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
@@ -11,10 +12,76 @@ class AuthNotifier with ChangeNotifier {
   final AuthedUserRepository _repository;
 
   AuthedUser? currentUser;
+  String errorMessage = '';
 
   Future<void> implicitLogin() async {
     currentUser = await _repository.implicitLogin();
     notifyListeners();
+  }
+
+  Future<bool> signUpWithGoogle() async {
+    final googleUser = await _repository.signUpWithGoogle();
+    try {
+      final googleUser = await _repository.signUpWithGoogle();
+      if (googleUser == null) {
+        return false;
+      }
+      currentUser = googleUser;
+      notifyListeners();
+    } on PopTalkException catch (e) {
+      errorMessage = e.message;
+      notifyListeners();
+      return false;
+    }
+    return true;
+  }
+
+  Future<bool> signInWithGoogle() async {
+    try {
+      final googleUser = await _repository.signInWithGoogle();
+      if (googleUser == null) {
+        return false;
+      }
+      currentUser = googleUser;
+      notifyListeners();
+    } on PopTalkException catch (e) {
+      errorMessage = e.message;
+      notifyListeners();
+      return false;
+    }
+    return true;
+  }
+
+  Future<bool> signUpWithApple() async {
+    try {
+      final appleUser = await _repository.signUpWithApple();
+      if (appleUser == null) {
+        return false;
+      }
+      currentUser = appleUser;
+      notifyListeners();
+    } on PopTalkException catch (e) {
+      errorMessage = e.message;
+      notifyListeners();
+      return false;
+    }
+    return true;
+  }
+
+  Future<bool> signInWithApple() async {
+    try {
+      final appleUser = await _repository.signUpWithApple();
+      if (appleUser == null) {
+        return false;
+      }
+      currentUser = appleUser;
+      notifyListeners();
+    } on PopTalkException catch (e) {
+      errorMessage = e.message;
+      notifyListeners();
+      return false;
+    }
+    return true;
   }
 
   Future<void> likeTalk(TalkItem talk) async {
