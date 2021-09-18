@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,6 +42,16 @@ class MyTalkNotifier with ChangeNotifier {
 
   Future<void> fetchPostedItems() async {
     postedTalkItems = await _repository.fetchPostedItems(_authedUser);
+  }
+
+  Future<void> deleteTalkItemById({required TalkItem talkItem}) async {
+    if (!talkItem.isPublic) {
+      await File(talkItem.localUrl!).delete();
+      savedTalkItems.removeWhere((value) => value.id == talkItem.id);
+    }
+    postedTalkItems.removeWhere((value) => value.id == talkItem.id);
+    await _repository.deleteTalkItemById(talkItem.id);
+    notifyListeners();
   }
 }
 
