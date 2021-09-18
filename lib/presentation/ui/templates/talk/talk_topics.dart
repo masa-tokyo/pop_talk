@@ -5,7 +5,12 @@ import 'package:pop_talk/domain/model/talk_topic.dart';
 import 'package:pop_talk/presentation/notifier/gacha_timer.dart';
 import 'package:pop_talk/presentation/notifier/talk_topics.dart';
 import 'package:pop_talk/presentation/ui/pages/talk/post_recording_screen.dart';
-import 'package:pop_talk/presentation/ui/utils/functions.dart';
+import 'package:pop_talk/presentation/ui/utils/routes.dart';
+
+// ignore: top_level_function_literal_block
+final gachaAnimationProvider = StateProvider((ref) {
+  return false;
+});
 
 class TalkTopicsView extends StatelessWidget {
   const TalkTopicsView({
@@ -45,6 +50,8 @@ class TalkTopicsView extends StatelessWidget {
                           onPressed: _gachaTimerNotifier.remainingCount == 0
                               ? null
                               : () {
+                                  context.read(gachaAnimationProvider).state =
+                                      false;
                                   _gachaTimerNotifier.play();
                                   context.read(talkTopicProvider).reset();
                                 },
@@ -102,6 +109,9 @@ class _PopCornGridViewState extends State<PopCornGridView>
   double expanddelayTime = 0;
   double shrinkdelayTime = 0;
 
+  //微調整
+  double expandMax = 1.3;
+
   late final List<Animation<double>> fadeAnimations;
   late final List<Animation<double>> expandAnimations;
   late final List<Animation<double>> shrinkAnimations;
@@ -110,8 +120,10 @@ class _PopCornGridViewState extends State<PopCornGridView>
   late final AnimationController fadeController;
   late final AnimationController expandcontroller;
   late final AnimationController shrinkcontroller;
-  late final AnimationController controller2;
-  late final AnimationController scalecontroller;
+  int shrinkCount = 0;
+
+  double? popHeight;
+  double? popWidth;
 
   @override
   void initState() {
@@ -154,7 +166,7 @@ class _PopCornGridViewState extends State<PopCornGridView>
 
       return Tween(
         begin: 0.0,
-        end: 1.3,
+        end: expandMax,
       ).animate(CurvedAnimation(
         parent: expandcontroller,
         curve: Interval(expanddelayTime, expanddelayTime + 0.1,
@@ -173,7 +185,7 @@ class _PopCornGridViewState extends State<PopCornGridView>
     shrinkAnimations = widget.talkTopics.map((_) {
       shrinkdelayTime = shrinkdelayTime + 0.15;
       return Tween(
-        begin: 1.3,
+        begin: expandMax,
         end: 1.0,
       ).animate(CurvedAnimation(
         parent: shrinkcontroller,
@@ -183,7 +195,12 @@ class _PopCornGridViewState extends State<PopCornGridView>
           curve: Curves.decelerate,
         ),
       )..addStatusListener(
-          (status) {},
+          (status) async {
+            if (shrinkcontroller.isCompleted) {
+              Timer(const Duration(milliseconds: 2000),
+                  () => context.read(gachaAnimationProvider).state = true);
+            }
+          },
         ));
     }).toList();
 
@@ -192,26 +209,98 @@ class _PopCornGridViewState extends State<PopCornGridView>
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      crossAxisCount: 2,
-      children: widget.talkTopics.asMap().entries.map((entry) {
-        return Padding(
-          padding: const EdgeInsets.all(10),
-          child: InkWell(
-            onTap: () => _openPostRecordingScreen(
-                context,
-                entry.value.id,
-                entry.value),
-            child: FadeTransition(
-              opacity: fadeAnimations[entry.key],
-              child: AnimatedBuilder(
-                  animation: expandcontroller,
-                  builder: (buildContext, child) {
-                    return Transform.scale(
-                      scale: expandAnimations[entry.key].value != 1.3
-                          ? expandAnimations[entry.key].value
-                          : shrinkAnimations[entry.key].value,
-                      child: Container(
+    final size = MediaQuery.of(context).size;
+
+    double screenWidth;
+    screenWidth = size.width;
+    double maxPopWidth = 320;
+    if (screenWidth < 390) {
+      maxPopWidth = 320; //iphoneSE
+    } else if (screenWidth < 500) {
+      maxPopWidth = 390; //iphone12
+    } else {
+      maxPopWidth = 500; //flutter web
+    }
+
+    return Consumer(builder: (context, watch, __) {
+      final animationFlg = watch(gachaAnimationProvider).state;
+      return ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: maxPopWidth),
+        child: GridView.count(
+          crossAxisCount: 2,
+          children: widget.talkTopics.asMap().entries.map((entry) {
+            return Padding(
+              padding: const EdgeInsets.all(10),
+              child: InkWell(
+                onTap: () => _openPostRecordingScreen(
+                    context, entry.value.id, entry.value.name),
+                //アニメーション未実施の場合のUI
+                child: animationFlg == false
+                    ? FadeTransition(
+                        opacity: fadeAnimations[entry.key],
+                        child: AnimatedBuilder(
+                            animation: expandcontroller,
+                            builder: (buildContext, child) {
+                              return Transform.scale(
+                                scale: expandAnimations[entry.key].value !=
+                                        expandMax
+                                    ? expandAnimations[entry.key].value
+                                    : shrinkAnimations[entry.key].value,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      color: const Color(0xff804B3A),
+                                      width: 10,
+                                    ),
+                                    borderRadius: BorderRadius.circular(
+                                      50,
+                                    ),
+                                  ),
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                        left: 20,
+                                        top: 20,
+                                        child: Container(
+                                          height: 20,
+                                          width: 20,
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Color(0xffFF934E),
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        right: 20,
+                                        bottom: 20,
+                                        child: Container(
+                                          height: 20,
+                                          width: 20,
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            // ignore: lines_longer_than_80_chars
+                                            color: Color(0xffFF934E),
+                                          ),
+                                        ),
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Center(
+                                            child: Text(entry.value.name),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }),
+                      )
+                    //アニメーション実施済の場合のUI
+                    : Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
                           border: Border.all(
@@ -260,13 +349,12 @@ class _PopCornGridViewState extends State<PopCornGridView>
                           ],
                         ),
                       ),
-                    );
-                  }),
-            ),
-          ),
-        );
-      }).toList(),
-    );
+              ),
+            );
+          }).toList(),
+        ),
+      );
+    });
   }
 
   void _openPostRecordingScreen(
