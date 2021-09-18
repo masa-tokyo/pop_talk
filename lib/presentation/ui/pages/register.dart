@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/src/provider.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -89,10 +90,12 @@ class _RegisterPageState extends State<RegisterPage> {
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
                     onPressed: () async {
-                      isMember!
+                      final result = isMember!
                           ? await authNotifier.signInWithGoogle()
                           : await authNotifier.signUpWithGoogle();
-                      Navigator.pop(context);
+                      if (result) {
+                        Navigator.pop(context);
+                      }
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -124,10 +127,12 @@ class _RegisterPageState extends State<RegisterPage> {
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
                     onPressed: () async {
-                      isMember!
+                      final result = isMember!
                           ? await authNotifier.signInWithApple()
                           : await authNotifier.signUpWithApple();
-                      Navigator.pop(context);
+                      if (result) {
+                        Navigator.pop(context);
+                      }
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

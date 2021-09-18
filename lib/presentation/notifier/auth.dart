@@ -12,46 +12,76 @@ class AuthNotifier with ChangeNotifier {
   final AuthedUserRepository _repository;
 
   AuthedUser? currentUser;
+  String errorMessage = '';
 
   Future<void> implicitLogin() async {
     currentUser = await _repository.implicitLogin();
     notifyListeners();
   }
 
-  Future<void> signUpWithGoogle() async {
+  Future<bool> signUpWithGoogle() async {
     final googleUser = await _repository.signUpWithGoogle();
-    if (googleUser == null) {
-      return;
+    try {
+      final googleUser = await _repository.signUpWithGoogle();
+      if (googleUser == null) {
+        return false;
+      }
+      currentUser = googleUser;
+      notifyListeners();
+    } on PopTalkException catch (e) {
+      errorMessage = e.message;
+      notifyListeners();
+      return false;
     }
-    currentUser = googleUser;
-    notifyListeners();
+    return true;
   }
 
-  Future<void> signInWithGoogle() async {
-    final googleUser = await _repository.signInWithGoogle();
-    if (googleUser == null) {
-      return;
+  Future<bool> signInWithGoogle() async {
+    try {
+      final googleUser = await _repository.signInWithGoogle();
+      if (googleUser == null) {
+        return false;
+      }
+      currentUser = googleUser;
+      notifyListeners();
+    } on PopTalkException catch (e) {
+      errorMessage = e.message;
+      notifyListeners();
+      return false;
     }
-    currentUser = googleUser;
-    notifyListeners();
+    return true;
   }
 
-  Future<void> signUpWithApple() async {
-    final appleUser = await _repository.signUpWithApple();
-    if (appleUser == null) {
-      return;
+  Future<bool> signUpWithApple() async {
+    try {
+      final appleUser = await _repository.signUpWithApple();
+      if (appleUser == null) {
+        return false;
+      }
+      currentUser = appleUser;
+      notifyListeners();
+    } on PopTalkException catch (e) {
+      errorMessage = e.message;
+      notifyListeners();
+      return false;
     }
-    currentUser = appleUser;
-    notifyListeners();
+    return true;
   }
 
-  Future<void> signInWithApple() async {
-    final appleUser = await _repository.signInWithApple();
-    if (appleUser == null) {
-      return;
+  Future<bool> signInWithApple() async {
+    try {
+      final appleUser = await _repository.signUpWithApple();
+      if (appleUser == null) {
+        return false;
+      }
+      currentUser = appleUser;
+      notifyListeners();
+    } on PopTalkException catch (e) {
+      errorMessage = e.message;
+      notifyListeners();
+      return false;
     }
-    currentUser = appleUser;
-    notifyListeners();
+    return true;
   }
 
   Future<void> likeTalk(TalkItem talk) async {

@@ -74,66 +74,82 @@ class FirestoreAuthedUserRepository implements AuthedUserRepository {
   }
 
   @override
-  Future<AuthedUser> signUpWithGoogle() async {
-    final googleUser = await googleSignIn.signIn();
-    final googleAuth = await googleUser!.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
+  Future<AuthedUser?> signUpWithGoogle() async {
+    try {
+      final googleUser = await googleSignIn.signIn();
+      final googleAuth = await googleUser!.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
 
-    await _auth.currentUser!.linkWithCredential(credential);
+      await _auth.currentUser!.linkWithCredential(credential);
+    } catch (e) {
+      return null;
+    }
     return _getFirebaseUser();
   }
 
   @override
-  Future<AuthedUser> signInWithGoogle() async {
-    final googleUser = await googleSignIn.signIn();
-    // if (googleUser != null) {
-    final googleAuth = await googleUser!.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
+  Future<AuthedUser?> signInWithGoogle() async {
+    try {
+      final googleUser = await googleSignIn.signIn();
+      // if (googleUser != null) {
+      final googleAuth = await googleUser!.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
 
-    await _auth.signInWithCredential(credential);
+      await _auth.signInWithCredential(credential);
+      return _getFirebaseUser();
+    } catch (e) {
+      return null;
+    }
+  }
+
+  @override
+  Future<AuthedUser?> signUpWithApple() async {
+    try {
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      final oAuthProvider = OAuthProvider('apple.com');
+      final credential = oAuthProvider.credential(
+        idToken: appleCredential.identityToken,
+        accessToken: appleCredential.authorizationCode,
+      );
+
+      await _auth.currentUser!.linkWithCredential(credential);
+    } catch (e) {
+      return null;
+    }
     return _getFirebaseUser();
   }
 
   @override
-  Future<AuthedUser> signUpWithApple() async {
-    final appleCredential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-    );
+  Future<AuthedUser?> signInWithApple() async {
+    try {
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+      final oAuthProvider = OAuthProvider('apple.com');
+      final credential = oAuthProvider.credential(
+        idToken: appleCredential.identityToken,
+        accessToken: appleCredential.authorizationCode,
+      );
 
-    final oAuthProvider = OAuthProvider('apple.com');
-    final credential = oAuthProvider.credential(
-      idToken: appleCredential.identityToken,
-      accessToken: appleCredential.authorizationCode,
-    );
-
-    await _auth.currentUser!.linkWithCredential(credential);
-    return _getFirebaseUser();
-  }
-
-  @override
-  Future<AuthedUser> signInWithApple() async {
-    final appleCredential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-    );
-    final oAuthProvider = OAuthProvider('apple.com');
-    final credential = oAuthProvider.credential(
-      idToken: appleCredential.identityToken,
-      accessToken: appleCredential.authorizationCode,
-    );
-
-    await _auth.signInWithCredential(credential);
+      await _auth.signInWithCredential(credential);
+    } catch (e) {
+      return null;
+    }
     return _getFirebaseUser();
   }
 
