@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pop_talk/domain/model/talk_topic.dart';
+import 'package:pop_talk/presentation/notifier/player.dart';
 import 'package:pop_talk/presentation/notifier/recording.dart';
 import 'package:pop_talk/presentation/ui/pages/register.dart';
 import 'package:pop_talk/presentation/ui/templates/talk/after_recording_page.dart';
@@ -21,11 +23,10 @@ enum ScreenState {
 }
 
 class PostRecordingScreen extends StatefulWidget {
-  const PostRecordingScreen({
-    required this.talkTopicId,
-    required this.talkTopicName});
+  const PostRecordingScreen(
+      {required this.talkTopicId, required this.talkTopic});
   final String talkTopicId;
-  final String talkTopicName;
+  final TalkTopic talkTopic;
 
   @override
   _PostRecordingScreenState createState() => _PostRecordingScreenState();
@@ -62,12 +63,11 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
     _stopRecording();
     _flutterSoundRecorder.closeAudioSession();
 
-    if(!_isSaveFile){
+    if (!_isSaveFile) {
       final outputFile = File(_path);
       if (outputFile.existsSync()) {
         outputFile.delete();
       }
-
     }
 
     if (_recorderSubscription != null) {
@@ -78,7 +78,6 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Stack(alignment: AlignmentDirectional.topStart, children: [
         _page(context),
@@ -101,45 +100,50 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
     switch (_screenState) {
       case ScreenState.beforeRecording:
         page = BeforeRecordingPage(
-            onRecordingButtonPressed: _onRecordingButtonPressed,
-            talkTopicName: widget.talkTopicName,);
+          onRecordingButtonPressed: _onRecordingButtonPressed,
+          talkTopicName: widget.talkTopic.name,
+        );
         break;
       case ScreenState.duringRecording:
         page = DuringRecordingPage(
-            onStopButtonPressed: _onStopButtonPressed,
-            stream: _flutterSoundRecorder.onProgress!,
-            talkTopicName: widget.talkTopicName,);
+          onStopButtonPressed: _onStopButtonPressed,
+          stream: _flutterSoundRecorder.onProgress!,
+          talkTopicName: widget.talkTopic.name,
+        );
         break;
       case ScreenState.afterRecording:
         page = AfterRecordingPage(
-            onAgainButtonPressed: _onAgainButtonPressed,
-            onEditButtonPressed: _onEditButtonPressed,
-            talkTopicName: widget.talkTopicName,);
+          onAgainButtonPressed: _onAgainButtonPressed,
+          onEditButtonPressed: _onEditButtonPressed,
+          talkTopic: widget.talkTopic,
+          path: _path,
+        );
         break;
       case ScreenState.edit:
         page = TalkEditPage(
-            titleController: _titleController,
-            descriptionController: _descriptionController,
-            onPostButtonPressed: _onPostButtonPressed,
-            onDraftSaveButtonPressed: _onDraftSaveButtonPressed,
-            talkTopicName: widget.talkTopicName,);
+          titleController: _titleController,
+          descriptionController: _descriptionController,
+          onPostButtonPressed: _onPostButtonPressed,
+          onDraftSaveButtonPressed: _onDraftSaveButtonPressed,
+          talkTopicName: widget.talkTopic.name,
+        );
         break;
     }
     return page;
   }
 
-  Future<void> _onRecordingButtonPressed() async{
-      setState(() {
-        _screenState = ScreenState.duringRecording;
-      });
-      await _startRecording();
-
+  Future<void> _onRecordingButtonPressed() async {
+    setState(() {
+      _screenState = ScreenState.duringRecording;
+    });
+    await _startRecording();
   }
 
-  Future<void> _onStopButtonPressed() async{
+  Future<void> _onStopButtonPressed() async {
     await _stopRecording();
     setState(() {
       _screenState = ScreenState.afterRecording;
+      context.read(playerProvider).initPlayer(AudioPlayType.file, path: _path);
     });
   }
 
@@ -160,43 +164,34 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
     });
   }
 
-  Future<void> _onPostButtonPressed() async{
-    final recordingNotifier
-                      = context.read<RecordingNotifier>(recordingProvider);
+  Future<void> _onPostButtonPressed() async {
+    final recordingNotifier =
+        context.read<RecordingNotifier>(recordingProvider);
 
-    if(recordingNotifier.authedUser.isAnonymous){
-
+    if (recordingNotifier.authedUser.isAnonymous) {
       await showModalBottomSheet<void>(
           context: context,
           isScrollControlled: true,
-          builder: (context){
-            return StatefulBuilder(
-                builder: (context, setState){
-              return RegisterPage(
-                  isMember: false,
-                  modalSetState: setState);
-            }
-            );
+          builder: (context) {
+            return StatefulBuilder(builder: (context, setState) {
+              return RegisterPage(isMember: false, modalSetState: setState);
+            });
           });
-
-    } else{
+    } else {
       await recordingNotifier.postRecording(
           title: _titleController.text,
           description: _descriptionController.text,
           path: _path,
           duration: _duration,
-          talkTopicId: widget.talkTopicId
-      );
-
+          talkTopicId: widget.talkTopicId);
 
       Navigator.pop(context);
     }
-
   }
 
-  Future<void> _onDraftSaveButtonPressed() async{
-    final recordingNotifier
-                    = context.read<RecordingNotifier>(recordingProvider);
+  Future<void> _onDraftSaveButtonPressed() async {
+    final recordingNotifier =
+        context.read<RecordingNotifier>(recordingProvider);
     await recordingNotifier.saveDraft(
       title: _titleController.text,
       description: _descriptionController.text,
@@ -207,9 +202,7 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
 
     _isSaveFile = true;
     Navigator.pop(context);
-
   }
-
 
   //-----------------------------------------------------------Recording Methods
   Future<void> _openTheRecorder() async {
@@ -238,5 +231,4 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
   Future<void> _stopRecording() async {
     await _flutterSoundRecorder.stopRecorder();
   }
-
 }

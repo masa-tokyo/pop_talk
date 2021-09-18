@@ -13,9 +13,8 @@ class TalkTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
-    return Padding(
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 12),
       padding: const EdgeInsets.only(top: 4),
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -31,18 +30,17 @@ class TalkTile extends StatelessWidget {
                 width: 1,
               ),
               borderRadius: BorderRadius.circular(12)),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Expanded(
+                    child: Column(
                       children: [
                         Container(
-                          width: width * 0.36,
-                          height: height * 0.12,
+                          constraints: const BoxConstraints(
+                              minHeight: 120, maxWidth: 200),
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.black38),
                             borderRadius: BorderRadius.circular(12),
@@ -52,6 +50,7 @@ class TalkTile extends StatelessWidget {
                             alignment: AlignmentDirectional.center,
                             children: [
                               Container(
+                                width: double.infinity,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(4),
                                   color: Colors.black26,
@@ -91,10 +90,10 @@ class TalkTile extends StatelessWidget {
                           ),
                         ),
                         if (isPublic)
-                          SizedBox(
-                            width: width * 0.36,
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 200),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Row(
                                   children: [
@@ -113,11 +112,14 @@ class TalkTile extends StatelessWidget {
                           ),
                       ],
                     ),
-                    SizedBox(
-                      height: height * 0.12,
-                      width: width * 0.40,
+                  ),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.only(left: 12),
+                      constraints:
+                          const BoxConstraints(maxWidth: 200, minHeight: 120),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Text(
                             talkItem.title ?? '無題',
@@ -134,10 +136,8 @@ class TalkTile extends StatelessWidget {
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ],
+                  ),
+                ]),
           ),
         ),
       ),
@@ -159,7 +159,6 @@ void _showModalBottomSheet({
       return StatefulBuilder(
         builder: (BuildContext context, StateSetter modalSetState) {
           return SizedBox(
-            height: MediaQuery.of(context).size.height * 0.88,
             child: PreviewPage(
               talkItem: talkItem,
               modalSetState: modalSetState,

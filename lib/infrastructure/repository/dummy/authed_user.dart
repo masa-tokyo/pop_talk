@@ -36,4 +36,15 @@ class DummyAuthedUserRepository implements AuthedUserRepository {
   Future signInWithApple() async {
     return authedUser;
   }
+
+  @override
+  Future<void> likeTalk(AuthedUser user, String talkId) async {
+    return;
+  }
+
+  @override
+  Future<void> followUser(AuthedUser user, String userId) async {
+    return;
+  }
+
 }

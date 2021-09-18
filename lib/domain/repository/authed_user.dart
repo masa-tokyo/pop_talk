@@ -6,4 +6,6 @@ abstract class AuthedUserRepository {
   Future signInWithGoogle();
   Future signUpWithApple();
   Future signInWithApple();
+  Future<void> likeTalk(AuthedUser user, String talkId);
+  Future<void> followUser(AuthedUser user, String userId);
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pop_talk/domain/model/authed_user.dart';
+import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/domain/repository/authed_user.dart';
 
 class AuthNotifier with ChangeNotifier {
@@ -37,7 +37,23 @@ class AuthNotifier with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addLikeTalk() async {}
+  Future<void> likeTalk(TalkItem talk) async {
+    if (currentUser == null) {
+      return;
+    }
+    currentUser!.likeTalk(talk.id);
+    await _repository.likeTalk(currentUser!, talk.id);
+    notifyListeners();
+  }
+
+  Future<void> followUser(TalkUser user) async {
+    if (currentUser == null) {
+      return;
+    }
+    currentUser!.followUser(user.id);
+    await _repository.followUser(currentUser!, user.id);
+    notifyListeners();
+  }
 }
 
 final authProvider = ChangeNotifierProvider<AuthNotifier>(

@@ -36,67 +36,78 @@ class _ExistingTalkEditPageState extends State<ExisitingTalkEditPage> {
                   ),
                 ),
               ),
-              Text(widget.talkItem.topicName,
-                  style: TextStyle(
-                    fontSize: Theme.of(context).textTheme.headline2!.fontSize,
-                  )),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 32),
-                child: Divider(
-                  color: Colors.grey,
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 600),
+                child: Column(
+                  children: [
+                    Text(widget.talkItem.topicName,
+                        style: TextStyle(
+                          fontSize:
+                              Theme.of(context).textTheme.headline2!.fontSize,
+                        )),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 32),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 24),
-                child: Text(
-                  'タイトル',
-                  style: TextStyle(
-                    fontSize: Theme.of(context).textTheme.headline4!.fontSize,
-                    fontWeight: FontWeight.bold,
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 24),
+                  child: Text(
+                    'タイトル',
+                    style: TextStyle(
+                      fontSize: Theme.of(context).textTheme.headline4!.fontSize,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: TextField(
-                  controller: titleController,
-                  maxLines: 1,
-                  maxLength: 40,
-                  keyboardType: TextInputType.text,
-                  decoration: const InputDecoration(
-                    hintText: '40字以内で入力してください',
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: TextField(
+                    controller: titleController,
+                    maxLines: 1,
+                    maxLength: 40,
+                    keyboardType: TextInputType.text,
+                    decoration: const InputDecoration(
+                      hintText: '40字以内で入力してください',
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 24),
-                child: Text(
-                  '説明',
-                  style: TextStyle(
-                    fontSize: Theme.of(context).textTheme.headline4!.fontSize,
-                    fontWeight: FontWeight.bold,
+                Padding(
+                  padding: const EdgeInsets.only(left: 24),
+                  child: Text(
+                    '説明',
+                    style: TextStyle(
+                      fontSize: Theme.of(context).textTheme.headline4!.fontSize,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: TextField(
-                  controller: descriptionController,
-                  maxLines: 5,
-                  maxLength: 800,
-                  keyboardType: TextInputType.text,
-                  decoration: const InputDecoration(
-                    hintText:
-                        '例) A子ちゃんとのスタバでのおしゃべりです。とってもゆるい感じですが、よかったら聴いてください笑',
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: TextField(
+                    controller: descriptionController,
+                    maxLines: 5,
+                    maxLength: 800,
+                    keyboardType: TextInputType.text,
+                    decoration: const InputDecoration(
+                      hintText:
+                          '例) A子ちゃんとのスタバでのおしゃべりです。とってもゆるい感じですが、よかったら聴いてください笑',
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           TextButton(
             onPressed: () {

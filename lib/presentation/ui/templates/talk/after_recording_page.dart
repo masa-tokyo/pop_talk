@@ -1,96 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pop_talk/domain/model/talk_topic.dart';
 import 'package:pop_talk/presentation/ui/molecules/elevated_circle_button_with_icon.dart';
+import 'package:pop_talk/presentation/ui/templates/talk/recording_preview_card.dart';
 
 class AfterRecordingPage extends StatelessWidget {
   const AfterRecordingPage({
     required this.onAgainButtonPressed,
     required this.onEditButtonPressed,
-    required this.talkTopicName});
+    required this.talkTopic,
+    required this.path});
 
   final VoidCallback onAgainButtonPressed;
   final VoidCallback onEditButtonPressed;
-  final String talkTopicName;
+  final TalkTopic talkTopic;
+  final String path;
 
   @override
   Widget build(BuildContext context) {
-    const _currentValue = 0.3;
 
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            children: [
-              const SizedBox(
-                height: 100,
-              ),
-              Text(talkTopicName,
-                  style: TextStyle(
-                    fontSize: Theme.of(context).textTheme.headline2!.fontSize,
-                  )),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 32),
-                child: Divider(
-                  color: Colors.grey,
-                ),
-              ),
-            ],
-          ),
-          Column(
-            children: [
-              SizedBox(
-                width: 80,
-                height: 80,
-                child: ElevatedButton(
-                    onPressed: () {
-                      return;
-                    },
-                    style: ButtonStyle(
-                        backgroundColor:
-                        MaterialStateProperty.all(Colors.deepOrangeAccent),
-                        shape: MaterialStateProperty.all(const CircleBorder(
-                            side: BorderSide(color: Colors.deepOrangeAccent)))),
-                    child: const FaIcon( FontAwesomeIcons.play,
-                      size: 24,
-                    )),
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              //todo update the value
-              Slider(
-                value: _currentValue,
-                onChanged: (value) {
-                  return;
-                },
-                activeColor: Colors.deepOrangeAccent,
-                inactiveColor: Colors.grey[300],
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '2:12',
-                      style: TextStyle(
-                          fontSize:
-                          Theme.of(context).textTheme.headline5!.fontSize),
-                    ),
-                    Text(
-                      '12:02',
-                      style: TextStyle(
-                          fontSize:
-                          Theme.of(context).textTheme.headline5!.fontSize),
-                    )
-                  ],
-                ),
-              )
-            ],
+          const SizedBox(height: 52,),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: RecordingPreviewCard(talkTopic: talkTopic, path: path,),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 60),
+            padding: const EdgeInsets.only(top: 16, bottom: 32),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
