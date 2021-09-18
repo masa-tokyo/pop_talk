@@ -8,9 +8,7 @@ import 'package:pop_talk/domain/repository/talk_item.dart';
 import 'package:pop_talk/presentation/notifier/auth.dart';
 
 class MyTalkNotifier with ChangeNotifier {
-  MyTalkNotifier(this._repository, this._authedUser) {
-    init();
-  }
+  MyTalkNotifier(this._repository, this._authedUser);
 
   final AuthedUser _authedUser;
   final TalkItemRepository _repository;
@@ -45,7 +43,7 @@ class MyTalkNotifier with ChangeNotifier {
   }
 }
 
-final myTalkProvider = ChangeNotifierProvider<MyTalkNotifier>(
+final myTalkProvider = ChangeNotifierProvider.autoDispose<MyTalkNotifier>(
   (ref) {
     final authNotifier = ref.read(authProvider);
     if (authNotifier.currentUser == null) {
@@ -54,6 +52,6 @@ final myTalkProvider = ChangeNotifierProvider<MyTalkNotifier>(
     return MyTalkNotifier(
       GetIt.instance.get<TalkItemRepository>(),
       authNotifier.currentUser!,
-    );
+    )..init();
   },
 );
