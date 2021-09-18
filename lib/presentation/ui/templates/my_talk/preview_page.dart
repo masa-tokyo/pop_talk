@@ -42,10 +42,10 @@ class _PreviewPageState extends State<PreviewPage> {
                 IconButton(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   onPressed: () async {
-                    await context
-                        .read(myTalkProvider)
-                        .deleteTalkItemById(talkItem: widget.talkItem);
-                    Navigator.of(context).pop();
+                    await _deleteDialog(
+                      context: context,
+                      talkItem: widget.talkItem,
+                    );
                   },
                   icon: const Icon(
                     Icons.delete_outline_outlined,
@@ -286,11 +286,11 @@ class _PreviewPageState extends State<PreviewPage> {
   }
 }
 
-void _showModalBottomSheet({
+Future<void> _showModalBottomSheet({
   required BuildContext context,
   required Widget page,
-}) {
-  showModalBottomSheet<void>(
+}) async {
+  await showModalBottomSheet<void>(
     context: context,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10),
@@ -299,5 +299,51 @@ void _showModalBottomSheet({
     builder: (context) {
       return page;
     },
+  );
+}
+
+Future<void> _deleteDialog({
+  required BuildContext context,
+  required TalkItem talkItem,
+}) {
+  return showDialog<void>(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      title: const Text(
+        'トークを削除しますか?',
+        textAlign: TextAlign.center,
+      ),
+      actions: [
+        TextButton(
+          style: TextButton.styleFrom(
+            primary: Colors.black,
+            backgroundColor: Colors.white,
+          ),
+          child: const Text(
+            'いいえ',
+          ),
+          onPressed: () {
+            Navigator.of(ctx).pop();
+          },
+        ),
+        TextButton(
+          style: TextButton.styleFrom(
+            primary: Colors.black,
+            backgroundColor: Colors.white,
+          ),
+          child: const Text('はい'),
+          onPressed: () async {
+            await context
+                .read(myTalkProvider)
+                .deleteTalkItemById(talkItem: talkItem);
+            Navigator.of(ctx).pop();
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    ),
   );
 }
