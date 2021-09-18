@@ -87,13 +87,6 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
                             ),
                           ],
                         ),
-                        InkWell(
-                          onTap: () async {
-                            await FirebaseAuth.instance.signOut();
-                            await _authNotifier.implicitLogin();
-                          },
-                          child: Text('ログアウト'),
-                        ),
                       ],
                     ),
                   ),
