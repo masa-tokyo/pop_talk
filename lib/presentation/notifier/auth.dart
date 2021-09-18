@@ -19,18 +19,22 @@ class AuthNotifier with ChangeNotifier {
 
   Future<void> signUpWithGoogle() async {
     await _repository.signUpWithGoogle();
+    notifyListeners();
   }
 
   Future<void> signInWithGoogle() async {
     await _repository.signInWithGoogle();
+    notifyListeners();
   }
 
   Future<void> signUpWithApple() async {
     await _repository.signUpWithApple();
+    notifyListeners();
   }
 
   Future<void> signInWithApple() async {
     await _repository.signInWithApple();
+    notifyListeners();
   }
 
   Future<void> addLikeTalk() async {}
