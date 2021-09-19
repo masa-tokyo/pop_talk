@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "999109151178",
+    "project_id": "poptalk-production",
+    "storage_bucket": "poptalk-production.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:999109151178:android:53eaae36ab430a601c6733",
+        "android_client_info": {
+          "package_name": "com.yamyanu.poptalk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "999109151178-ngns5fca4d3j2rkm9abei15rc3d0ad7s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAc81PiowJv7Z03uyn1S8B2zBCC0QH9lM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "999109151178-ngns5fca4d3j2rkm9abei15rc3d0ad7s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "999109151178-k5jletvstnpjtc6qagjed7qcrad30pk9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.yamyanu.poptalk"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
