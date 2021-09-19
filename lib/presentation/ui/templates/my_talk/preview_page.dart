@@ -338,7 +338,7 @@ Future<void> _deleteDialog({
           onPressed: () async {
             await context
                 .read(myTalkProvider)
-                .deleteTalkItemById(talkItem: talkItem);
+                .deleteTalkItem(talkItem: talkItem);
             Navigator.of(ctx).pop();
             Navigator.of(context).pop();
           },

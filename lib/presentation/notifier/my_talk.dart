@@ -44,14 +44,12 @@ class MyTalkNotifier with ChangeNotifier {
     postedTalkItems = await _repository.fetchPostedItems(_authedUser);
   }
 
-  Future<void> deleteTalkItemById({required TalkItem talkItem}) async {
-    if (!talkItem.isPublic) {
-      final url = talkItem.localUrl;
-      if (url != null) {
-        await File(talkItem.localUrl!).delete();
-      }
-      savedTalkItems.removeWhere((value) => value.id == talkItem.id);
+  Future<void> deleteTalkItem({required TalkItem talkItem}) async {
+    final url = talkItem.localUrl;
+    if (url != null) {
+      await File(talkItem.localUrl!).delete();
     }
+    savedTalkItems.removeWhere((value) => value.id == talkItem.id);
     postedTalkItems.removeWhere((value) => value.id == talkItem.id);
     await _repository.deleteTalkItem(talkItem);
     notifyListeners();
