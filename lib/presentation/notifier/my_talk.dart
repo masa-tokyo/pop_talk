@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,9 +10,7 @@ import 'package:pop_talk/domain/repository/talk_item.dart';
 import 'package:pop_talk/presentation/notifier/auth.dart';
 
 class MyTalkNotifier with ChangeNotifier {
-  MyTalkNotifier(this._repository, this._authedUser) {
-    init();
-  }
+  MyTalkNotifier(this._repository, this._authedUser);
 
   final AuthedUser _authedUser;
   final TalkItemRepository _repository;
@@ -43,9 +43,20 @@ class MyTalkNotifier with ChangeNotifier {
   Future<void> fetchPostedItems() async {
     postedTalkItems = await _repository.fetchPostedItems(_authedUser);
   }
+
+  Future<void> deleteTalkItem({required TalkItem talkItem}) async {
+    final url = talkItem.localUrl;
+    if (url != null) {
+      await File(talkItem.localUrl!).delete();
+    }
+    savedTalkItems.removeWhere((value) => value.id == talkItem.id);
+    postedTalkItems.removeWhere((value) => value.id == talkItem.id);
+    await _repository.deleteTalkItem(talkItem);
+    notifyListeners();
+  }
 }
 
-final myTalkProvider = ChangeNotifierProvider<MyTalkNotifier>(
+final myTalkProvider = ChangeNotifierProvider.autoDispose<MyTalkNotifier>(
   (ref) {
     final authNotifier = ref.read(authProvider);
     if (authNotifier.currentUser == null) {
@@ -54,6 +65,6 @@ final myTalkProvider = ChangeNotifierProvider<MyTalkNotifier>(
     return MyTalkNotifier(
       GetIt.instance.get<TalkItemRepository>(),
       authNotifier.currentUser!,
-    );
+    )..init();
   },
 );

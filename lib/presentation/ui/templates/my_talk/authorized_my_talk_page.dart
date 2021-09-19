@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/domain/model/authed_user.dart';
+import 'package:pop_talk/presentation/notifier/my_talk.dart';
 import 'package:pop_talk/presentation/ui/organisms/talk_tile.dart';
 
 class AuthorizedMyTalkPage extends StatefulWidget {
@@ -132,33 +134,54 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
                     ),
                     Container(
                       height: _tabIndex == 0
-                          ? (175 * widget.savedTalkItems.length).toDouble()
-                          : (195 * widget.postedTalkItems.length).toDouble(),
+                          ? widget.savedTalkItems.isEmpty
+                              ? 400
+                              : (175 * widget.savedTalkItems.length).toDouble()
+                          : widget.postedTalkItems.isEmpty
+                              ? 400
+                              : (195 * widget.postedTalkItems.length)
+                                  .toDouble(),
                       constraints: const BoxConstraints(maxWidth: 600),
-                      child: TabBarView(
-                        children: [
-                          ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: widget.savedTalkItems.length,
-                            itemBuilder: (BuildContext context, int i) {
-                              return TalkTile(
-                                talkItem: widget.savedTalkItems[i],
-                                isPublic: false,
-                              );
-                            },
-                          ),
-                          ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: widget.postedTalkItems.length,
-                            itemBuilder: (BuildContext context, int i) {
-                              return TalkTile(
-                                talkItem: widget.postedTalkItems[i],
-                                isPublic: true,
-                              );
-                            },
-                          ),
-                        ],
-                      ),
+                      child: Consumer(builder: (context, watch, _) {
+                        return TabBarView(
+                          children: [
+                            widget.savedTalkItems.isEmpty
+                                ? const Center(
+                                    child: Text(
+                                      '保存済みのトークはまだありません',
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: widget.savedTalkItems.length,
+                                    itemBuilder: (BuildContext context, int i) {
+                                      return TalkTile(
+                                        talkItem: widget.savedTalkItems[i],
+                                        isPublic: false,
+                                      );
+                                    },
+                                  ),
+                            widget.postedTalkItems.isEmpty
+                                ? const Center(
+                                    child: Text(
+                                      '配信済みのトークはまだありません',
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: widget.postedTalkItems.length,
+                                    itemBuilder: (BuildContext context, int i) {
+                                      return TalkTile(
+                                        talkItem: widget.postedTalkItems[i],
+                                        isPublic: true,
+                                      );
+                                    },
+                                  ),
+                          ],
+                        );
+                      }),
                     ),
                   ],
                 ),

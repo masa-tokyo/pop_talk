@@ -226,6 +226,15 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
       'likeNumber': 0,
     });
   }
+
+  @override
+  Future<void> deleteTalkItem(TalkItem talkItem) async {
+    final url = talkItem.url;
+    if (url != null) {
+      await _storage.refFromURL(url).delete();
+    }
+    await _firestore.collection('talks').doc(talkItem.id).delete();
+  }
 }
 
 @freezed

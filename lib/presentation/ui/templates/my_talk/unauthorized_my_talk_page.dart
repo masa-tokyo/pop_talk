@@ -82,18 +82,26 @@ class UnauthorizedMyTalkPage extends StatelessWidget {
               ),
             ),
             Container(
-              height: (175 * savedTalkItems.length).toDouble(),
+              height: savedTalkItems.isEmpty
+                  ? 400
+                  : (175 * savedTalkItems.length).toDouble(),
               constraints: const BoxConstraints(maxWidth: 600),
-              child: ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: savedTalkItems.length,
-                itemBuilder: (BuildContext context, int i) {
-                  return TalkTile(
-                    talkItem: savedTalkItems[i],
-                    isPublic: false,
-                  );
-                },
-              ),
+              child: savedTalkItems.isEmpty
+                  ? const Center(
+                      child: Text(
+                        '保存済みのトークはまだありません',
+                      ),
+                    )
+                  : ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: savedTalkItems.length,
+                      itemBuilder: (BuildContext context, int i) {
+                        return TalkTile(
+                          talkItem: savedTalkItems[i],
+                          isPublic: false,
+                        );
+                      },
+                    ),
             ),
           ],
         ),

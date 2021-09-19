@@ -179,15 +179,19 @@ class DummyTalkItemRepository implements TalkItemRepository {
   }
 
   @override
-  Future<void> saveDraft(
-  {required String talkTopicId,
+  Future<void> saveDraft({
+    required String talkTopicId,
     required String title,
     required String description,
     required String localPath,
     required int duration,
-    required String createdUserId,}
-      ) async{
+    required String createdUserId,
+  }) async {
     throw UnimplementedError();
+  }
 
+  @override
+  Future<void> deleteTalkItem(TalkItem talkItem) async {
+    _talkItems.removeWhere((talk) => talk.id == talkItem.id);
   }
 }

@@ -22,12 +22,14 @@ abstract class TalkItemRepository {
     required String createdUserId,
   });
 
-  Future<void> saveDraft(
-  {required String talkTopicId,
-  required String title,
-  required String description,
-  required String localPath,
-  required int duration,
-  required String createdUserId,}
-      );
+  Future<void> saveDraft({
+    required String talkTopicId,
+    required String title,
+    required String description,
+    required String localPath,
+    required int duration,
+    required String createdUserId,
+  });
+
+  Future<void> deleteTalkItem(TalkItem talkItem);
 }
