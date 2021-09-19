@@ -191,7 +191,7 @@ class DummyTalkItemRepository implements TalkItemRepository {
   }
 
   @override
-  Future<void> deleteTalkItemById(String talkId) async {
-    _talkItems.removeWhere((talk) => talk.id == talkId);
+  Future<void> deleteTalkItem(TalkItem talkItem) async {
+    _talkItems.removeWhere((talk) => talk.id == talkItem.id);
   }
 }

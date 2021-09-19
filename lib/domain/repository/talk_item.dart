@@ -31,5 +31,5 @@ abstract class TalkItemRepository {
     required String createdUserId,
   });
 
-  Future<void> deleteTalkItemById(String talkId);
+  Future<void> deleteTalkItem(TalkItem talkItem);
 }
