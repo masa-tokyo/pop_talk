@@ -54,6 +54,11 @@ class MyTalkNotifier with ChangeNotifier {
     await _repository.deleteTalkItem(talkItem);
     notifyListeners();
   }
+
+  Future<void> stopPostingTalk({required TalkItem talkItem}) async {
+    await _repository.stopPostingTalk(talkItem);
+    await init();
+  }
 }
 
 final myTalkProvider = ChangeNotifierProvider.autoDispose<MyTalkNotifier>(

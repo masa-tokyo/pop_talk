@@ -32,4 +32,6 @@ abstract class TalkItemRepository {
   });
 
   Future<void> deleteTalkItem(TalkItem talkItem);
+
+  Future<void> stopPostingTalk(TalkItem talkItem);
 }

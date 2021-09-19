@@ -235,6 +235,18 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
     }
     await _firestore.collection('talks').doc(talkItem.id).delete();
   }
+
+  @override
+  Future<void> stopPostingTalk(TalkItem talkItem) async {
+    final docRef = _firestore.collection('talks').doc(talkItem.id);
+    final oldTalkItem = await docRef.get();
+
+    final newTalk = <String, dynamic>{
+      ...oldTalkItem.data()!,
+      'isPublic': false,
+    };
+    await docRef.update(newTalk);
+  }
 }
 
 @freezed

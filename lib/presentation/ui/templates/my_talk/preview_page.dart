@@ -42,9 +42,12 @@ class _PreviewPageState extends State<PreviewPage> {
                 IconButton(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   onPressed: () async {
-                    await _deleteDialog(
+                    await _confirmDialog(
                       context: context,
-                      talkItem: widget.talkItem,
+                      content: 'トークを削除しますか？',
+                      function: context
+                          .read(myTalkProvider)
+                          .deleteTalkItem(talkItem: widget.talkItem),
                     );
                   },
                   icon: const Icon(
@@ -250,8 +253,14 @@ class _PreviewPageState extends State<PreviewPage> {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () {
-                          // 配信停止 or 配信する
+                        onPressed: () async {
+                          await _confirmDialog(
+                            context: context,
+                            content: 'トークを配信停止にしますか？',
+                            function: context
+                                .read(myTalkProvider)
+                                .stopPostingTalk(talkItem: widget.talkItem),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Theme.of(context).primaryColor,
@@ -302,18 +311,19 @@ Future<void> _showModalBottomSheet({
   );
 }
 
-Future<void> _deleteDialog({
+Future<void> _confirmDialog({
   required BuildContext context,
-  required TalkItem talkItem,
-}) {
+  required String content,
+  required Future<void> function,
+}) async {
   return showDialog<void>(
     context: context,
     builder: (ctx) => AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      title: const Text(
-        'トークを削除しますか?',
+      title: Text(
+        content,
         textAlign: TextAlign.center,
       ),
       actions: [
@@ -336,9 +346,7 @@ Future<void> _deleteDialog({
           ),
           child: const Text('はい'),
           onPressed: () async {
-            await context
-                .read(myTalkProvider)
-                .deleteTalkItem(talkItem: talkItem);
+            await function;
             Navigator.of(ctx).pop();
             Navigator.of(context).pop();
           },
