@@ -24,6 +24,7 @@ environment:
 dependencies:
   cloud_firestore: ^2.4.0
   collection: ^1.15.0
+  crypto: ^3.0.1
   firebase_auth: ^3.0.1
   firebase_core: ^1.4.0
   firebase_storage: ^9.0.0
@@ -38,11 +39,10 @@ dependencies:
   get_it: ^7.2.0
   google_fonts: ^2.1.0
   google_sign_in: ^5.1.0
-  sign_in_with_apple: ^3.0.0
-  crypto: ^3.0.1
   json_serializable: ^4.1.0
   just_audio: ^0.9.11
   path_provider: ^2.0.2
+  sign_in_with_apple: ^3.0.0
   uuid: ^3.0.4
 
 dev_dependencies:
