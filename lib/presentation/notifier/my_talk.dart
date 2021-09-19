@@ -45,9 +45,9 @@ class MyTalkNotifier with ChangeNotifier {
   }
 
   Future<void> deleteTalkItem({required TalkItem talkItem}) async {
-    final url = talkItem.localUrl;
-    if (url != null) {
-      await File(talkItem.localUrl!).delete();
+    final localUrl = talkItem.localUrl;
+    if (localUrl != null) {
+      await File(localUrl).delete();
     }
     savedTalkItems.removeWhere((value) => value.id == talkItem.id);
     postedTalkItems.removeWhere((value) => value.id == talkItem.id);
@@ -57,6 +57,15 @@ class MyTalkNotifier with ChangeNotifier {
 
   Future<void> stopPostingTalk({required TalkItem talkItem}) async {
     await _repository.stopPostingTalk(talkItem);
+    await init();
+  }
+
+  Future<void> postSavedTalk({required TalkItem talkItem}) async {
+    final localUrl = talkItem.localUrl;
+    await _repository.postSavedTalk(talkItem);
+    if (localUrl != null) {
+      await File(localUrl).delete();
+    }
     await init();
   }
 }

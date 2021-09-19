@@ -45,9 +45,8 @@ class _PreviewPageState extends State<PreviewPage> {
                     await _confirmDialog(
                       context: context,
                       content: 'トークを削除しますか？',
-                      function: context
-                          .read(myTalkProvider)
-                          .deleteTalkItem(talkItem: widget.talkItem),
+                      talkItem: widget.talkItem,
+                      toDelete: true,
                     );
                   },
                   icon: const Icon(
@@ -254,13 +253,19 @@ class _PreviewPageState extends State<PreviewPage> {
                       ),
                       ElevatedButton(
                         onPressed: () async {
-                          await _confirmDialog(
-                            context: context,
-                            content: 'トークを配信停止にしますか？',
-                            function: context
-                                .read(myTalkProvider)
-                                .stopPostingTalk(talkItem: widget.talkItem),
-                          );
+                          widget.talkItem.isPublic
+                              ? await _confirmDialog(
+                                  context: context,
+                                  content: 'トークを配信停止にしますか？',
+                                  talkItem: widget.talkItem,
+                                  toDelete: false,
+                                )
+                              : await _confirmDialog(
+                                  context: context,
+                                  content: 'トークを配信しますか？',
+                                  talkItem: widget.talkItem,
+                                  toDelete: false,
+                                );
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Theme.of(context).primaryColor,
@@ -314,7 +319,8 @@ Future<void> _showModalBottomSheet({
 Future<void> _confirmDialog({
   required BuildContext context,
   required String content,
-  required Future<void> function,
+  required TalkItem talkItem,
+  required bool toDelete,
 }) async {
   return showDialog<void>(
     context: context,
@@ -346,7 +352,17 @@ Future<void> _confirmDialog({
           ),
           child: const Text('はい'),
           onPressed: () async {
-            await function;
+            toDelete
+                ? await context
+                    .read(myTalkProvider)
+                    .deleteTalkItem(talkItem: talkItem)
+                : talkItem.isPublic
+                    ? await context
+                        .read(myTalkProvider)
+                        .stopPostingTalk(talkItem: talkItem)
+                    : await context
+                        .read(myTalkProvider)
+                        .postSavedTalk(talkItem: talkItem);
             Navigator.of(ctx).pop();
             Navigator.of(context).pop();
           },

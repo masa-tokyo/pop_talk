@@ -243,9 +243,47 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
 
     final newTalk = <String, dynamic>{
       ...oldTalkItem.data()!,
+      'publishedAt': null,
       'isPublic': false,
     };
     await docRef.update(newTalk);
+  }
+
+  @override
+  Future<void> postSavedTalk(TalkItem talkItem) async {
+    final url = talkItem.url;
+    final docRef = _firestore.collection('talks').doc(talkItem.id);
+    final oldTalkItem = await docRef.get();
+
+    if (url == null) {
+      final storagePath = const Uuid().v1();
+
+      final storageRef = _storage.ref().child(storagePath);
+      final uploadTask = storageRef.putFile(
+          File(talkItem.localUrl!),
+          SettableMetadata(
+            contentType: 'audio/aac',
+          ));
+      final downloadUrl = await uploadTask
+          .then((TaskSnapshot snapshot) => snapshot.ref.getDownloadURL());
+
+      final newTalk = <String, dynamic>{
+        ...oldTalkItem.data()!,
+        'publishedAt': DateTime.now(),
+        'isPublic': true,
+        'url': downloadUrl,
+        'storagePath': storagePath,
+        'localUrl': null,
+      };
+      await docRef.update(newTalk);
+    } else {
+      final newTalk = <String, dynamic>{
+        ...oldTalkItem.data()!,
+        'publishedAt': DateTime.now(),
+        'isPublic': true,
+      };
+      await docRef.update(newTalk);
+    }
   }
 }
 
