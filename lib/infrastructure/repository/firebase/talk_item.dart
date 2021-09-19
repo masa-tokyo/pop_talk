@@ -230,11 +230,9 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
   @override
   Future<void> deleteTalkItem(TalkItem talkItem) async {
     if (talkItem.isPublic) {
-      if (talkItem.url != null) {
-        final url = talkItem.url;
-        if (url != null) {
-          await _storage.refFromURL(url).delete();
-        }
+      final url = talkItem.url;
+      if (url != null) {
+        await _storage.refFromURL(url).delete();
       }
     }
     await _firestore.collection('talks').doc(talkItem.id).delete();
