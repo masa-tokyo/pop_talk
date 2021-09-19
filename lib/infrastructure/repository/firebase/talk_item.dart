@@ -82,18 +82,39 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
     if (firestoreTalks.isEmpty) {
       return [];
     }
-    final result = await Future.wait<QuerySnapshot<Map<String, dynamic>>>([
-      _firestore
-          .collection('users')
-          .where(FieldPath.documentId, whereIn: userIds.toSet().toList())
-          .get(),
-      _firestore
-          .collection('talkTopics')
-          .where(FieldPath.documentId, whereIn: topicIds.toSet().toList())
-          .get(),
-    ]);
-    final firestoreUsers = result[0].docs;
-    final firestoreTalkTopics = result[1].docs;
+    final firestoreUsers = <QueryDocumentSnapshot<Map<String, dynamic>>>[];
+    // whereInで10個以上指定するとエラーが出るのでchunkしてクライアントで合わせる
+    (await Future.wait(
+      userIds.splitBetweenIndexed((index, _, __) => index % 10 == 0).map(
+        (chunkUserIds) {
+          return _firestore
+              .collection('users')
+              .where(
+                FieldPath.documentId,
+                whereIn: chunkUserIds.toSet().toList(),
+              )
+              .get();
+        },
+      ).toList(),
+    ))
+        .forEach((snapshot) => firestoreUsers.addAll(snapshot.docs));
+
+    final firestoreTalkTopics = <QueryDocumentSnapshot<Map<String, dynamic>>>[];
+    (await Future.wait(
+      topicIds.splitBetweenIndexed((index, _, __) => index % 10 == 0).map(
+        (chunkTopicIds) {
+          return _firestore
+              .collection('talkTopics')
+              .where(
+                FieldPath.documentId,
+                whereIn: chunkTopicIds.toSet().toList(),
+              )
+              .get();
+        },
+      ).toList(),
+    ))
+        .forEach((snapshot) => firestoreTalkTopics.addAll(snapshot.docs));
+
     return firestoreTalks
         .map<TalkItem?>((talks) {
           // TODO(yano): 現状対象のuserが見つからないパターンがあるのでそれを除外している必ずuserが作られるようになったら変更したい
@@ -122,13 +143,23 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
     if (ids.isEmpty) {
       return [];
     }
+    final documents = <QueryDocumentSnapshot<Map<String, dynamic>>>[];
+    // whereInで10個以上指定するとエラーが出るのでchunkしてクライアントで合わせる
+    (await Future.wait(
+      ids.splitBetweenIndexed((index, _, __) => index % 10 == 0).map(
+        (chunkIds) {
+          return _firestore
+              .collection('talks')
+              .where('isPublic', isEqualTo: true)
+              .where(FieldPath.documentId, whereIn: chunkIds)
+              .get();
+        },
+      ).toList(),
+    ))
+        .forEach((snapshot) => documents.addAll(snapshot.docs));
+
     // idの検索とorderByを同時に使用することができないので, orderはclient側で行う
-    final snapshot = await _firestore
-        .collection('talks')
-        .where('isPublic', isEqualTo: true)
-        .where(FieldPath.documentId, whereIn: ids)
-        .get();
-    return (await _createTalkItems(snapshot.docs))
+    return (await _createTalkItems(documents))
       ..sort((a, b) => b.publishedAt!.difference(a.publishedAt!).inSeconds);
   }
 
@@ -151,13 +182,22 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
     if (createdUserIds.isEmpty) {
       return [];
     }
-    final snapshot = await _firestore
-        .collection('talks')
-        .where('isPublic', isEqualTo: true)
-        .where('createdUserId', whereIn: createdUserIds)
-        .orderBy('publishedAt', descending: true)
-        .get();
-    return _createTalkItems(snapshot.docs);
+    final documents = <QueryDocumentSnapshot<Map<String, dynamic>>>[];
+    // whereInで10個以上指定するとエラーが出るのでchunkしてクライアントで合わせる
+    (await Future.wait(
+      createdUserIds.splitBetweenIndexed((index, _, __) => index % 10 == 0).map(
+        (chunkUserIds) {
+          return _firestore
+              .collection('talks')
+              .where('isPublic', isEqualTo: true)
+              .where('createdUserId', whereIn: chunkUserIds)
+              .get();
+        },
+      ).toList(),
+    ))
+        .forEach((snapshot) => documents.addAll(snapshot.docs));
+    return (await _createTalkItems(documents))
+      ..sort((a, b) => b.publishedAt!.difference(a.publishedAt!).inSeconds);
   }
 
   @override
