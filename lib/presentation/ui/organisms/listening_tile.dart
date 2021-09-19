@@ -3,6 +3,7 @@ import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/presentation/notifier/auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pop_talk/presentation/notifier/talk_list.dart';
+import 'package:intl/intl.dart';
 
 class ListeningTile extends StatelessWidget {
   const ListeningTile({
@@ -15,6 +16,7 @@ class ListeningTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dateFormat = DateFormat('yyyy-MM-dd hh:mm');
     return InkWell(
       onTap: onTap == null
           ? () {}
@@ -40,7 +42,9 @@ class ListeningTile extends StatelessWidget {
                     alignment: Alignment.topRight,
                     child: Padding(
                       padding: const EdgeInsets.only(right: 3),
-                      child: Text('${talkItem.publishedAt}配信'),
+                      child: Text(
+                        '${dateFormat.format(talkItem.publishedAt!)} 配信',
+                      ),
                     ),
                   ),
                 ],

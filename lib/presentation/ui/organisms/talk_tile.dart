@@ -51,19 +51,22 @@ class TalkTile extends StatelessWidget {
                             children: [
                               Container(
                                 width: double.infinity,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  color: Colors.black26,
-                                ),
-                                child: Text(
-                                  talkItem.topicName,
-                                  textAlign: TextAlign.center,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline3
-                                      ?.copyWith(color: Colors.white),
+                                color: Colors.black26,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  child: Text(
+                                    talkItem.topicName,
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline3
+                                        ?.copyWith(color: Colors.white),
+                                  ),
                                 ),
                               ),
                               Positioned(
@@ -74,15 +77,21 @@ class TalkTile extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(4),
                                     color: Colors.black26,
                                   ),
-                                  child: Text(
-                                    '${talkItem.duration}分',
-                                    textAlign: TextAlign.center,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline5
-                                        ?.copyWith(color: Colors.white),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                      vertical: 2,
+                                    ),
+                                    child: Text(
+                                      '${talkItem.duration}分',
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5
+                                          ?.copyWith(color: Colors.white),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -90,24 +99,32 @@ class TalkTile extends StatelessWidget {
                           ),
                         ),
                         if (isPublic)
-                          ConstrainedBox(
-                            constraints: const BoxConstraints(maxWidth: 200),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Row(
-                                  children: [
-                                    const Icon(Icons.headphones_rounded),
-                                    Text('${talkItem.playNumber}')
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    const Icon(Icons.favorite_outline),
-                                    Text('${talkItem.likeNumber}')
-                                  ],
-                                )
-                              ],
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 200),
+                              child: Row(
+                                // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  // TODO(any): 聞かれた回数も取る
+                                  // Row(
+                                  //   children: [
+                                  //     const Icon(Icons.headphones_rounded),
+                                  //     Text('${talkItem.playNumber}')
+                                  //   ],
+                                  // ),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.favorite_outline,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text('${talkItem.likeNumber}')
+                                    ],
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                       ],

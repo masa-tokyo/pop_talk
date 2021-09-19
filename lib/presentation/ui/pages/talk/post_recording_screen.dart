@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pop_talk/domain/model/talk_topic.dart';
+import 'package:pop_talk/presentation/notifier/my_talk.dart';
 import 'package:pop_talk/presentation/notifier/player.dart';
 import 'package:pop_talk/presentation/notifier/recording.dart';
 import 'package:pop_talk/presentation/ui/pages/register.dart';
@@ -184,6 +185,10 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
           path: _path,
           duration: _duration,
           talkTopicId: widget.talkTopicId);
+
+      // マイトークを更新するが待つ必要はない
+      // ignore: unawaited_futures
+      context.read(myTalkProvider).init();
 
       Navigator.pop(context);
     }
