@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
@@ -5,7 +7,7 @@ import 'package:pop_talk/domain/model/talk_topic.dart';
 import 'package:pop_talk/presentation/notifier/gacha_timer.dart';
 import 'package:pop_talk/presentation/notifier/talk_topics.dart';
 import 'package:pop_talk/presentation/ui/pages/talk/post_recording_screen.dart';
-import 'package:pop_talk/presentation/ui/utils/routes.dart';
+import 'package:pop_talk/presentation/ui/utils/functions.dart';
 
 // ignore: top_level_function_literal_block
 final gachaAnimationProvider = StateProvider((ref) {
@@ -120,14 +122,10 @@ class _PopCornGridViewState extends State<PopCornGridView>
   late final AnimationController fadeController;
   late final AnimationController expandcontroller;
   late final AnimationController shrinkcontroller;
-  int shrinkCount = 0;
-
-  double? popHeight;
-  double? popWidth;
 
   @override
   void initState() {
-    //フェードアニメーション
+    // フェードアニメーション
     fadeController = AnimationController(
       duration: const Duration(milliseconds: 3000),
       vsync: this,
@@ -213,157 +211,138 @@ class _PopCornGridViewState extends State<PopCornGridView>
 
     double screenWidth;
     screenWidth = size.width;
-    double maxPopWidth = 320;
-    if (screenWidth < 390) {
-      maxPopWidth = 320; //iphoneSE
-    } else if (screenWidth < 500) {
-      maxPopWidth = 390; //iphone12
-    } else {
-      maxPopWidth = 500; //flutter web
-    }
+    //iphoneSE screenwidth:320
+    //iphone12 screenwidth:390
+    //web      screenwidth:500以上
+    //iphoneSEサイズ
+    double maxPopWidth = 320.0;
 
     return Consumer(builder: (context, watch, __) {
       final animationFlg = watch(gachaAnimationProvider).state;
       return ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: maxPopWidth),
-        child: GridView.count(
-          crossAxisCount: 2,
-          children: widget.talkTopics.asMap().entries.map((entry) {
-            return Padding(
-              padding: const EdgeInsets.all(10),
-              child: InkWell(
-                onTap: () => _openPostRecordingScreen(
-                    context, entry.value.id, entry.value.name),
-                //アニメーション未実施の場合のUI
-                child: animationFlg == false
-                    ? FadeTransition(
-                        opacity: fadeAnimations[entry.key],
-                        child: AnimatedBuilder(
-                            animation: expandcontroller,
-                            builder: (buildContext, child) {
-                              return Transform.scale(
-                                scale: expandAnimations[entry.key].value !=
-                                        expandMax
-                                    ? expandAnimations[entry.key].value
-                                    : shrinkAnimations[entry.key].value,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(
-                                      color: const Color(0xff804B3A),
-                                      width: 10,
-                                    ),
-                                    borderRadius: BorderRadius.circular(
-                                      50,
-                                    ),
-                                  ),
-                                  child: Stack(
-                                    children: [
-                                      Positioned(
-                                        left: 20,
-                                        top: 20,
-                                        child: Container(
-                                          height: 20,
-                                          width: 20,
-                                          decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Color(0xffFF934E),
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        right: 20,
-                                        bottom: 20,
-                                        child: Container(
-                                          height: 20,
-                                          width: 20,
-                                          decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            // ignore: lines_longer_than_80_chars
-                                            color: Color(0xffFF934E),
-                                          ),
-                                        ),
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Center(
-                                            child: Text(entry.value.name),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }),
-                      )
-                    //アニメーション実施済の場合のUI
-                    : Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                            color: const Color(0xff804B3A),
-                            width: 10,
-                          ),
-                          borderRadius: BorderRadius.circular(
-                            50,
-                          ),
-                        ),
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              left: 20,
-                              top: 20,
-                              child: Container(
-                                height: 20,
-                                width: 20,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Color(0xffFF934E),
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              right: 20,
-                              bottom: 20,
-                              child: Container(
-                                height: 20,
-                                width: 20,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
+        constraints: BoxConstraints(
+          maxWidth: maxPopWidth,
+        ),
+        child: Center(
+          child: GridView.count(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisCount: 2,
+            children: widget.talkTopics.asMap().entries.map((entry) {
+              return Padding(
+                padding: const EdgeInsets.all(10),
+                child: InkWell(
+                  onTap: () => _openPostRecordingScreen(
+                      context, entry.value.id, entry.value),
+                  //アニメーション未実施の場合のUI
+                  child: animationFlg == false
+                      ? FadeTransition(
+                          opacity: fadeAnimations[entry.key],
+                          child: AnimatedBuilder(
+                              animation: expandcontroller,
+                              builder: (buildContext, child) {
+                                return Transform.scale(
+                                  scale: expandAnimations[entry.key].value !=
+                                          expandMax
+                                      ? expandAnimations[entry.key].value
+                                      : shrinkAnimations[entry.key].value,
                                   // ignore: lines_longer_than_80_chars
-                                  color: Color(0xffFF934E),
-                                ),
-                              ),
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Center(
-                                  child: Text(entry.value.name),
-                                ),
-                              ],
-                            ),
-                          ],
+                                  child: PopContainer(
+                                    topicName: entry.value.name,
+                                  ),
+                                );
+                              }),
+                        )
+                      //アニメーション実施済の場合のUI
+                      : PopContainer(
+                          topicName: entry.value.name,
                         ),
-                      ),
-              ),
-            );
-          }).toList(),
+                ),
+              );
+            }).toList(),
+          ),
         ),
       );
     });
   }
 
   void _openPostRecordingScreen(
-      BuildContext context,
-      String id,
-      TalkTopic talkTopic) {
-
-    Navigator.push(context, createRouteFromBottom(context,
-        PostRecordingScreen(talkTopicId: id, talkTopic: talkTopic,)));
+      BuildContext context, String id, TalkTopic talkTopic) {
+    Navigator.push(
+        context,
+        createRouteFromBottom(
+            context,
+            PostRecordingScreen(
+              talkTopicId: id,
+              talkTopic: talkTopic,
+            )));
   }
 }
 
+class PopContainer extends StatelessWidget {
+  double circlePotision = 15;
+  double circleSize = 15;
+  final String? topicName;
+  PopContainer({this.topicName});
+
+  double popBorder = 6;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(
+          color: const Color(0xff804B3A),
+          width: popBorder,
+        ),
+        borderRadius: BorderRadius.circular(
+          50,
+        ),
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            left: circlePotision,
+            top: circlePotision,
+            child: Container(
+              height: circleSize,
+              width: circleSize,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Color(0xffFF934E),
+              ),
+            ),
+          ),
+          Positioned(
+            right: circlePotision,
+            bottom: circlePotision,
+            child: Container(
+              height: circleSize,
+              width: circleSize,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                // ignore: lines_longer_than_80_chars
+                color: Color(0xffFF934E),
+              ),
+            ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(left: 10, right: 10),
+                child: Center(
+                  child: Text(
+                    topicName!,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}

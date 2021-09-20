@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pop_talk/presentation/notifier/talk_topics.dart';
 
+final imageWidget = Image.asset('assets/images/pop.png');
+
 class GachaView extends StatefulWidget {
   @override
   _GachaViewState createState() => _GachaViewState();
@@ -11,18 +13,42 @@ class GachaView extends StatefulWidget {
 
 class _GachaViewState extends State<GachaView>
     with SingleTickerProviderStateMixin {
+  late MediaQueryData _mediaQueryData;
+  double? screenWidth;
+  double? screenHeight;
+  double? blockSizeHorizontal;
+  double? blockSizeVertical;
+
+  double? btnSizeHorizontal;
+  double? btnSizeVertical;
+
   bool isTapped = false;
-  final imageWidget = Image.asset('assets/images/pop.png');
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    _mediaQueryData = MediaQuery.of(context);
+    screenWidth = _mediaQueryData.size.width;
+    screenHeight = _mediaQueryData.size.height;
+
+    blockSizeHorizontal = screenWidth! / 100;
+    blockSizeVertical = screenHeight! / 100;
+
+    btnSizeHorizontal = blockSizeHorizontal! * 60; //幅
+    btnSizeVertical = blockSizeVertical! * 8; //高
+
     final _talkTopicNotifier = context.read(talkTopicProvider);
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          isTapped
-              ? ShakeAnimation(
+      child: isTapped
+          ? Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ShakeAnimation(
                   onEndAnimation: () async {
                     await _talkTopicNotifier.nextThemes();
                     setState(() {
@@ -30,23 +56,43 @@ class _GachaViewState extends State<GachaView>
                     });
                   },
                   child: imageWidget,
-                )
-              : imageWidget,
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                isTapped = true;
-              });
-            },
-            child: Text(
-              'トークテーマを選ぶ',
-              style: TextStyle(
-                fontSize: Theme.of(context).textTheme.headline2!.fontSize,
-              ),
+                ),
+                SizedBox(
+                  width: btnSizeHorizontal,
+                  height: btnSizeVertical,
+                ),
+              ],
+            )
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                imageWidget,
+                LayoutBuilder(builder:
+                    (BuildContext context, BoxConstraints constraints) {
+                  return SizedBox(
+                    width: btnSizeHorizontal,
+                    height: btnSizeVertical,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: const StadiumBorder(),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          isTapped = true;
+                        });
+                      },
+                      child: Text(
+                        'トークテーマを選ぶ',
+                        style: TextStyle(
+                          fontSize:
+                              Theme.of(context).textTheme.headline2!.fontSize,
+                        ),
+                      ),
+                    ),
+                  );
+                })
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }
@@ -67,7 +113,6 @@ class _ShakeAnimationState extends State<ShakeAnimation>
     with TickerProviderStateMixin {
   late final AnimationController controller;
 
-  final imageWidget = Image.asset('assets/images/pop.png');
   int shakeCount = 0;
 
   @override
@@ -157,10 +202,6 @@ class _ShakeAnimationState extends State<ShakeAnimation>
                               color: Colors.white,
                               spreadRadius: 50,
                               blurRadius: 10,
-                              offset: Offset(
-                                10,
-                                10,
-                              ),
                             ),
                           ],
                         ),
