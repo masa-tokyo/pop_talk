@@ -239,10 +239,8 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
   @override
   Future<void> draftTalk(TalkItem talkItem) async {
     final docRef = _firestore.collection('talks').doc(talkItem.id);
-    final oldTalkItem = await docRef.get();
 
     final newTalk = <String, dynamic>{
-      ...oldTalkItem.data()!,
       'publishedAt': null,
       'isPublic': false,
     };
@@ -253,7 +251,6 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
   Future<void> publishTalk(TalkItem talkItem) async {
     final url = talkItem.url;
     final docRef = _firestore.collection('talks').doc(talkItem.id);
-    final oldTalkItem = await docRef.get();
 
     if (url == null) {
       final storagePath = const Uuid().v1();
@@ -268,7 +265,6 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
           .then((TaskSnapshot snapshot) => snapshot.ref.getDownloadURL());
 
       final newTalk = <String, dynamic>{
-        ...oldTalkItem.data()!,
         'publishedAt': DateTime.now(),
         'isPublic': true,
         'url': downloadUrl,
@@ -278,7 +274,6 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
       await docRef.update(newTalk);
     } else {
       final newTalk = <String, dynamic>{
-        ...oldTalkItem.data()!,
         'publishedAt': DateTime.now(),
         'isPublic': true,
       };
