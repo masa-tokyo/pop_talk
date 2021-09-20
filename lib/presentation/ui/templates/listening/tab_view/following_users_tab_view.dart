@@ -23,31 +23,38 @@ class _FollowingUsersTabViewState extends State<FollowingUsersTabView> {
       if (talks.isEmpty) {
         return const Center(child: Text('まだフォローしたユーザーのトークがありません.'));
       }
-      return ListView.builder(
-        itemCount: talks.length,
-        itemBuilder: (BuildContext context, int i) {
-          return Padding(
-            padding: const EdgeInsets.all(6),
-            child: ListeningTile(
-              talkItem: talks[i],
-              onTap: (_) async {
-                await context
-                    .read(
-                      playerFamilyProvider(
-                        RecommendationTabView.playerProviderName,
-                      ),
-                    )
-                    .reset();
-                final playerNotifier = context.read(playerProvider);
-                await playerNotifier.initPlayer(
-                  AudioPlayType.playlist,
-                  talks: talks.skip(i).toList(),
-                );
-                await playerNotifier.play();
-              },
-            ),
-          );
+      return RefreshIndicator(
+        color: Theme.of(context).primaryColor,
+        onRefresh: () async {
+          await talks;
         },
+        child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
+          itemCount: talks.length,
+          itemBuilder: (BuildContext context, int i) {
+            return Padding(
+              padding: const EdgeInsets.all(6),
+              child: ListeningTile(
+                talkItem: talks[i],
+                onTap: (_) async {
+                  await context
+                      .read(
+                        playerFamilyProvider(
+                          RecommendationTabView.playerProviderName,
+                        ),
+                      )
+                      .reset();
+                  final playerNotifier = context.read(playerProvider);
+                  await playerNotifier.initPlayer(
+                    AudioPlayType.playlist,
+                    talks: talks.skip(i).toList(),
+                  );
+                  await playerNotifier.play();
+                },
+              ),
+            );
+          },
+        ),
       );
     });
   }
