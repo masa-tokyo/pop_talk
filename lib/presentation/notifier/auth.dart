@@ -83,6 +83,13 @@ class AuthNotifier with ChangeNotifier {
     return true;
   }
 
+  Future<void> signOut() async {
+    // 今のところ、UIで使用しない
+    await _repository.signOut();
+    currentUser = await _repository.implicitLogin();
+    notifyListeners();
+  }
+
   Future<void> likeTalk(TalkItem talk) async {
     if (currentUser == null) {
       return;
