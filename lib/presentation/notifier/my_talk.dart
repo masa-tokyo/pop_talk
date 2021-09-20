@@ -65,12 +65,13 @@ class MyTalkNotifier with ChangeNotifier {
   }
 
   Future<void> publishTalk({required TalkItem talkItem}) async {
+    final newUrl = await _repository.publishTalk(talkItem);
     final localUrl = talkItem.localUrl;
-    final publishTalkItem =
-        draftTalkItems.firstWhere((talk) => talk.id == talkItem.id)..publish();
+    final publishTalkItem = draftTalkItems
+        .firstWhere((talk) => talk.id == talkItem.id)
+      ..publish(newUrl);
     publishTalkItems = [...publishTalkItems, publishTalkItem];
     draftTalkItems.removeWhere((talk) => talk.id == talkItem.id);
-    await _repository.publishTalk(talkItem);
     if (localUrl != null) {
       await File(localUrl).delete();
     }

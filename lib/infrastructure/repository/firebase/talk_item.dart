@@ -288,7 +288,7 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
   }
 
   @override
-  Future<void> publishTalk(TalkItem talkItem) async {
+  Future<String?> publishTalk(TalkItem talkItem) async {
     final url = talkItem.url;
     final docRef = _firestore.collection('talks').doc(talkItem.id);
 
@@ -312,6 +312,7 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
         'localUrl': null,
       };
       await docRef.update(newTalk);
+      return downloadUrl;
     } else {
       final newTalk = <String, dynamic>{
         'publishedAt': DateTime.now(),

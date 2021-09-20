@@ -20,7 +20,7 @@ class TalkItem extends Object {
   final String topicName;
   final String? title;
   final String? description;
-  final String? url;
+  String? url;
   final String? localUrl;
   final int duration;
   final DateTime createdAt;
@@ -46,8 +46,9 @@ class TalkItem extends Object {
     isPublic = false;
   }
 
-  void publish() {
+  void publish(String? newUrl) {
     isPublic = true;
+    url = url ?? newUrl;
   }
 }
 

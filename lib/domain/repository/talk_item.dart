@@ -35,5 +35,5 @@ abstract class TalkItemRepository {
 
   Future<void> draftTalk(TalkItem talkItem);
 
-  Future<void> publishTalk(TalkItem talkItem);
+  Future<String?> publishTalk(TalkItem talkItem);
 }

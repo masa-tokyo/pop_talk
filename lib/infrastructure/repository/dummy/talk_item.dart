@@ -202,8 +202,8 @@ class DummyTalkItemRepository implements TalkItemRepository {
   }
 
   @override
-  Future<void> publishTalk(TalkItem talkItem) async {
+  Future<String?> publishTalk(TalkItem talkItem) async {
     final index = _talkItems.indexWhere((talk) => talk.id == talkItem.id);
-    _talkItems[index].publish();
+    _talkItems[index].publish('url');
   }
 }
