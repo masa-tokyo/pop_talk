@@ -144,7 +144,7 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
     await _stopRecording();
     setState(() {
       _screenState = ScreenState.afterRecording;
-      context.read(playerProvider).initPlayer(AudioPlayType.file, path: _path);
+      // context.read(playerProvider).initPlayer(AudioPlayType.file, path: _path);
     });
   }
 
