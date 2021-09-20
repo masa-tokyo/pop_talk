@@ -23,73 +23,64 @@ class TalkTopicsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: PopCornGridView(talkTopics: talkTopics),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+    return Stack(children: [
+      Center(
+        child: PopCornGridView(talkTopics: talkTopics),
+      ),
+      Align(
+        alignment: Alignment.bottomRight,
+        child: Consumer(builder: (context, watch, __) {
+          final _gachaTimerNotifier = watch(gachaTimerProvider);
+          final _remainMinutesString = (_gachaTimerNotifier.remainSeconds ~/ 60)
+              .toString()
+              .padLeft(2, '0');
+          final _remainSecondsString = (_gachaTimerNotifier.remainSeconds % 60)
+              .toInt()
+              .toString()
+              .padLeft(2, '0');
+          return Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Consumer(builder: (context, watch, __) {
-                final _gachaTimerNotifier = watch(gachaTimerProvider);
-                final _remainMinutesString =
-                    (_gachaTimerNotifier.remainSeconds ~/ 60)
-                        .toString()
-                        .padLeft(2, '0');
-                final _remainSecondsString =
-                    (_gachaTimerNotifier.remainSeconds % 60)
-                        .toInt()
-                        .toString()
-                        .padLeft(2, '0');
-                return Column(
-                  children: [
-                    Stack(
-                      children: [
-                        FloatingActionButton(
-                          onPressed: _gachaTimerNotifier.remainingCount == 0
-                              ? null
-                              : () {
-                                  context.read(gachaAnimationProvider).state =
-                                      false;
-                                  _gachaTimerNotifier.play();
-                                  context.read(talkTopicProvider).reset();
-                                },
-                          backgroundColor: Colors.white,
-                          child: SvgPicture.asset(
-                            'assets/images/poptalk_logo.svg',
-                            fit: BoxFit.cover,
-                            height: 36,
-                            width: 36,
-                          ),
+              Stack(
+                children: [
+                  FloatingActionButton(
+                    onPressed: _gachaTimerNotifier.remainingCount == 0
+                        ? null
+                        : () {
+                            context.read(gachaAnimationProvider).state = false;
+                            _gachaTimerNotifier.play();
+                            context.read(talkTopicProvider).reset();
+                          },
+                    backgroundColor: Colors.white,
+                    child: SvgPicture.asset(
+                      'assets/images/poptalk_logo.svg',
+                      fit: BoxFit.cover,
+                      height: 36,
+                      width: 36,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                width: 100,
+                height: 30,
+                child: _gachaTimerNotifier.remainingCount != 0
+                    ? Center(
+                        child: Text(
+                          'あと${_gachaTimerNotifier.remainingCount}回',
                         ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 100,
-                      height: 30,
-                      child: _gachaTimerNotifier.remainingCount != 0
-                          ? Center(
-                              child: Text(
-                                'あと${_gachaTimerNotifier.remainingCount}回',
-                              ),
-                            )
-                          : Center(
-                              child: Text(
-                                '''回復まで$_remainMinutesString:$_remainSecondsString''',
-                              ),
-                            ),
-                    ),
-                  ],
-                );
-              }),
+                      )
+                    : Center(
+                        child: Text(
+                          '''回復まで$_remainMinutesString:$_remainSecondsString''',
+                        ),
+                      ),
+              ),
             ],
-          ),
-        ),
-      ],
-    );
+          );
+        }),
+      ),
+    ]);
   }
 }
 
@@ -213,7 +204,7 @@ class _PopCornGridViewState extends State<PopCornGridView>
     screenWidth = size.width;
     //iphoneSE screenwidth:320
     //iphone12 screenwidth:390
-    //web      screenwidth:500以上
+    //web      screenwidth:500
     //iphoneSEサイズ
     double maxPopWidth = 320.0;
 
@@ -225,8 +216,8 @@ class _PopCornGridViewState extends State<PopCornGridView>
         ),
         child: Center(
           child: GridView.count(
+            physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
             crossAxisCount: 2,
             children: widget.talkTopics.asMap().entries.map((entry) {
               return Padding(

@@ -1,4 +1,3 @@
-
 class TalkItem extends Object {
   TalkItem({
     required this.id,
@@ -26,7 +25,7 @@ class TalkItem extends Object {
   final int duration;
   final DateTime createdAt;
   final DateTime? publishedAt;
-  final bool isPublic;
+  bool isPublic;
   final int colorCode;
   int playNumber;
   int likeNumber;
@@ -43,6 +42,13 @@ class TalkItem extends Object {
     return isPublic ? Uri.parse(url!) : Uri.file(localUrl!);
   }
 
+  void draft() {
+    isPublic = false;
+  }
+
+  void publish() {
+    isPublic = true;
+  }
 }
 
 class TalkUser {

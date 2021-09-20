@@ -194,4 +194,16 @@ class DummyTalkItemRepository implements TalkItemRepository {
   Future<void> deleteTalkItem(TalkItem talkItem) async {
     _talkItems.removeWhere((talk) => talk.id == talkItem.id);
   }
+
+  @override
+  Future<void> draftTalk(TalkItem talkItem) async {
+    final index = _talkItems.indexWhere((talk) => talk.id == talkItem.id);
+    _talkItems[index].draft();
+  }
+
+  @override
+  Future<void> publishTalk(TalkItem talkItem) async {
+    final index = _talkItems.indexWhere((talk) => talk.id == talkItem.id);
+    _talkItems[index].publish();
+  }
 }

@@ -40,7 +40,7 @@ class _GachaViewState extends State<GachaView>
     blockSizeVertical = screenHeight! / 100;
 
     btnSizeHorizontal = blockSizeHorizontal! * 60; //幅
-    btnSizeVertical = blockSizeVertical! * 8; //高
+    btnSizeVertical = blockSizeVertical! * 10; //高
 
     final _talkTopicNotifier = context.read(talkTopicProvider);
     return Center(

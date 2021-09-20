@@ -8,13 +8,13 @@ import 'package:pop_talk/presentation/ui/organisms/talk_tile.dart';
 class AuthorizedMyTalkPage extends StatefulWidget {
   const AuthorizedMyTalkPage({
     Key? key,
-    required this.savedTalkItems,
-    required this.postedTalkItems,
+    required this.draftTalkItems,
+    required this.publishTalkItems,
     required this.userData,
   }) : super(key: key);
 
-  final List<TalkItem> savedTalkItems;
-  final List<TalkItem> postedTalkItems;
+  final List<TalkItem> draftTalkItems;
+  final List<TalkItem> publishTalkItems;
   final AuthedUser userData;
 
   @override
@@ -132,57 +132,73 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
                         ],
                       ),
                     ),
-                    Container(
-                      height: _tabIndex == 0
-                          ? widget.savedTalkItems.isEmpty
-                              ? 400
-                              : (175 * widget.savedTalkItems.length).toDouble()
-                          : widget.postedTalkItems.isEmpty
-                              ? 400
-                              : (195 * widget.postedTalkItems.length)
-                                  .toDouble(),
-                      constraints: const BoxConstraints(maxWidth: 600),
-                      child: Consumer(builder: (context, watch, _) {
-                        return TabBarView(
-                          children: [
-                            widget.savedTalkItems.isEmpty
-                                ? const Center(
-                                    child: Text(
-                                      '保存済みのトークはまだありません',
-                                    ),
-                                  )
-                                : ListView.builder(
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemCount: widget.savedTalkItems.length,
-                                    itemBuilder: (BuildContext context, int i) {
-                                      return TalkTile(
-                                        talkItem: widget.savedTalkItems[i],
-                                        isPublic: false,
-                                      );
-                                    },
-                                  ),
-                            widget.postedTalkItems.isEmpty
-                                ? const Center(
-                                    child: Text(
-                                      '配信済みのトークはまだありません',
-                                    ),
-                                  )
-                                : ListView.builder(
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemCount: widget.postedTalkItems.length,
-                                    itemBuilder: (BuildContext context, int i) {
-                                      return TalkTile(
-                                        talkItem: widget.postedTalkItems[i],
-                                        isPublic: true,
-                                      );
-                                    },
-                                  ),
-                          ],
-                        );
-                      }),
-                    ),
+                    Consumer(builder: (context, watch, _) {
+                      return watch(myTalkProvider).isLoading
+                          ? Container(
+                              height:
+                                  MediaQuery.of(context).size.height * 1 / 4,
+                              alignment: Alignment.bottomCenter,
+                              child: const CircularProgressIndicator(),
+                            )
+                          : Container(
+                              height: _tabIndex == 0
+                                  ? widget.draftTalkItems.isEmpty
+                                      ? 400
+                                      : (175 * widget.draftTalkItems.length)
+                                          .toDouble()
+                                  : widget.publishTalkItems.isEmpty
+                                      ? 400
+                                      : (195 * widget.publishTalkItems.length)
+                                          .toDouble(),
+                              constraints: const BoxConstraints(maxWidth: 600),
+                              child: Consumer(builder: (context, watch, _) {
+                                return TabBarView(
+                                  children: [
+                                    widget.draftTalkItems.isEmpty
+                                        ? const Center(
+                                            child: Text(
+                                              '保存済みのトークはまだありません',
+                                            ),
+                                          )
+                                        : ListView.builder(
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            itemCount:
+                                                widget.draftTalkItems.length,
+                                            itemBuilder:
+                                                (BuildContext context, int i) {
+                                              return TalkTile(
+                                                talkItem:
+                                                    widget.draftTalkItems[i],
+                                                isPublic: false,
+                                              );
+                                            },
+                                          ),
+                                    widget.publishTalkItems.isEmpty
+                                        ? const Center(
+                                            child: Text(
+                                              '配信済みのトークはまだありません',
+                                            ),
+                                          )
+                                        : ListView.builder(
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            itemCount:
+                                                widget.publishTalkItems.length,
+                                            itemBuilder:
+                                                (BuildContext context, int i) {
+                                              return TalkTile(
+                                                talkItem:
+                                                    widget.publishTalkItems[i],
+                                                isPublic: true,
+                                              );
+                                            },
+                                          ),
+                                  ],
+                                );
+                              }),
+                            );
+                    }),
                   ],
                 ),
               ),
