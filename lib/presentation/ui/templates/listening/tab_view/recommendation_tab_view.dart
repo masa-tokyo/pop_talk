@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pop_talk/presentation/notifier/player.dart';
 import 'package:pop_talk/presentation/notifier/talk_list.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pop_talk/presentation/ui/atoms/circular_progress_indicator.dart';
 import 'package:pop_talk/presentation/ui/organisms/talk_player_card.dart';
 
 class RecommendationTabView extends StatefulWidget {
@@ -34,7 +35,7 @@ class _RecommendationTabViewState extends State<RecommendationTabView> {
 
         if (talkListNotifier.recommendLists == null ||
             recommendPlayerNotifier.currentTalk == null) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: PopTalkCircularProgressIndicator());
         }
         return Padding(
           padding: const EdgeInsets.all(26),
