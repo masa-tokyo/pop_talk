@@ -38,6 +38,11 @@ class DummyAuthedUserRepository implements AuthedUserRepository {
   }
 
   @override
+  Future<void> signOut() async {
+    return;
+  }
+
+  @override
   Future<void> likeTalk(AuthedUser user, String talkId) async {
     return;
   }
