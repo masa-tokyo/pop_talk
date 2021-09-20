@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pop_talk/domain/model/authed_user.dart';
@@ -29,9 +27,7 @@ class FirestoreAuthedUserRepository implements AuthedUserRepository {
     if (!firestoreUser.exists) {
       await _userCollection.doc(firebaseUser.uid).set(<String, dynamic>{
         'name': 'ゲストユーザー',
-        // TODO(yano): ランダムで画像出すURLにしているがpoptalkで作成したurlを設定する
-        'photoUrl':
-            'https://i.picsum.photos/id/344/200/300.jpg?hmac=hFZM-uJoRMyNATe_kjGvS2NGGP60jqqP64vpGQ98VAo',
+        'photoUrl': RandomPhotoUrl().getRandom(),
         'likeTalkIds': <dynamic>[],
         'followingUserIds': <dynamic>[],
         'followerNumber': 0,
@@ -181,4 +177,19 @@ class FirestoreAuthedUser with _$FirestoreAuthedUser {
 
   factory FirestoreAuthedUser.fromJson(Map<String, dynamic> json) =>
       _$FirestoreAuthedUserFromJson(json);
+}
+
+class RandomPhotoUrl {
+  final List<String> _urls = [
+    '''https://firebasestorage.googleapis.com/v0/b/poptalk-production.appspot.com/o/icon%2FIcon%20%E2%80%93%201.png?alt=media&token=5bdaad63-b7f8-420f-962f-e0f92a1ddfb6''',
+    '''https://firebasestorage.googleapis.com/v0/b/poptalk-production.appspot.com/o/icon%2FIcon%20%E2%80%93%202.png?alt=media&token=55bcf401-38d8-432d-aee6-365fcff23d7b''',
+    '''https://firebasestorage.googleapis.com/v0/b/poptalk-production.appspot.com/o/icon%2FIcon%20%E2%80%93%203.png?alt=media&token=1eb6647c-7ab3-4eb1-90c1-19394072d259''',
+    '''https://firebasestorage.googleapis.com/v0/b/poptalk-production.appspot.com/o/icon%2FIcon%20%E2%80%93%204.png?alt=media&token=d9ab7fa0-fd09-407b-ac61-e0dd819c25fd''',
+    '''https://firebasestorage.googleapis.com/v0/b/poptalk-production.appspot.com/o/icon%2FIcon%20%E2%80%93%205.png?alt=media&token=1be6a191-6695-4690-9428-ba38bf7d82d6''',
+    '''https://firebasestorage.googleapis.com/v0/b/poptalk-production.appspot.com/o/icon%2FIcon%20%E2%80%93%206.png?alt=media&token=4a53e256-9c5b-4d02-bb2b-421365f71640''',
+  ];
+
+  String getRandom() {
+    return (_urls..shuffle()).first;
+  }
 }
