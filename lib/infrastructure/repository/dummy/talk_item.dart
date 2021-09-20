@@ -196,52 +196,16 @@ class DummyTalkItemRepository implements TalkItemRepository {
   }
 
   @override
-  Future<void> stopPostingTalk(TalkItem talkItem) async {
+  Future<void> draftTalk(TalkItem talkItem) async {
     final index = _talkItems.indexWhere((talk) => talk.id == talkItem.id);
-    _talkItems[index] = TalkItem(
-      id: talkItem.id,
-      localUrl: talkItem.localUrl,
-      url: talkItem.url,
-      topicName: talkItem.topicName,
-      title: talkItem.title,
-      description: talkItem.description,
-      duration: talkItem.duration,
-      publishedAt: talkItem.publishedAt,
-      createdAt: talkItem.createdAt,
-      colorCode: talkItem.colorCode,
-      isPublic: false,
-      likeNumber: talkItem.likeNumber,
-      playNumber: talkItem.playNumber,
-      createdUser: TalkUser(
-        id: talkItem.createdUser.id,
-        name: talkItem.createdUser.name,
-        photoUrl: talkItem.createdUser.photoUrl,
-      ),
-    );
+    final draftTalkItem = talkItem.draftTalk(talkItem: talkItem);
+    _talkItems[index] = draftTalkItem;
   }
 
   @override
-  Future<void> postSavedTalk(TalkItem talkItem) async {
+  Future<void> publishTalk(TalkItem talkItem) async {
     final index = _talkItems.indexWhere((talk) => talk.id == talkItem.id);
-    _talkItems[index] = TalkItem(
-      id: talkItem.id,
-      localUrl: talkItem.localUrl,
-      url: talkItem.url,
-      topicName: talkItem.topicName,
-      title: talkItem.title,
-      description: talkItem.description,
-      duration: talkItem.duration,
-      publishedAt: talkItem.publishedAt,
-      createdAt: talkItem.createdAt,
-      colorCode: talkItem.colorCode,
-      isPublic: true,
-      likeNumber: talkItem.likeNumber,
-      playNumber: talkItem.playNumber,
-      createdUser: TalkUser(
-        id: talkItem.createdUser.id,
-        name: talkItem.createdUser.name,
-        photoUrl: talkItem.createdUser.photoUrl,
-      ),
-    );
+    final publishTalkItem = talkItem.publishTalk(talkItem: talkItem);
+    _talkItems[index] = publishTalkItem;
   }
 }

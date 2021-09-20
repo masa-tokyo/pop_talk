@@ -19,18 +19,18 @@ class MyTalkPage extends StatelessWidget {
       builder: (context, watch, __) {
         final _authNotifier = watch(authProvider);
         final _talkItemNotifier = watch(myTalkProvider);
-        final _savedTalkItems = _talkItemNotifier.savedTalkItems;
-        final _postedTalkItems = _talkItemNotifier.postedTalkItems;
+        final _draftTalkItems = _talkItemNotifier.draftTalkItems;
+        final _publishTalkItems = _talkItemNotifier.publishTalkItems;
         if (_talkItemNotifier.isLoading) {
           return const Center(
             child: CircularProgressIndicator(),
           );
         } else if (_authNotifier.currentUser!.isAnonymous) {
-          return UnauthorizedMyTalkPage(savedTalkItems: _savedTalkItems);
+          return UnauthorizedMyTalkPage(draftTalkItems: _draftTalkItems);
         } else {
           return AuthorizedMyTalkPage(
-            savedTalkItems: _savedTalkItems,
-            postedTalkItems: _postedTalkItems,
+            draftTalkItems: _draftTalkItems,
+            publishTalkItems: _publishTalkItems,
             userData: _authNotifier.currentUser!,
           );
         }

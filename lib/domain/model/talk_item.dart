@@ -1,4 +1,3 @@
-
 class TalkItem extends Object {
   TalkItem({
     required this.id,
@@ -43,6 +42,51 @@ class TalkItem extends Object {
     return isPublic ? Uri.parse(url!) : Uri.file(localUrl!);
   }
 
+  TalkItem draftTalk({required TalkItem talkItem}) {
+    return TalkItem(
+      id: talkItem.id,
+      localUrl: talkItem.localUrl,
+      url: talkItem.url,
+      topicName: talkItem.topicName,
+      title: talkItem.title,
+      description: talkItem.description,
+      duration: talkItem.duration,
+      publishedAt: talkItem.publishedAt,
+      createdAt: talkItem.createdAt,
+      colorCode: talkItem.colorCode,
+      isPublic: false,
+      likeNumber: talkItem.likeNumber,
+      playNumber: talkItem.playNumber,
+      createdUser: TalkUser(
+        id: talkItem.createdUser.id,
+        name: talkItem.createdUser.name,
+        photoUrl: talkItem.createdUser.photoUrl,
+      ),
+    );
+  }
+
+  TalkItem publishTalk({required TalkItem talkItem}) {
+    return TalkItem(
+      id: talkItem.id,
+      localUrl: talkItem.localUrl,
+      url: talkItem.url,
+      topicName: talkItem.topicName,
+      title: talkItem.title,
+      description: talkItem.description,
+      duration: talkItem.duration,
+      publishedAt: talkItem.publishedAt,
+      createdAt: talkItem.createdAt,
+      colorCode: talkItem.colorCode,
+      isPublic: true,
+      likeNumber: talkItem.likeNumber,
+      playNumber: talkItem.playNumber,
+      createdUser: TalkUser(
+        id: talkItem.createdUser.id,
+        name: talkItem.createdUser.name,
+        photoUrl: talkItem.createdUser.photoUrl,
+      ),
+    );
+  }
 }
 
 class TalkUser {

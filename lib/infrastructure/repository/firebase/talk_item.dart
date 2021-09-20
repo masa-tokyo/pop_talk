@@ -237,7 +237,7 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
   }
 
   @override
-  Future<void> stopPostingTalk(TalkItem talkItem) async {
+  Future<void> draftTalk(TalkItem talkItem) async {
     final docRef = _firestore.collection('talks').doc(talkItem.id);
     final oldTalkItem = await docRef.get();
 
@@ -250,7 +250,7 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
   }
 
   @override
-  Future<void> postSavedTalk(TalkItem talkItem) async {
+  Future<void> publishTalk(TalkItem talkItem) async {
     final url = talkItem.url;
     final docRef = _firestore.collection('talks').doc(talkItem.id);
     final oldTalkItem = await docRef.get();

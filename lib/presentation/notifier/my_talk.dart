@@ -16,8 +16,8 @@ class MyTalkNotifier with ChangeNotifier {
   final TalkItemRepository _repository;
 
   bool isLoading = false;
-  List<TalkItem> savedTalkItems = [];
-  List<TalkItem> postedTalkItems = [];
+  List<TalkItem> draftTalkItems = [];
+  List<TalkItem> publishTalkItems = [];
 
   void startLoading() {
     isLoading = true;
@@ -37,11 +37,11 @@ class MyTalkNotifier with ChangeNotifier {
   }
 
   Future<void> fetchSavedItems() async {
-    savedTalkItems = await _repository.fetchSavedItems(_authedUser);
+    draftTalkItems = await _repository.fetchSavedItems(_authedUser);
   }
 
   Future<void> fetchPostedItems() async {
-    postedTalkItems = await _repository.fetchPostedItems(_authedUser);
+    publishTalkItems = await _repository.fetchPostedItems(_authedUser);
   }
 
   Future<void> deleteTalkItem({required TalkItem talkItem}) async {
@@ -49,24 +49,34 @@ class MyTalkNotifier with ChangeNotifier {
     if (localUrl != null) {
       await File(localUrl).delete();
     }
-    savedTalkItems.removeWhere((value) => value.id == talkItem.id);
-    postedTalkItems.removeWhere((value) => value.id == talkItem.id);
+    draftTalkItems.removeWhere((value) => value.id == talkItem.id);
+    publishTalkItems.removeWhere((value) => value.id == talkItem.id);
     await _repository.deleteTalkItem(talkItem);
     notifyListeners();
   }
 
-  Future<void> stopPostingTalk({required TalkItem talkItem}) async {
-    await _repository.stopPostingTalk(talkItem);
-    await init();
+  Future<void> draftTalk({required TalkItem talkItem}) async {
+    final publishTalkItem =
+        publishTalkItems.firstWhere((talk) => talk.id == talkItem.id);
+    final draftTalkItem = publishTalkItem.draftTalk(talkItem: publishTalkItem);
+    draftTalkItems = [...draftTalkItems, draftTalkItem];
+    publishTalkItems.removeWhere((talk) => talk.id == talkItem.id);
+    await _repository.draftTalk(talkItem);
+    notifyListeners();
   }
 
-  Future<void> postSavedTalk({required TalkItem talkItem}) async {
+  Future<void> publishTalk({required TalkItem talkItem}) async {
     final localUrl = talkItem.localUrl;
-    await _repository.postSavedTalk(talkItem);
+    final draftTalkItem =
+        draftTalkItems.firstWhere((talk) => talk.id == talkItem.id);
+    final publishTalkItem = talkItem.publishTalk(talkItem: draftTalkItem);
+    publishTalkItems = [...publishTalkItems, publishTalkItem];
+    draftTalkItems.removeWhere((talk) => talk.id == talkItem.id);
+    await _repository.publishTalk(talkItem);
     if (localUrl != null) {
       await File(localUrl).delete();
     }
-    await init();
+    notifyListeners();
   }
 }
 

@@ -359,10 +359,10 @@ Future<void> _confirmDialog({
                 : talkItem.isPublic
                     ? await context
                         .read(myTalkProvider)
-                        .stopPostingTalk(talkItem: talkItem)
+                        .draftTalk(talkItem: talkItem)
                     : await context
                         .read(myTalkProvider)
-                        .postSavedTalk(talkItem: talkItem);
+                        .publishTalk(talkItem: talkItem);
             Navigator.of(ctx).pop();
             Navigator.of(context).pop();
           },

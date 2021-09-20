@@ -5,10 +5,10 @@ import 'package:pop_talk/presentation/ui/organisms/talk_tile.dart';
 import 'package:pop_talk/presentation/ui/pages/register.dart';
 
 class UnauthorizedMyTalkPage extends StatelessWidget {
-  const UnauthorizedMyTalkPage({Key? key, required this.savedTalkItems})
+  const UnauthorizedMyTalkPage({Key? key, required this.draftTalkItems})
       : super(key: key);
 
-  final List<TalkItem> savedTalkItems;
+  final List<TalkItem> draftTalkItems;
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -82,11 +82,11 @@ class UnauthorizedMyTalkPage extends StatelessWidget {
               ),
             ),
             Container(
-              height: savedTalkItems.isEmpty
+              height: draftTalkItems.isEmpty
                   ? 400
-                  : (175 * savedTalkItems.length).toDouble(),
+                  : (175 * draftTalkItems.length).toDouble(),
               constraints: const BoxConstraints(maxWidth: 600),
-              child: savedTalkItems.isEmpty
+              child: draftTalkItems.isEmpty
                   ? const Center(
                       child: Text(
                         '保存済みのトークはまだありません',
@@ -94,10 +94,10 @@ class UnauthorizedMyTalkPage extends StatelessWidget {
                     )
                   : ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: savedTalkItems.length,
+                      itemCount: draftTalkItems.length,
                       itemBuilder: (BuildContext context, int i) {
                         return TalkTile(
-                          talkItem: savedTalkItems[i],
+                          talkItem: draftTalkItems[i],
                           isPublic: false,
                         );
                       },
