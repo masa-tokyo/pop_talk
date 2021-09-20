@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:pop_talk/domain/model/authed_user.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/domain/repository/talk_item.dart';
+import 'package:pop_talk/infrastructure/tracking.dart';
 import 'package:pop_talk/presentation/notifier/auth.dart';
 
 class MyTalkNotifier with ChangeNotifier {
@@ -61,6 +62,7 @@ class MyTalkNotifier with ChangeNotifier {
     draftTalkItems = [...draftTalkItems, draftTalkItem];
     publishTalkItems.removeWhere((talk) => talk.id == talkItem.id);
     await _repository.draftTalk(talkItem);
+    Tracking().logEvent(eventType: EventType.draftTalk);
     notifyListeners();
   }
 
@@ -74,6 +76,7 @@ class MyTalkNotifier with ChangeNotifier {
     if (localUrl != null) {
       await File(localUrl).delete();
     }
+    Tracking().logEvent(eventType: EventType.publishTalk);
     notifyListeners();
   }
 }
