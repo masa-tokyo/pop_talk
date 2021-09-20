@@ -32,4 +32,8 @@ abstract class TalkItemRepository {
   });
 
   Future<void> deleteTalkItem(TalkItem talkItem);
+
+  Future<void> draftTalk(TalkItem talkItem);
+
+  Future<void> publishTalk(TalkItem talkItem);
 }
