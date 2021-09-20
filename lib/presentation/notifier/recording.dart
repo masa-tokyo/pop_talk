@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pop_talk/domain/model/authed_user.dart';
 import 'package:pop_talk/domain/repository/talk_item.dart';
+import 'package:pop_talk/infrastructure/tracking.dart';
 import 'package:pop_talk/presentation/notifier/auth.dart';
 
 class RecordingNotifier extends ChangeNotifier {
@@ -30,6 +31,7 @@ class RecordingNotifier extends ChangeNotifier {
         audioFile: audioFile,
         duration: durationInt,
         createdUserId: authedUser.id);
+    Tracking().logEvent(eventType: EventType.publishTalk);
   }
 
   Future<void> saveDraft({
@@ -49,6 +51,7 @@ class RecordingNotifier extends ChangeNotifier {
       duration: durationInt,
       createdUserId: authedUser.id,
     );
+    Tracking().logEvent(eventType: EventType.draftTalk);
   }
 }
 

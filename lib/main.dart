@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pop_talk/infrastructure/tracking.dart';
 import 'package:pop_talk/presentation/notifier/auth.dart';
 import 'package:pop_talk/presentation/ui/pages/service/privacy.dart';
 import 'package:pop_talk/presentation/ui/pages/service/term_of_use.dart';
@@ -105,6 +106,9 @@ class MyApp extends StatelessWidget {
           ServiceTermOfUsePage.routeName: (_) => ServiceTermOfUsePage(),
         },
         initialRoute: TopPage.routeName,
+        navigatorObservers: [
+          Tracking().getPageViewObserver(),
+        ],
       ),
     );
   }

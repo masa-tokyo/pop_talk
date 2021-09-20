@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
+import 'package:pop_talk/infrastructure/tracking.dart';
 
 enum PlayerButtonState {
   playing,
@@ -83,6 +84,7 @@ class PlayerNotifier extends ChangeNotifier {
           currentPlayer
             ..seekToNext()
             ..play();
+          _trackPlayEvent();
         } else {
           currentPlayer
             ..seek(Duration.zero)
@@ -105,7 +107,20 @@ class PlayerNotifier extends ChangeNotifier {
 
   Future<void> play() async {
     await _audioPlayer!.play();
+    _trackPlayEvent();
     notifyListeners();
+  }
+
+  void _trackPlayEvent() {
+    if (currentTalk == null) {
+      return;
+    }
+    Tracking().logEvent(
+      eventType: EventType.playTalk,
+      eventParams: <String, dynamic>{
+        'talkId': currentTalk!.id,
+      },
+    );
   }
 
   Future<void> pause() async {
@@ -146,7 +161,6 @@ class PlayerNotifier extends ChangeNotifier {
   bool hasPlayer() {
     return _audioPlayer != null;
   }
-
 }
 
 final playerProvider = ChangeNotifierProvider<PlayerNotifier>((ref) {
