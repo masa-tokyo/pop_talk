@@ -21,11 +21,7 @@ class MyTalkPage extends StatelessWidget {
         final _talkItemNotifier = watch(myTalkProvider);
         final _draftTalkItems = _talkItemNotifier.draftTalkItems;
         final _publishTalkItems = _talkItemNotifier.publishTalkItems;
-        if (_talkItemNotifier.isLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (_authNotifier.currentUser!.isAnonymous) {
+        if (_authNotifier.currentUser!.isAnonymous) {
           return UnauthorizedMyTalkPage(draftTalkItems: _draftTalkItems);
         } else {
           return AuthorizedMyTalkPage(

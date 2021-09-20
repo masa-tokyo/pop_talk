@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
+import 'package:pop_talk/presentation/notifier/my_talk.dart';
 import 'package:pop_talk/presentation/ui/organisms/talk_tile.dart';
 import 'package:pop_talk/presentation/ui/pages/register.dart';
 
@@ -81,28 +83,36 @@ class UnauthorizedMyTalkPage extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
-              height: draftTalkItems.isEmpty
-                  ? 400
-                  : (175 * draftTalkItems.length).toDouble(),
-              constraints: const BoxConstraints(maxWidth: 600),
-              child: draftTalkItems.isEmpty
-                  ? const Center(
-                      child: Text(
-                        '保存済みのトークはまだありません',
-                      ),
+            Consumer(builder: (context, watch, _) {
+              return watch(myTalkProvider).isLoading
+                  ? Container(
+                      height: MediaQuery.of(context).size.height * 1 / 4,
+                      alignment: Alignment.bottomCenter,
+                      child: const CircularProgressIndicator(),
                     )
-                  : ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: draftTalkItems.length,
-                      itemBuilder: (BuildContext context, int i) {
-                        return TalkTile(
-                          talkItem: draftTalkItems[i],
-                          isPublic: false,
-                        );
-                      },
-                    ),
-            ),
+                  : Container(
+                      height: draftTalkItems.isEmpty
+                          ? 400
+                          : (175 * draftTalkItems.length).toDouble(),
+                      constraints: const BoxConstraints(maxWidth: 600),
+                      child: draftTalkItems.isEmpty
+                          ? const Center(
+                              child: Text(
+                                '保存済みのトークはまだありません',
+                              ),
+                            )
+                          : ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: draftTalkItems.length,
+                              itemBuilder: (BuildContext context, int i) {
+                                return TalkTile(
+                                  talkItem: draftTalkItems[i],
+                                  isPublic: false,
+                                );
+                              },
+                            ),
+                    );
+            }),
           ],
         ),
       ),
