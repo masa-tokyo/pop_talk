@@ -20,7 +20,6 @@ class AuthNotifier with ChangeNotifier {
   }
 
   Future<bool> signUpWithGoogle() async {
-    final googleUser = await _repository.signUpWithGoogle();
     try {
       final googleUser = await _repository.signUpWithGoogle();
       if (googleUser == null) {
