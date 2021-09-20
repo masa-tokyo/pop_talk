@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/presentation/notifier/my_talk.dart';
+import 'package:pop_talk/presentation/ui/atoms/circular_progress_indicator.dart';
 import 'package:pop_talk/presentation/ui/organisms/talk_tile.dart';
 import 'package:pop_talk/presentation/ui/pages/register.dart';
 
@@ -88,7 +88,7 @@ class UnauthorizedMyTalkPage extends StatelessWidget {
                   ? Container(
                       height: MediaQuery.of(context).size.height * 1 / 4,
                       alignment: Alignment.bottomCenter,
-                      child: const CircularProgressIndicator(),
+                      child: const PopTalkCircularProgressIndicator(),
                     )
                   : Container(
                       height: draftTalkItems.isEmpty

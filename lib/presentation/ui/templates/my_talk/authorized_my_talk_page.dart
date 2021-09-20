@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/domain/model/authed_user.dart';
+import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/presentation/notifier/my_talk.dart';
+import 'package:pop_talk/presentation/ui/atoms/circular_progress_indicator.dart';
 import 'package:pop_talk/presentation/ui/organisms/talk_tile.dart';
 
 class AuthorizedMyTalkPage extends StatefulWidget {
@@ -138,7 +139,7 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
                               height:
                                   MediaQuery.of(context).size.height * 1 / 4,
                               alignment: Alignment.bottomCenter,
-                              child: const CircularProgressIndicator(),
+                              child: const PopTalkCircularProgressIndicator(),
                             )
                           : Container(
                               height: _tabIndex == 0

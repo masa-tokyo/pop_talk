@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pop_talk/presentation/notifier/player.dart';
 import 'package:pop_talk/presentation/notifier/talk_list.dart';
+import 'package:pop_talk/presentation/ui/atoms/circular_progress_indicator.dart';
 import 'package:pop_talk/presentation/ui/organisms/listening_tile.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pop_talk/presentation/ui/templates/listening/tab_view/recommendation_tab_view.dart';
 
 class LikedTalksTabView extends StatefulWidget {
@@ -17,7 +18,7 @@ class _LikedTalksTabViewState extends State<LikedTalksTabView> {
       final talkListNotifier = watch(talkListProvider);
       final talks = talkListNotifier.likeLists;
       if (talks == null) {
-        return const Center(child: CircularProgressIndicator());
+        return const Center(child: PopTalkCircularProgressIndicator());
       }
       if (talks.isEmpty) {
         return const Center(child: Text('まだライクしたトークがありません.'));
