@@ -92,7 +92,6 @@ class TalkPlayerCard extends StatelessWidget {
             width: 50,
             height: 50,
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.orange),
               shape: BoxShape.circle,
               image: DecorationImage(
                 fit: BoxFit.fill,
