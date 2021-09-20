@@ -56,9 +56,8 @@ class MyTalkNotifier with ChangeNotifier {
   }
 
   Future<void> draftTalk({required TalkItem talkItem}) async {
-    final publishTalkItem =
-        publishTalkItems.firstWhere((talk) => talk.id == talkItem.id);
-    final draftTalkItem = publishTalkItem.draftTalk(talkItem: publishTalkItem);
+    final draftTalkItem =
+        publishTalkItems.firstWhere((talk) => talk.id == talkItem.id)..draft();
     draftTalkItems = [...draftTalkItems, draftTalkItem];
     publishTalkItems.removeWhere((talk) => talk.id == talkItem.id);
     await _repository.draftTalk(talkItem);
@@ -67,9 +66,8 @@ class MyTalkNotifier with ChangeNotifier {
 
   Future<void> publishTalk({required TalkItem talkItem}) async {
     final localUrl = talkItem.localUrl;
-    final draftTalkItem =
-        draftTalkItems.firstWhere((talk) => talk.id == talkItem.id);
-    final publishTalkItem = talkItem.publishTalk(talkItem: draftTalkItem);
+    final publishTalkItem =
+        draftTalkItems.firstWhere((talk) => talk.id == talkItem.id)..publish();
     publishTalkItems = [...publishTalkItems, publishTalkItem];
     draftTalkItems.removeWhere((talk) => talk.id == talkItem.id);
     await _repository.publishTalk(talkItem);

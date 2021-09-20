@@ -198,14 +198,12 @@ class DummyTalkItemRepository implements TalkItemRepository {
   @override
   Future<void> draftTalk(TalkItem talkItem) async {
     final index = _talkItems.indexWhere((talk) => talk.id == talkItem.id);
-    final draftTalkItem = talkItem.draftTalk(talkItem: talkItem);
-    _talkItems[index] = draftTalkItem;
+    _talkItems[index].draft();
   }
 
   @override
   Future<void> publishTalk(TalkItem talkItem) async {
     final index = _talkItems.indexWhere((talk) => talk.id == talkItem.id);
-    final publishTalkItem = talkItem.publishTalk(talkItem: talkItem);
-    _talkItems[index] = publishTalkItem;
+    _talkItems[index].publish();
   }
 }
