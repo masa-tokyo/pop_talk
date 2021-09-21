@@ -212,8 +212,8 @@ class DummyTalkItemRepository implements TalkItemRepository {
     TalkItem talkItem,
     String? newTitle,
     String? newDescription,
-  ) {
-    // TODO: implement editTalk
-    throw UnimplementedError();
+  ) async {
+    final index = _talkItems.indexWhere((talk) => talk.id == talkItem.id);
+    _talkItems[index].edit(newTitle, newDescription);
   }
 }
