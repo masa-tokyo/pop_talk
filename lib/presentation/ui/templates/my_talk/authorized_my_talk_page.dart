@@ -7,18 +7,20 @@ import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/presentation/notifier/my_talk.dart';
 import 'package:pop_talk/presentation/ui/atoms/circular_progress_indicator.dart';
 import 'package:pop_talk/presentation/ui/organisms/talk_tile.dart';
+import 'package:pop_talk/presentation/ui/templates/my_talk/profile_edit_page.dart';
+import 'package:pop_talk/presentation/ui/utils/modal_bottom_sheet.dart';
 
 class AuthorizedMyTalkPage extends StatefulWidget {
   const AuthorizedMyTalkPage({
     Key? key,
     required this.draftTalkItems,
     required this.publishTalkItems,
-    required this.userData,
+    required this.authedUser,
   }) : super(key: key);
 
   final List<TalkItem> draftTalkItems;
   final List<TalkItem> publishTalkItems;
-  final AuthedUser userData;
+  final AuthedUser authedUser;
 
   @override
   _AuthorizedMyTalkPageState createState() => _AuthorizedMyTalkPageState();
@@ -29,7 +31,6 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('${widget.userData.id}');
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -52,7 +53,7 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
                   ),
                   child: ClipOval(
                     child: Image.network(
-                      widget.userData.photoUrl,
+                      widget.authedUser.photoUrl,
                       fit: BoxFit.fill,
                       errorBuilder: (c, o, s) {
                         return const Icon(
@@ -70,7 +71,7 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        widget.userData.name,
+                        widget.authedUser.name,
                         style: Theme.of(context)
                             .textTheme
                             .headline3!
@@ -78,7 +79,12 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       TextButton(
-                        onPressed: () async {},
+                        onPressed: () async {
+                          await showBottomSheetPage(
+                              context: context,
+                              page: ProfileEditPage(
+                                  authedUser: widget.authedUser));
+                        },
                         style: TextButton.styleFrom(
                           backgroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
@@ -106,7 +112,7 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            '${widget.userData.followerNumber}',
+                            '${widget.authedUser.followerNumber}',
                             style:
                                 Theme.of(context).textTheme.headline3!.copyWith(
                                       fontWeight: FontWeight.bold,
@@ -122,7 +128,7 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            '${widget.userData.likeNumber}',
+                            '${widget.authedUser.likeNumber}',
                             style:
                                 Theme.of(context).textTheme.headline3!.copyWith(
                                       fontWeight: FontWeight.bold,
