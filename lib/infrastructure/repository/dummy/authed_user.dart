@@ -52,4 +52,9 @@ class DummyAuthedUserRepository implements AuthedUserRepository {
   Future<void> followUser(AuthedUser user, String userId) async {
     return;
   }
+
+  @override
+  Future<void> changeUserName(String id, String newName) async {
+    authedUser.name = newName;
+  }
 }

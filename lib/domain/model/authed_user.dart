@@ -11,7 +11,7 @@ class AuthedUser {
   });
 
   final String id;
-  final String name;
+  String name;
   final bool isAnonymous;
   final List<String> followingUserIds;
   final List<String> likeTalkIds;
@@ -39,5 +39,9 @@ class AuthedUser {
 
   bool alreadyFollowUser(String userId) {
     return followingUserIds.contains(userId);
+  }
+
+  void changeUserName(String newName) {
+    name = newName;
   }
 }

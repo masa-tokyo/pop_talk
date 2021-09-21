@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pop_talk/domain/model/authed_user.dart';
+import 'package:pop_talk/presentation/notifier/auth.dart';
 import 'package:pop_talk/presentation/notifier/my_talk.dart';
 
 class ProfileEditPage extends StatefulWidget {
@@ -117,6 +118,10 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
               return TextButton(
                 onPressed: () async {
                   if (_form.currentState!.validate()) {
+                    await watch(authProvider).changeUserName(
+                      widget.authedUser,
+                      _nameController.text,
+                    );
                     Navigator.of(context).pop();
                   }
                 },

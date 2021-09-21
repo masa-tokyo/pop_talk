@@ -167,6 +167,13 @@ class FirestoreAuthedUserRepository implements AuthedUserRepository {
       ...firestoreUser.data()!,
     });
   }
+
+  @override
+  Future<void> changeUserName(String id, String newName) async {
+    await _userCollection.doc(id).update({
+      'name': newName,
+    });
+  }
 }
 
 @freezed
