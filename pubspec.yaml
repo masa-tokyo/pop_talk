@@ -42,12 +42,14 @@ dependencies:
   google_sign_in: ^5.1.0
   json_serializable: ^4.1.0
   just_audio: ^0.9.11
+  package_info: ^2.0.2
   path_provider: ^2.0.2
   sign_in_with_apple: ^3.0.0
   uuid: ^3.0.4
 
 dev_dependencies:
   build_runner: ^1.11.1
+  flutter_launcher_icons: ^0.9.2
   flutter_test:
     sdk: flutter
   freezed: ^0.14.1+1
@@ -98,3 +100,8 @@ flutter:
   assets:
     - .env
     - assets/images/
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/icon.png"
