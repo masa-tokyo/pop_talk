@@ -18,10 +18,10 @@ class TalkItem extends Object {
 
   final String id;
   final String topicName;
-  final String? title;
-  final String? description;
-  final String? url;
-  final String? localUrl;
+  String? title;
+  String? description;
+  String? url;
+  String? localUrl;
   final int duration;
   final DateTime createdAt;
   final DateTime? publishedAt;
@@ -39,15 +39,22 @@ class TalkItem extends Object {
   int get hashCode => id.hashCode;
 
   Uri get uri {
-    return isPublic ? Uri.parse(url!) : Uri.file(localUrl!);
+    return url != null ? Uri.parse(url!) : Uri.file(localUrl!);
   }
 
   void draft() {
     isPublic = false;
   }
 
-  void publish() {
+  void publish(String? newUrl) {
     isPublic = true;
+    url = url ?? newUrl;
+    localUrl = null;
+  }
+
+  void edit(String? newTitle, String? newDescription) {
+    title = newTitle ?? '';
+    description = newDescription ?? '';
   }
 }
 

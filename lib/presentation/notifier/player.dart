@@ -11,7 +11,7 @@ enum PlayerButtonState {
 }
 
 enum AudioPlayType {
-  file,
+  single,
   playlist,
 }
 
@@ -47,7 +47,7 @@ class PlayerNotifier extends ChangeNotifier {
   Future<void> initPlayer(
     AudioPlayType playType, {
     List<TalkItem>? talks,
-    String? path,
+    Uri? uri,
   }) async {
     await reset();
     final currentPlayer = _audioPlayer = AudioPlayer();
@@ -65,7 +65,10 @@ class PlayerNotifier extends ChangeNotifier {
         preload: false,
       );
     } else {
-      await currentPlayer.setFilePath(path!);
+      await currentPlayer.setAudioSource(
+        ConcatenatingAudioSource(
+            useLazyPreparation: true, children: [AudioSource.uri(uri!)]),
+      );
     }
 
     currentPlayer.playerStateStream.listen((playerState) {

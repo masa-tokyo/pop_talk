@@ -32,17 +32,17 @@ class MyTalkNotifier with ChangeNotifier {
 
   Future<void> init() async {
     startLoading();
-    await fetchSavedItems();
-    await fetchPostedItems();
+    await fetchDraftItems();
+    await fetchPublishItems();
     endLoading();
   }
 
-  Future<void> fetchSavedItems() async {
-    draftTalkItems = await _repository.fetchSavedItems(_authedUser);
+  Future<void> fetchDraftItems() async {
+    draftTalkItems = await _repository.fetchDraftItems(_authedUser);
   }
 
-  Future<void> fetchPostedItems() async {
-    publishTalkItems = await _repository.fetchPostedItems(_authedUser);
+  Future<void> fetchPublishItems() async {
+    publishTalkItems = await _repository.fetchPublishItems(_authedUser);
   }
 
   Future<void> deleteTalkItem({required TalkItem talkItem}) async {
@@ -67,16 +67,35 @@ class MyTalkNotifier with ChangeNotifier {
   }
 
   Future<void> publishTalk({required TalkItem talkItem}) async {
+    final newUrl = await _repository.publishTalk(talkItem);
     final localUrl = talkItem.localUrl;
-    final publishTalkItem =
-        draftTalkItems.firstWhere((talk) => talk.id == talkItem.id)..publish();
+    final publishTalkItem = draftTalkItems
+        .firstWhere((talk) => talk.id == talkItem.id)
+      ..publish(newUrl);
     publishTalkItems = [...publishTalkItems, publishTalkItem];
     draftTalkItems.removeWhere((talk) => talk.id == talkItem.id);
-    await _repository.publishTalk(talkItem);
     if (localUrl != null) {
       await File(localUrl).delete();
     }
     Tracking().logEvent(eventType: EventType.publishTalk);
+    notifyListeners();
+  }
+
+  Future<void> editTalk({
+    required TalkItem talkItem,
+    required String newTitle,
+    required String newDescription,
+  }) async {
+    if (talkItem.isPublic) {
+      publishTalkItems
+          .firstWhere((talk) => talk.id == talkItem.id)
+          .edit(newTitle, newDescription);
+    } else {
+      draftTalkItems
+          .firstWhere((talk) => talk.id == talkItem.id)
+          .edit(newTitle, newDescription);
+    }
+    await _repository.editTalk(talkItem, newTitle, newDescription);
     notifyListeners();
   }
 }

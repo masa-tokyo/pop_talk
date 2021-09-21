@@ -20,7 +20,7 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
   final _storage = FirebaseStorage.instance;
 
   @override
-  Future<List<TalkItem>> fetchSavedItems(AuthedUser authedUser) async {
+  Future<List<TalkItem>> fetchDraftItems(AuthedUser authedUser) async {
     final snapshot = await _firestore
         .collection('talks')
         .where('isPublic', isEqualTo: false)
@@ -31,7 +31,7 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
   }
 
   @override
-  Future<List<TalkItem>> fetchPostedItems(AuthedUser authedUser) async {
+  Future<List<TalkItem>> fetchPublishItems(AuthedUser authedUser) async {
     final snapshot = await _firestore
         .collection('talks')
         .where('isPublic', isEqualTo: true)
@@ -288,7 +288,7 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
   }
 
   @override
-  Future<void> publishTalk(TalkItem talkItem) async {
+  Future<String?> publishTalk(TalkItem talkItem) async {
     final url = talkItem.url;
     final docRef = _firestore.collection('talks').doc(talkItem.id);
 
@@ -312,6 +312,7 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
         'localUrl': null,
       };
       await docRef.update(newTalk);
+      return downloadUrl;
     } else {
       final newTalk = <String, dynamic>{
         'publishedAt': DateTime.now(),
@@ -319,6 +320,21 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
       };
       await docRef.update(newTalk);
     }
+  }
+
+  @override
+  Future<void> editTalk(
+    TalkItem talkItem,
+    String? newTitle,
+    String? newDescription,
+  ) async {
+    final docRef = _firestore.collection('talks').doc(talkItem.id);
+
+    final newTalk = <String, dynamic>{
+      'title': newTitle,
+      'description': newDescription,
+    };
+    await docRef.update(newTalk);
   }
 }
 
