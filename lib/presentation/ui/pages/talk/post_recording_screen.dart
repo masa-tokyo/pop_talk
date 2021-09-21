@@ -186,10 +186,6 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
           duration: _duration,
           talkTopicId: widget.talkTopicId);
 
-      // マイトークを更新するが待つ必要はない
-      // ignore: unawaited_futures
-      context.read(myTalkProvider).init();
-
       Navigator.pop(context);
     }
   }
