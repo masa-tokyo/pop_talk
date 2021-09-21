@@ -32,17 +32,17 @@ class MyTalkNotifier with ChangeNotifier {
 
   Future<void> init() async {
     startLoading();
-    await fetchSavedItems();
-    await fetchPostedItems();
+    await fetchDraftItems();
+    await fetchPublishItems();
     endLoading();
   }
 
-  Future<void> fetchSavedItems() async {
-    draftTalkItems = await _repository.fetchSavedItems(_authedUser);
+  Future<void> fetchDraftItems() async {
+    draftTalkItems = await _repository.fetchDraftItems(_authedUser);
   }
 
-  Future<void> fetchPostedItems() async {
-    publishTalkItems = await _repository.fetchPostedItems(_authedUser);
+  Future<void> fetchPublishItems() async {
+    publishTalkItems = await _repository.fetchPublishItems(_authedUser);
   }
 
   Future<void> deleteTalkItem({required TalkItem talkItem}) async {

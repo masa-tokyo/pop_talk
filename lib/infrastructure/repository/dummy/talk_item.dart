@@ -139,12 +139,12 @@ final _talkItems = [
 
 class DummyTalkItemRepository implements TalkItemRepository {
   @override
-  Future<List<TalkItem>> fetchSavedItems(AuthedUser authedUser) async {
+  Future<List<TalkItem>> fetchDraftItems(AuthedUser authedUser) async {
     return _talkItems.where((item) => item.isPublic == false).toList();
   }
 
   @override
-  Future<List<TalkItem>> fetchPostedItems(AuthedUser authedUser) async {
+  Future<List<TalkItem>> fetchPublishItems(AuthedUser authedUser) async {
     return _talkItems.where((item) => item.isPublic == true).toList();
   }
 

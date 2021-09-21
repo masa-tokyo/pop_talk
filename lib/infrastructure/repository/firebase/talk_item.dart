@@ -20,7 +20,7 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
   final _storage = FirebaseStorage.instance;
 
   @override
-  Future<List<TalkItem>> fetchSavedItems(AuthedUser authedUser) async {
+  Future<List<TalkItem>> fetchDraftItems(AuthedUser authedUser) async {
     final snapshot = await _firestore
         .collection('talks')
         .where('isPublic', isEqualTo: false)
@@ -31,7 +31,7 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
   }
 
   @override
-  Future<List<TalkItem>> fetchPostedItems(AuthedUser authedUser) async {
+  Future<List<TalkItem>> fetchPublishItems(AuthedUser authedUser) async {
     final snapshot = await _firestore
         .collection('talks')
         .where('isPublic', isEqualTo: true)

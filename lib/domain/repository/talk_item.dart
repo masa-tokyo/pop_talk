@@ -3,9 +3,9 @@ import 'package:pop_talk/domain/model/authed_user.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
 
 abstract class TalkItemRepository {
-  Future<List<TalkItem>> fetchSavedItems(AuthedUser authedUser);
+  Future<List<TalkItem>> fetchDraftItems(AuthedUser authedUser);
 
-  Future<List<TalkItem>> fetchPostedItems(AuthedUser authedUser);
+  Future<List<TalkItem>> fetchPublishItems(AuthedUser authedUser);
 
   Future<List<TalkItem>> fetchRecommendLists();
 
