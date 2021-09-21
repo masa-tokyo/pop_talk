@@ -29,6 +29,7 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('${widget.userData.id}');
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -50,8 +51,8 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
                     'assets/images/default_avatar.png',
                   ),
                   child: ClipOval(
-                    child: Image.asset(
-                      'assets/images/default_avatar.png',
+                    child: Image.network(
+                      widget.userData.photoUrl,
                       fit: BoxFit.fill,
                       errorBuilder: (c, o, s) {
                         return const Icon(

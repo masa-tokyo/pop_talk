@@ -66,6 +66,7 @@ class FirestoreAuthedUserRepository implements AuthedUserRepository {
       likeTalkIds: firestoreUser.likeTalkIds,
       followerNumber: firestoreUser.followerNumber,
       likeNumber: firestoreUser.likeNumber,
+      photoUrl: firestoreUser.photoUrl,
     );
   }
 
@@ -178,6 +179,7 @@ class FirestoreAuthedUser with _$FirestoreAuthedUser {
     required List<String> likeTalkIds,
     required int followerNumber,
     required int likeNumber,
+    required String photoUrl,
   }) = _FirestoreAuthedUser;
 
   factory FirestoreAuthedUser.fromJson(Map<String, dynamic> json) =>

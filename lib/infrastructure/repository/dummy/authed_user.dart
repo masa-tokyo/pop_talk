@@ -10,6 +10,7 @@ class DummyAuthedUserRepository implements AuthedUserRepository {
     likeTalkIds: ['1', '3', '5', '6'],
     likeNumber: 5,
     followerNumber: 2,
+    photoUrl: '',
   );
 
   @override

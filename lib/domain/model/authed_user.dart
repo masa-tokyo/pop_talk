@@ -7,6 +7,7 @@ class AuthedUser {
     required this.likeTalkIds,
     required this.followerNumber,
     required this.likeNumber,
+    required this.photoUrl,
   });
 
   final String id;
@@ -16,6 +17,7 @@ class AuthedUser {
   final List<String> likeTalkIds;
   final int followerNumber;
   final int likeNumber;
+  final String photoUrl;
 
   void likeTalk(String talkId) {
     final talkIds = {...likeTalkIds, talkId}.toList();
