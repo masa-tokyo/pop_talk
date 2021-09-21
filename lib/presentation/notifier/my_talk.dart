@@ -77,6 +77,24 @@ class MyTalkNotifier with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  Future<void> editTalk({
+    required TalkItem talkItem,
+    required String newTitle,
+    required String newDescription,
+  }) async {
+    if (talkItem.isPublic) {
+      publishTalkItems
+          .firstWhere((talk) => talk.id == talkItem.id)
+          .edit(newTitle, newDescription);
+    } else {
+      draftTalkItems
+          .firstWhere((talk) => talk.id == talkItem.id)
+          .edit(newTitle, newDescription);
+    }
+    await _repository.editTalk(talkItem, newTitle, newDescription);
+    notifyListeners();
+  }
 }
 
 final myTalkProvider = ChangeNotifierProvider.autoDispose<MyTalkNotifier>(

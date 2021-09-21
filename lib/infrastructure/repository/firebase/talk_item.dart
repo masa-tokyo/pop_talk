@@ -321,6 +321,21 @@ class FirestoreTalkItemRepository implements TalkItemRepository {
       await docRef.update(newTalk);
     }
   }
+
+  @override
+  Future<void> editTalk(
+    TalkItem talkItem,
+    String? newTitle,
+    String? newDescription,
+  ) async {
+    final docRef = _firestore.collection('talks').doc(talkItem.id);
+
+    final newTalk = <String, dynamic>{
+      'title': newTitle,
+      'description': newDescription,
+    };
+    await docRef.update(newTalk);
+  }
 }
 
 @freezed

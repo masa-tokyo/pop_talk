@@ -18,8 +18,8 @@ class TalkItem extends Object {
 
   final String id;
   final String topicName;
-  final String? title;
-  final String? description;
+  String? title;
+  String? description;
   String? url;
   String? localUrl;
   final int duration;
@@ -50,6 +50,11 @@ class TalkItem extends Object {
     isPublic = true;
     url = url ?? newUrl;
     localUrl = null;
+  }
+
+  void edit(String? newTitle, String? newDescription) {
+    title = newTitle ?? '';
+    description = newDescription ?? '';
   }
 }
 

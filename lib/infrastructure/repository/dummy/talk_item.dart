@@ -206,4 +206,14 @@ class DummyTalkItemRepository implements TalkItemRepository {
     final index = _talkItems.indexWhere((talk) => talk.id == talkItem.id);
     _talkItems[index].publish('url');
   }
+
+  @override
+  Future<void> editTalk(
+    TalkItem talkItem,
+    String? newTitle,
+    String? newDescription,
+  ) {
+    // TODO: implement editTalk
+    throw UnimplementedError();
+  }
 }

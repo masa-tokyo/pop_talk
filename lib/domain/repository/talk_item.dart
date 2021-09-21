@@ -36,4 +36,10 @@ abstract class TalkItemRepository {
   Future<void> draftTalk(TalkItem talkItem);
 
   Future<String?> publishTalk(TalkItem talkItem);
+
+  Future<void> editTalk(
+    TalkItem talkItem,
+    String? newTitle,
+    String? newDescription,
+  );
 }
