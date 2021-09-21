@@ -26,7 +26,7 @@ class _LikedTalksTabViewState extends State<LikedTalksTabView> {
       return RefreshIndicator(
         color: Theme.of(context).primaryColor,
         onRefresh: () async {
-          await talks;
+          await talkListNotifier.fetchLikeLists();
         },
         child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),

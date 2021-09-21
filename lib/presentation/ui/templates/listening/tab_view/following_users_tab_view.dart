@@ -26,7 +26,7 @@ class _FollowingUsersTabViewState extends State<FollowingUsersTabView> {
       return RefreshIndicator(
         color: Theme.of(context).primaryColor,
         onRefresh: () async {
-          await talks;
+          await talkListNotifier.fetchFollowLists();
         },
         child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
