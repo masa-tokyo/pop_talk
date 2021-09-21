@@ -19,9 +19,6 @@ class _GachaViewState extends State<GachaView>
   double? blockSizeHorizontal;
   double? blockSizeVertical;
 
-  double? btnSizeHorizontal;
-  double? btnSizeVertical;
-
   bool isTapped = false;
 
   @override
@@ -39,9 +36,6 @@ class _GachaViewState extends State<GachaView>
     blockSizeHorizontal = screenWidth! / 100;
     blockSizeVertical = screenHeight! / 100;
 
-    btnSizeHorizontal = blockSizeHorizontal! * 60; //幅
-    btnSizeVertical = blockSizeVertical! * 10; //高
-
     final _talkTopicNotifier = context.read(talkTopicProvider);
     return Center(
       child: isTapped
@@ -57,40 +51,41 @@ class _GachaViewState extends State<GachaView>
                   },
                   child: imageWidget,
                 ),
-                SizedBox(
-                  width: btnSizeHorizontal,
-                  height: btnSizeVertical,
-                ),
+                const SizedBox(height: 100),
               ],
             )
           : Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 imageWidget,
-                LayoutBuilder(builder:
-                    (BuildContext context, BoxConstraints constraints) {
-                  return SizedBox(
-                    width: btnSizeHorizontal,
-                    height: btnSizeVertical,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: const StadiumBorder(),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          isTapped = true;
-                        });
-                      },
-                      child: Text(
-                        'トークテーマを選ぶ',
-                        style: TextStyle(
-                          fontSize:
-                              Theme.of(context).textTheme.headline2!.fontSize,
+                SizedBox(
+                  height: 100,
+                  child: Column(
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: const StadiumBorder(),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            isTapped = true;
+                          });
+                        },
+                        child: Text(
+                          'トークテーマを選ぶ',
+                          style: TextStyle(
+                            fontSize:
+                            Theme.of(context).textTheme.headline2!.fontSize,
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                })
+                    ],
+                  ),
+                ),
               ],
             ),
     );

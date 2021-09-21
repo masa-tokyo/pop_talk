@@ -197,6 +197,14 @@ class _PopCornGridViewState extends State<PopCornGridView>
   }
 
   @override
+  void dispose() {
+    fadeController.dispose();
+    expandcontroller.dispose();
+    shrinkcontroller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
