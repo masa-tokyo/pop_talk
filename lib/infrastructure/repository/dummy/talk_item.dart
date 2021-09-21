@@ -139,12 +139,12 @@ final _talkItems = [
 
 class DummyTalkItemRepository implements TalkItemRepository {
   @override
-  Future<List<TalkItem>> fetchSavedItems(AuthedUser authedUser) async {
+  Future<List<TalkItem>> fetchDraftItems(AuthedUser authedUser) async {
     return _talkItems.where((item) => item.isPublic == false).toList();
   }
 
   @override
-  Future<List<TalkItem>> fetchPostedItems(AuthedUser authedUser) async {
+  Future<List<TalkItem>> fetchPublishItems(AuthedUser authedUser) async {
     return _talkItems.where((item) => item.isPublic == true).toList();
   }
 
@@ -202,8 +202,18 @@ class DummyTalkItemRepository implements TalkItemRepository {
   }
 
   @override
-  Future<void> publishTalk(TalkItem talkItem) async {
+  Future<String?> publishTalk(TalkItem talkItem) async {
     final index = _talkItems.indexWhere((talk) => talk.id == talkItem.id);
-    _talkItems[index].publish();
+    _talkItems[index].publish('url');
+  }
+
+  @override
+  Future<void> editTalk(
+    TalkItem talkItem,
+    String? newTitle,
+    String? newDescription,
+  ) async {
+    final index = _talkItems.indexWhere((talk) => talk.id == talkItem.id);
+    _talkItems[index].edit(newTitle, newDescription);
   }
 }
