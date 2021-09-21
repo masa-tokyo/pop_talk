@@ -20,41 +20,54 @@ class _LikedTalksTabViewState extends State<LikedTalksTabView> {
       if (talks == null) {
         return const Center(child: PopTalkCircularProgressIndicator());
       }
-      if (talks.isEmpty) {
-        return const Center(child: Text('まだライクしたトークがありません.'));
-      }
       return RefreshIndicator(
         color: Theme.of(context).primaryColor,
         onRefresh: () async {
           await talkListNotifier.fetchLikeLists();
         },
-        child: ListView.builder(
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemCount: talks.length,
-          itemBuilder: (BuildContext context, int i) {
-            return Padding(
-              padding: const EdgeInsets.all(6),
-              child: ListeningTile(
-                talkItem: talks[i],
-                onTap: (_) async {
-                  await context
-                      .read(
-                        playerFamilyProvider(
-                          RecommendationTabView.playerProviderName,
-                        ),
-                      )
-                      .reset();
-                  final playerNotifier = context.read(playerProvider);
-                  await playerNotifier.initPlayer(
-                    AudioPlayType.playlist,
-                    talks: talks.skip(i).toList(),
+        child: talks.isEmpty
+            ? Center(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        minHeight: 500,
+                      ),
+                      child: const Center(
+                        child: Text('まだライクしたトークがありません.'),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : ListView.builder(
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: talks.length,
+                itemBuilder: (BuildContext context, int i) {
+                  return Padding(
+                    padding: const EdgeInsets.all(6),
+                    child: ListeningTile(
+                      talkItem: talks[i],
+                      onTap: (_) async {
+                        await context
+                            .read(
+                              playerFamilyProvider(
+                                RecommendationTabView.playerProviderName,
+                              ),
+                            )
+                            .reset();
+                        final playerNotifier = context.read(playerProvider);
+                        await playerNotifier.initPlayer(
+                          AudioPlayType.playlist,
+                          talks: talks.skip(i).toList(),
+                        );
+                        await playerNotifier.play();
+                      },
+                    ),
                   );
-                  await playerNotifier.play();
                 },
               ),
-            );
-          },
-        ),
       );
     });
   }
