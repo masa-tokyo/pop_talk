@@ -8,6 +8,7 @@ abstract class AuthedUserRepository {
   Future<AuthedUser?> signInWithApple();
   Future<void> likeTalk(AuthedUser user, String talkId);
   Future<void> followUser(AuthedUser user, String userId);
+  Future<void> signOut();
 }
 
 class PopTalkException implements Exception {

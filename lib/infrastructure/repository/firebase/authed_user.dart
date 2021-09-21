@@ -149,6 +149,11 @@ class FirestoreAuthedUserRepository implements AuthedUserRepository {
     return _getFirebaseUser();
   }
 
+  @override
+  Future<void> signOut() async {
+    return _auth.signOut();
+  }
+
   Future<AuthedUser> _getFirebaseUser() async {
     final firebaseUser = _auth.currentUser;
     if (firebaseUser == null) {

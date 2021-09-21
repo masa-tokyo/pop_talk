@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pop_talk/domain/model/authed_user.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/domain/repository/authed_user.dart';
+import 'package:pop_talk/infrastructure/tracking.dart';
 
 class AuthNotifier with ChangeNotifier {
   AuthNotifier(this._repository);
@@ -16,6 +16,7 @@ class AuthNotifier with ChangeNotifier {
 
   Future<void> implicitLogin() async {
     currentUser = await _repository.implicitLogin();
+    await Tracking().setUserId(currentUser!.id);
     notifyListeners();
   }
 
@@ -32,6 +33,7 @@ class AuthNotifier with ChangeNotifier {
       notifyListeners();
       return false;
     }
+    Tracking().logEvent(eventType: EventType.signUp);
     return true;
   }
 
@@ -48,6 +50,7 @@ class AuthNotifier with ChangeNotifier {
       notifyListeners();
       return false;
     }
+    await Tracking().setUserId(currentUser!.id);
     return true;
   }
 
@@ -64,6 +67,7 @@ class AuthNotifier with ChangeNotifier {
       notifyListeners();
       return false;
     }
+    Tracking().logEvent(eventType: EventType.signUp);
     return true;
   }
 
@@ -80,7 +84,15 @@ class AuthNotifier with ChangeNotifier {
       notifyListeners();
       return false;
     }
+    await Tracking().setUserId(currentUser!.id);
     return true;
+  }
+
+  Future<void> signOut() async {
+    // 今のところ、UIで使用しない
+    await _repository.signOut();
+    currentUser = await _repository.implicitLogin();
+    notifyListeners();
   }
 
   Future<void> likeTalk(TalkItem talk) async {
@@ -89,6 +101,7 @@ class AuthNotifier with ChangeNotifier {
     }
     currentUser!.likeTalk(talk.id);
     await _repository.likeTalk(currentUser!, talk.id);
+    Tracking().logEvent(eventType: EventType.likeTalk);
     notifyListeners();
   }
 
@@ -98,6 +111,7 @@ class AuthNotifier with ChangeNotifier {
     }
     currentUser!.followUser(user.id);
     await _repository.followUser(currentUser!, user.id);
+    Tracking().logEvent(eventType: EventType.followUser);
     notifyListeners();
   }
 }

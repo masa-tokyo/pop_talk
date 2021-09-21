@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pop_talk/infrastructure/tracking.dart';
 import 'package:pop_talk/presentation/notifier/auth.dart';
 import 'package:pop_talk/presentation/ui/pages/service/privacy.dart';
 import 'package:pop_talk/presentation/ui/pages/service/term_of_use.dart';
@@ -19,93 +21,94 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProviderScope(
-      child: SetUp(
-        child: MaterialApp(
-          title: 'PopTalk',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            fontFamily: GoogleFonts.mPlus1p().fontFamily,
-            textTheme: const TextTheme(
-              headline1: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 32,
-              ),
-              headline2: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 18,
-              ),
-              headline3: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-              ),
-              headline4: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 14,
-              ),
-              headline5: TextStyle(
-                fontWeight: FontWeight.w900,
-                fontSize: 12,
-              ),
-              bodyText1: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.normal,
-              ),
-            ).apply(
-              displayColor: Colors.black,
+      child: MaterialApp(
+        title: 'PopTalk',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          fontFamily: GoogleFonts.mPlus1p().fontFamily,
+          textTheme: const TextTheme(
+            headline1: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 32,
             ),
-            elevatedButtonTheme: ElevatedButtonThemeData(
-              style: ElevatedButton.styleFrom(
-                primary: const Color(0xFFFF934E),
-                onSurface: const Color(0xFFC4C4C4),
-                textStyle: TextStyle(
-                  fontSize: 16,
-                  fontFamily: GoogleFonts.mPlus1p().fontFamily,
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 30,
-                  vertical: 20,
-                ),
-                elevation: 0,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(5),
-                  ),
-                ),
-              ),
+            headline2: TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 18,
             ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                backgroundColor: const Color(0xFFFF934E),
-                textStyle: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                  fontFamily: GoogleFonts.mPlus1p().fontFamily,
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 6,
-                ),
-                elevation: 0,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(20),
-                  ),
-                ),
-              ),
+            headline3: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 16,
             ),
-            primaryColor: const Color(0xFFFF934E),
-            scaffoldBackgroundColor: const Color(0xFFF1EFE5),
-            canvasColor: const Color(0xfff2f2f2),
-            hoverColor: Colors.transparent,
-            disabledColor: Colors.blue[300],
+            headline4: TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 14,
+            ),
+            headline5: TextStyle(
+              fontWeight: FontWeight.w900,
+              fontSize: 12,
+            ),
+            bodyText1: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.normal,
+            ),
+          ).apply(
+            displayColor: Colors.black,
           ),
-          routes: {
-            TopPage.routeName: (_) => TopPage(),
-            ServicePrivacyPage.routeName: (_) => ServicePrivacyPage(),
-            ServiceTermOfUsePage.routeName: (_) => ServiceTermOfUsePage(),
-          },
-          initialRoute: TopPage.routeName,
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              primary: const Color(0xFFFF934E),
+              onSurface: const Color(0xFFC4C4C4),
+              textStyle: TextStyle(
+                fontSize: 16,
+                fontFamily: GoogleFonts.mPlus1p().fontFamily,
+              ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 30,
+                vertical: 20,
+              ),
+              elevation: 0,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(5),
+                ),
+              ),
+            ),
+          ),
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              backgroundColor: const Color(0xFFFF934E),
+              textStyle: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+                fontFamily: GoogleFonts.mPlus1p().fontFamily,
+              ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 6,
+              ),
+              elevation: 0,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20),
+                ),
+              ),
+            ),
+          ),
+          primaryColor: const Color(0xFFFF934E),
+          scaffoldBackgroundColor: const Color(0xFFF1EFE5),
+          canvasColor: const Color(0xfff2f2f2),
+          hoverColor: Colors.transparent,
+          disabledColor: Colors.blue[300],
         ),
+        routes: {
+          TopPage.routeName: (_) => SetUp(child: TopPage()),
+          ServicePrivacyPage.routeName: (_) => ServicePrivacyPage(),
+          ServiceTermOfUsePage.routeName: (_) => ServiceTermOfUsePage(),
+        },
+        initialRoute: TopPage.routeName,
+        navigatorObservers: [
+          Tracking().getPageViewObserver(),
+        ],
       ),
     );
   }
@@ -126,102 +129,64 @@ class SetUp extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           return child;
         }
-        // TODO(any): いい感じのスプラッシュスクリーンを作る
-        return Container();
+        return SplashScreen();
       },
     );
   }
 
   Future<void> setUp(BuildContext context) async {
-    await Firebase.initializeApp();
-    await registerDIContainer();
+    // Splashスクリーンを見せるために最小1秒待つ
+    final showSplash = Future<void>.delayed(const Duration(seconds: 1));
+    await Future.wait([
+      Firebase.initializeApp(),
+      registerDIContainer(),
+    ]);
 
-    final _authNotifier = context.read(authProvider);
-    await _authNotifier.implicitLogin();
+    await Future.wait([
+      context.read(authProvider).implicitLogin(),
+      showSplash,
+    ]);
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
+class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+          children: [
+            SvgPicture.asset(
+              'assets/images/poptalk_logo.svg',
+              fit: BoxFit.cover,
+              height: 90,
+              width: 90,
             ),
             Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              'PopTalk',
+              style: GoogleFonts.mPlusRounded1c(
+                letterSpacing: 0.5,
+                textStyle: const TextStyle(
+                  fontSize: 56,
+                  fontWeight: FontWeight.w800,
+                  color: Color(0xFF804B3A),
+                ),
+              ),
+            ),
+            Text(
+              'ポップなテーマでトークが弾ける',
+              style: GoogleFonts.mPlusRounded1c(
+                letterSpacing: 0.5,
+                textStyle: const TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF804B3A),
+                ),
+              ),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
