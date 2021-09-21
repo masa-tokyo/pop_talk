@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:logger/logger.dart' show Level;
 import 'package:path_provider/path_provider.dart';
 import 'package:pop_talk/domain/model/talk_topic.dart';
 import 'package:pop_talk/presentation/notifier/my_talk.dart';
@@ -38,7 +39,9 @@ class _PostRecordingScreenState extends State<PostRecordingScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
-  final FlutterSoundRecorder _flutterSoundRecorder = FlutterSoundRecorder();
+  final FlutterSoundRecorder _flutterSoundRecorder = FlutterSoundRecorder(
+    logLevel: Level.error,
+  );
   StreamSubscription? _recorderSubscription;
 
   String _path = '';
