@@ -37,17 +37,28 @@ class _RecommendationTabViewState extends State<RecommendationTabView> {
             recommendPlayerNotifier.currentTalk == null) {
           return const Center(child: PopTalkCircularProgressIndicator());
         }
-        return Padding(
-          padding: const EdgeInsets.all(26),
+        return RefreshIndicator(
+          color: Theme.of(context).primaryColor,
+          onRefresh: () async {
+            await talkListNotifier.fetchRecommendLists();
+          },
           child: Center(
-            child: FittedBox(
-              child: TalkPlayerCard(
-                recommendPlayerNotifier.currentTalk!,
-                recommendPlayerNotifier,
-                onPlay: (_) {
-                  context.read(playerProvider).reset();
-                },
-              ),
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(26),
+                  child: FittedBox(
+                    child: TalkPlayerCard(
+                      recommendPlayerNotifier.currentTalk!,
+                      recommendPlayerNotifier,
+                      onPlay: (_) {
+                        context.read(playerProvider).reset();
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         );
