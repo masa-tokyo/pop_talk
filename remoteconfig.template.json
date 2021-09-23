@@ -1,0 +1,9 @@
+{
+  "parameters": {
+    "requireBuildNumber": {
+      "defaultValue": {
+        "value": "1"
+      }
+    }
+  }
+}
