@@ -66,6 +66,7 @@ class FirestoreAuthedUserRepository implements AuthedUserRepository {
       likeTalkIds: firestoreUser.likeTalkIds,
       followerNumber: firestoreUser.followerNumber,
       likeNumber: firestoreUser.likeNumber,
+      photoUrl: firestoreUser.photoUrl,
     );
   }
 
@@ -166,6 +167,13 @@ class FirestoreAuthedUserRepository implements AuthedUserRepository {
       ...firestoreUser.data()!,
     });
   }
+
+  @override
+  Future<void> changeUserName(String id, String newName) async {
+    await _userCollection.doc(id).update({
+      'name': newName,
+    });
+  }
 }
 
 @freezed
@@ -178,6 +186,7 @@ class FirestoreAuthedUser with _$FirestoreAuthedUser {
     required List<String> likeTalkIds,
     required int followerNumber,
     required int likeNumber,
+    required String photoUrl,
   }) = _FirestoreAuthedUser;
 
   factory FirestoreAuthedUser.fromJson(Map<String, dynamic> json) =>

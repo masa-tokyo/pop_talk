@@ -27,7 +27,7 @@ class MyTalkPage extends StatelessWidget {
           return AuthorizedMyTalkPage(
             draftTalkItems: _draftTalkItems,
             publishTalkItems: _publishTalkItems,
-            userData: _authNotifier.currentUser!,
+            authedUser: _authNotifier.currentUser!,
           );
         }
       },

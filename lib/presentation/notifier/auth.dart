@@ -114,6 +114,12 @@ class AuthNotifier with ChangeNotifier {
     Tracking().logEvent(eventType: EventType.followUser);
     notifyListeners();
   }
+
+  Future<void> changeUserName(AuthedUser authedUser, String newName) async {
+    authedUser.changeUserName(newName);
+    await _repository.changeUserName(authedUser.id, newName);
+    notifyListeners();
+  }
 }
 
 final authProvider = ChangeNotifierProvider<AuthNotifier>(
