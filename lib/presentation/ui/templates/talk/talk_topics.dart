@@ -197,6 +197,14 @@ class _PopCornGridViewState extends State<PopCornGridView>
   }
 
   @override
+  void dispose() {
+    fadeController.dispose();
+    expandcontroller.dispose();
+    shrinkcontroller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
@@ -260,23 +268,25 @@ class _PopCornGridViewState extends State<PopCornGridView>
   void _openPostRecordingScreen(
       BuildContext context, String id, TalkTopic talkTopic) {
     Navigator.push(
+      context,
+      createRouteFromBottom(
         context,
-        createRouteFromBottom(
-            context,
-            PostRecordingScreen(
-              talkTopicId: id,
-              talkTopic: talkTopic,
-            )));
+        PostRecordingScreen(
+          talkTopicId: id,
+          talkTopic: talkTopic,
+        ),
+      ),
+    );
   }
 }
 
 class PopContainer extends StatelessWidget {
-  double circlePotision = 15;
-  double circleSize = 15;
+  const PopContainer({this.topicName});
+  static const double circlePosition = 15;
+  static const double circleSize = 15;
   final String? topicName;
-  PopContainer({this.topicName});
 
-  double popBorder = 6;
+  static const double popBorder = 6;
 
   @override
   Widget build(BuildContext context) {
@@ -294,8 +304,8 @@ class PopContainer extends StatelessWidget {
       child: Stack(
         children: [
           Positioned(
-            left: circlePotision,
-            top: circlePotision,
+            left: circlePosition,
+            top: circlePosition,
             child: Container(
               height: circleSize,
               width: circleSize,
@@ -306,8 +316,8 @@ class PopContainer extends StatelessWidget {
             ),
           ),
           Positioned(
-            right: circlePotision,
-            bottom: circlePotision,
+            right: circlePosition,
+            bottom: circlePosition,
             child: Container(
               height: circleSize,
               width: circleSize,

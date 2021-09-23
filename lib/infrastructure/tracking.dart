@@ -41,7 +41,10 @@ class Tracking {
     return FirebaseAnalyticsObserver(
       analytics: _analytics,
       nameExtractor: (settings) {
-        final paths = settings.name!.split('?');
+        final paths = settings.name?.split('?');
+        if (paths == null) {
+          return null;
+        }
         final path = paths.first;
         pageView(path);
         return path;
