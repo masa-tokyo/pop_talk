@@ -93,9 +93,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                 'assets/images/default_avatar.png',
                               ),
                               child: ClipOval(
-                                // TODO(MyTalkTeam): Image.networkでstorageに保存したアイコンを表示する。一旦デフォの画像を置いとく。
-                                child: Image.asset(
-                                  'assets/images/default_avatar.png',
+                                child: Image.network(
+                                  widget.talkItem.createdUser.photoUrl,
                                   fit: BoxFit.fill,
                                   errorBuilder: (c, o, s) {
                                     return const Icon(

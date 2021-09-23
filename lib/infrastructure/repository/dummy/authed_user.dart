@@ -10,6 +10,7 @@ class DummyAuthedUserRepository implements AuthedUserRepository {
     likeTalkIds: ['1', '3', '5', '6'],
     likeNumber: 5,
     followerNumber: 2,
+    photoUrl: '',
   );
 
   @override
@@ -50,5 +51,10 @@ class DummyAuthedUserRepository implements AuthedUserRepository {
   @override
   Future<void> followUser(AuthedUser user, String userId) async {
     return;
+  }
+
+  @override
+  Future<void> changeUserName(String id, String newName) async {
+    authedUser.name = newName;
   }
 }
