@@ -12,7 +12,7 @@ class AuthNotifier with ChangeNotifier {
   final AuthedUserRepository _repository;
 
   AuthedUser? currentUser;
-  String errorMessage = '';
+  String? errorMessage;
 
   Future<void> implicitLogin() async {
     currentUser = await _repository.implicitLogin();
