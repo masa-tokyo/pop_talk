@@ -9,6 +9,7 @@ abstract class AuthedUserRepository {
   Future<void> likeTalk(AuthedUser user, String talkId);
   Future<void> followUser(AuthedUser user, String userId);
   Future<void> signOut();
+  Future<void> changeUserName(String id, String newName);
 }
 
 class PopTalkException implements Exception {

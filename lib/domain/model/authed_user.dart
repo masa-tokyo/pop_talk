@@ -7,15 +7,17 @@ class AuthedUser {
     required this.likeTalkIds,
     required this.followerNumber,
     required this.likeNumber,
+    required this.photoUrl,
   });
 
   final String id;
-  final String name;
+  String name;
   final bool isAnonymous;
   final List<String> followingUserIds;
   final List<String> likeTalkIds;
   final int followerNumber;
   final int likeNumber;
+  final String photoUrl;
 
   void likeTalk(String talkId) {
     final talkIds = {...likeTalkIds, talkId}.toList();
@@ -37,5 +39,9 @@ class AuthedUser {
 
   bool alreadyFollowUser(String userId) {
     return followingUserIds.contains(userId);
+  }
+
+  void changeUserName(String newName) {
+    name = newName;
   }
 }

@@ -24,7 +24,10 @@ class PlayerNotifier extends ChangeNotifier {
   Duration duration = Duration.zero;
 
   TalkItem? get currentTalk {
-    if (_audioPlayer == null || playType != AudioPlayType.playlist) {
+    if (_audioPlayer == null ||
+        playType != AudioPlayType.playlist ||
+        _talks == null ||
+        _talks!.isEmpty) {
       return null;
     }
     return _talks![_audioPlayer!.currentIndex ?? 0];

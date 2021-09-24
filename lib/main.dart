@@ -1,13 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:package_info/package_info.dart';
 import 'package:pop_talk/infrastructure/tracking.dart';
 import 'package:pop_talk/presentation/notifier/auth.dart';
 import 'package:pop_talk/presentation/ui/pages/service/privacy.dart';
 import 'package:pop_talk/presentation/ui/pages/service/term_of_use.dart';
 import 'package:pop_talk/presentation/ui/pages/top.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'infrastructure/service_provider.dart';
 
@@ -114,7 +117,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class SetUp extends StatelessWidget {
+class SetUp extends StatefulWidget {
   const SetUp({
     required this.child,
   });
@@ -122,30 +125,62 @@ class SetUp extends StatelessWidget {
   final Widget child;
 
   @override
+  _SetUpState createState() => _SetUpState();
+}
+
+class _SetUpState extends State<SetUp> {
+  bool isLoading = true;
+  bool shouldUpdate = false;
+
+  @override
+  void initState() {
+    setUp(context).then((value) => setState(() => isLoading = false));
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: setUp(context),
-      builder: (BuildContext context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return child;
-        }
-        return SplashScreen();
-      },
-    );
+    if (isLoading || shouldUpdate) {
+      return SplashScreen();
+    }
+    return widget.child;
   }
 
   Future<void> setUp(BuildContext context) async {
-    // Splashスクリーンを見せるために最小1秒待つ
-    final showSplash = Future<void>.delayed(const Duration(seconds: 1));
+    // Splashスクリーンを見せるために最小1.5秒待つ
+    final showSplash = Future<void>.delayed(
+      const Duration(seconds: 1, milliseconds: 500),
+    );
     await Future.wait([
       Firebase.initializeApp(),
       registerDIContainer(),
     ]);
 
     await Future.wait([
+      checkBuildNumber(context),
       context.read(authProvider).implicitLogin(),
       showSplash,
     ]);
+  }
+
+  Future<void> checkBuildNumber(BuildContext context) async {
+    final remoteConfig = RemoteConfig.instance;
+    await remoteConfig.setConfigSettings(RemoteConfigSettings(
+      fetchTimeout: const Duration(seconds: 3),
+      minimumFetchInterval: const Duration(seconds: 1),
+    ));
+    await remoteConfig.fetchAndActivate();
+    final requireBuildNumber = remoteConfig.getInt('requireBuildNumber');
+
+    final info = await PackageInfo.fromPlatform();
+    final currentBuildNumber = int.parse(info.buildNumber);
+
+    if (requireBuildNumber > currentBuildNumber) {
+      setState(() {
+        shouldUpdate = true;
+      });
+      await _showUpdateDialog(context: context);
+    }
   }
 }
 
@@ -189,4 +224,36 @@ class SplashScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> _showUpdateDialog({
+  required BuildContext context,
+}) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false,
+    builder: (ctx) => AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      title: const Text(
+        'PopTalkの新しいバージョンが公開されました。アプリをアップデートして下さい。',
+      ),
+      actions: [
+        Align(
+          alignment: Alignment.center,
+          child: TextButton(
+            style: TextButton.styleFrom(
+              primary: Colors.blue,
+              backgroundColor: Colors.white,
+            ),
+            onPressed: () async {
+              await launch('https://poptalk.page.link/store');
+            },
+            child: const Text('アップデート'),
+          ),
+        ),
+      ],
+    ),
+  );
 }

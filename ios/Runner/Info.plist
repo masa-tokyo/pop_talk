@@ -57,5 +57,7 @@
     		</array>
     	</dict>
     </array>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>トークを録音するためにマイクを使用します.</string>
 </dict>
 </plist>
