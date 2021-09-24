@@ -74,33 +74,41 @@ class FirestoreAuthedUserRepository implements AuthedUserRepository {
   Future<AuthedUser?> signUpWithGoogle() async {
     try {
       final googleUser = await googleSignIn.signIn();
-      final googleAuth = await googleUser!.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      await _auth.currentUser!.linkWithCredential(credential);
-    } catch (e) {
-      return null;
+      if (googleUser == null) {
+        return null;
+      } else {
+        final googleAuth = await googleUser.authentication;
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+        await _auth.currentUser!.linkWithCredential(credential);
+        return _getFirebaseUser();
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'credential-already-in-use') {
+        throw PopTalkException('アカウントが存在します');
+      }
+      // } on FirebaseAuthException {
     }
-    return _getFirebaseUser();
   }
 
   @override
   Future<AuthedUser?> signInWithGoogle() async {
     try {
       final googleUser = await googleSignIn.signIn();
-      // if (googleUser != null) {
-      final googleAuth = await googleUser!.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      await _auth.signInWithCredential(credential);
-      return _getFirebaseUser();
-    } catch (e) {
+      if (googleUser == null) {
+        return null;
+      } else {
+        final googleAuth = await googleUser.authentication;
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+        await _auth.signInWithCredential(credential);
+        return _getFirebaseUser();
+      }
+    } on Exception catch (e) {
       return null;
     }
   }
@@ -122,10 +130,21 @@ class FirestoreAuthedUserRepository implements AuthedUserRepository {
       );
 
       await _auth.currentUser!.linkWithCredential(credential);
-    } catch (e) {
+      return _getFirebaseUser();
+      // } on FirebaseAuthException catch (e) {
+      //   print(e);
+      //   return null;
+      // }
+    } on SignInWithAppleAuthorizationException {
+      // if (e.code == 'AuthorizationErrorCode.unknown') {
+      //   return null;
+      // }
       return null;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'credential-already-in-use') {
+        throw PopTalkException('アカウントが存在します');
+      }
     }
-    return _getFirebaseUser();
   }
 
   @override
@@ -144,10 +163,10 @@ class FirestoreAuthedUserRepository implements AuthedUserRepository {
       );
 
       await _auth.signInWithCredential(credential);
-    } catch (e) {
+      return _getFirebaseUser();
+    } on SignInWithAppleAuthorizationException {
       return null;
     }
-    return _getFirebaseUser();
   }
 
   @override
