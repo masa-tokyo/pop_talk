@@ -1,4 +1,6 @@
-class AuthedUser {
+import 'package:pop_talk/domain/model/interface.dart';
+
+class AuthedUser implements HasProfile {
   AuthedUser({
     required this.id,
     required this.name,
@@ -11,12 +13,14 @@ class AuthedUser {
   });
 
   final String id;
+  @override
   String name;
   final bool isAnonymous;
   final List<String> followingUserIds;
   final List<String> likeTalkIds;
   final int followerNumber;
   final int likeNumber;
+  @override
   final String photoUrl;
 
   void likeTalk(String talkId) {

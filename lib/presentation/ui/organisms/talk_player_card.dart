@@ -4,6 +4,7 @@ import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pop_talk/presentation/notifier/auth.dart';
 import 'package:pop_talk/presentation/notifier/player.dart';
+import 'package:pop_talk/presentation/ui/atoms/user_avator.dart';
 import 'package:pop_talk/presentation/ui/utils/functions.dart';
 
 class TalkPlayerCard extends StatelessWidget {
@@ -88,16 +89,9 @@ class TalkPlayerCard extends StatelessWidget {
       alignment: Alignment.topRight,
       child: Column(
         children: [
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                fit: BoxFit.fill,
-                image: NetworkImage(talk.createdUser.photoUrl),
-              ),
-            ),
+          UserAvatar(
+            profile: talk.createdUser,
+            radius: 25,
           ),
           Text(
             talk.createdUser.name,

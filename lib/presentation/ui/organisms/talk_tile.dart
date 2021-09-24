@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/presentation/notifier/player.dart';
 import 'package:pop_talk/presentation/ui/templates/my_talk/preview_page.dart';
+import 'package:pop_talk/presentation/ui/utils/functions.dart';
 
 class TalkTile extends StatelessWidget {
   const TalkTile({
@@ -87,7 +88,9 @@ class TalkTile extends StatelessWidget {
                                         vertical: 2,
                                       ),
                                       child: Text(
-                                        '${talkItem.duration}分',
+                                        convertDurationToString(
+                                          Duration(seconds: talkItem.duration),
+                                        ),
                                         textAlign: TextAlign.center,
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,

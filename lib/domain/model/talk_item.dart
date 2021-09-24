@@ -1,3 +1,5 @@
+import 'package:pop_talk/domain/model/interface.dart';
+
 class TalkItem extends Object {
   TalkItem({
     required this.id,
@@ -58,10 +60,12 @@ class TalkItem extends Object {
   }
 }
 
-class TalkUser {
+class TalkUser implements HasProfile {
   TalkUser({required this.id, required this.name, required this.photoUrl});
 
   final String id;
+  @override
   final String name;
+  @override
   final String photoUrl;
 }
