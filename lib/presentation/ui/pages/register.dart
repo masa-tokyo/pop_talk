@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -118,39 +120,50 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                  if (Platform.isIOS)
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      onPressed: () async {
+                        final result = isMember!
+                            ? await authNotifier.signInWithApple()
+                            : await authNotifier.signUpWithApple();
+                        if (result) {
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            FontAwesomeIcons.apple,
+                            size: 30,
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            isMember! ? 'Appleでログインする' : 'Appleで始める',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    onPressed: () async {
-                      final result = isMember!
-                          ? await authNotifier.signInWithApple()
-                          : await authNotifier.signUpWithApple();
-                      if (result) {
-                        Navigator.pop(context);
+                  Consumer(
+                    builder: (context, watch, __) {
+                      final message = watch(authProvider).errorMessage;
+                      if (message == null) {
+                        return SizedBox.shrink();
+                      } else {
+                        return Text(message);
                       }
                     },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          FontAwesomeIcons.apple,
-                          size: 30,
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          isMember! ? 'Appleでログインする' : 'Appleで始める',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(vertical: 8),
