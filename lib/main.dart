@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -11,10 +14,12 @@ import 'package:pop_talk/presentation/ui/pages/service/privacy.dart';
 import 'package:pop_talk/presentation/ui/pages/service/term_of_use.dart';
 import 'package:pop_talk/presentation/ui/pages/top.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 import 'infrastructure/service_provider.dart';
 
 void main() {
+  setPathUrlStrategy();
   runApp(const MyApp());
 }
 
@@ -164,6 +169,9 @@ class _SetUpState extends State<SetUp> {
   }
 
   Future<void> checkBuildNumber(BuildContext context) async {
+    if (kIsWeb) {
+      return;
+    }
     final remoteConfig = RemoteConfig.instance;
     await remoteConfig.setConfigSettings(RemoteConfigSettings(
       fetchTimeout: const Duration(seconds: 3),
@@ -248,7 +256,11 @@ Future<void> _showUpdateDialog({
               backgroundColor: Colors.white,
             ),
             onPressed: () async {
-              await launch('https://poptalk.page.link/store');
+              if (Platform.isIOS) {
+                await launch('https://apps.apple.com/app/id1586833764');
+              } else {
+                await launch('https://play.google.com/store/apps/details?id=com.yamyanu.poptalk');
+              }
             },
             child: const Text('アップデート'),
           ),
