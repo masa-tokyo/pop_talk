@@ -1,17 +1,12 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/src/provider.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pop_talk/presentation/notifier/auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pop_talk/presentation/ui/pages/service/privacy.dart';
 import 'package:pop_talk/presentation/ui/pages/service/term_of_use.dart';
 import 'package:pop_talk/presentation/ui/utils/modal_bottom_sheet.dart';
@@ -159,9 +154,17 @@ class _RegisterPageState extends State<RegisterPage> {
                     builder: (context, watch, __) {
                       final message = watch(authProvider).errorMessage;
                       if (message == null) {
-                        return SizedBox.shrink();
+                        return const SizedBox.shrink();
                       } else {
-                        return Text(message);
+                        return SizedBox(
+                          height: 50,
+                          child: Center(
+                            child: Text(
+                              message,
+                              style: const TextStyle(color: Colors.redAccent),
+                            ),
+                          ),
+                        );
                       }
                     },
                   ),

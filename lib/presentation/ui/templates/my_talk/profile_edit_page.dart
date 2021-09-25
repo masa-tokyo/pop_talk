@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pop_talk/domain/model/authed_user.dart';
 import 'package:pop_talk/presentation/notifier/auth.dart';
-import 'package:pop_talk/presentation/notifier/my_talk.dart';
+import 'package:pop_talk/presentation/ui/atoms/user_avator.dart';
 
 class ProfileEditPage extends StatefulWidget {
   const ProfileEditPage({
@@ -50,24 +50,9 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  CircleAvatar(
+                  UserAvatar(
+                    profile: widget.authedUser,
                     radius: 50,
-                    backgroundColor: Colors.black12,
-                    backgroundImage: const AssetImage(
-                      'assets/images/default_avatar.png',
-                    ),
-                    child: ClipOval(
-                      child: Image.network(
-                        widget.authedUser.photoUrl,
-                        fit: BoxFit.fill,
-                        errorBuilder: (c, o, s) {
-                          return const Icon(
-                            Icons.error,
-                            color: Colors.red,
-                          );
-                        },
-                      ),
-                    ),
                   ),
                   const SizedBox(height: 40),
                   Column(

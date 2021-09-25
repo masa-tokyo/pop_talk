@@ -6,6 +6,7 @@ import 'package:pop_talk/domain/model/authed_user.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/presentation/notifier/my_talk.dart';
 import 'package:pop_talk/presentation/ui/atoms/circular_progress_indicator.dart';
+import 'package:pop_talk/presentation/ui/atoms/user_avator.dart';
 import 'package:pop_talk/presentation/ui/organisms/talk_tile.dart';
 import 'package:pop_talk/presentation/ui/templates/my_talk/profile_edit_page.dart';
 import 'package:pop_talk/presentation/ui/utils/modal_bottom_sheet.dart';
@@ -45,25 +46,7 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                CircleAvatar(
-                  radius: 40,
-                  backgroundColor: Colors.black12,
-                  backgroundImage: const AssetImage(
-                    'assets/images/default_avatar.png',
-                  ),
-                  child: ClipOval(
-                    child: Image.network(
-                      widget.authedUser.photoUrl,
-                      fit: BoxFit.fill,
-                      errorBuilder: (c, o, s) {
-                        return const Icon(
-                          Icons.error,
-                          color: Colors.red,
-                        );
-                      },
-                    ),
-                  ),
-                ),
+                UserAvatar(profile: widget.authedUser),
                 ConstrainedBox(
                   constraints:
                       const BoxConstraints(minHeight: 140, maxWidth: 200),

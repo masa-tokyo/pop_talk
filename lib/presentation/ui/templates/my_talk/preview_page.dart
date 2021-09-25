@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/presentation/notifier/my_talk.dart';
 import 'package:pop_talk/presentation/notifier/player.dart';
+import 'package:pop_talk/presentation/ui/atoms/user_avator.dart';
 import 'package:pop_talk/presentation/ui/molecules/detail_dialog.dart';
 import 'package:pop_talk/presentation/ui/templates/my_talk/existing_talk_edit_page.dart';
 import 'package:pop_talk/presentation/ui/utils/functions.dart';
@@ -83,32 +84,13 @@ class _PreviewPageState extends State<PreviewPage> {
                       padding: const EdgeInsets.all(8),
                       child: Column(
                         children: [
-                          CircleAvatar(
-                            radius: 32,
-                            backgroundColor: Theme.of(context).primaryColor,
-                            child: CircleAvatar(
-                              radius: 30,
-                              backgroundColor: Colors.white,
-                              backgroundImage: const AssetImage(
-                                'assets/images/default_avatar.png',
-                              ),
-                              child: ClipOval(
-                                child: Image.network(
-                                  widget.talkItem.createdUser.photoUrl,
-                                  fit: BoxFit.fill,
-                                  errorBuilder: (c, o, s) {
-                                    return const Icon(
-                                      Icons.error,
-                                      color: Colors.red,
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
+                          UserAvatar(
+                            profile: widget.talkItem.createdUser,
+                            radius: 24,
                           ),
-                          const Text(
-                            '山田太郎',
-                            style: TextStyle(
+                          Text(
+                            widget.talkItem.createdUser.name,
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -119,10 +101,7 @@ class _PreviewPageState extends State<PreviewPage> {
                       height: 80,
                       width: double.infinity,
                       alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: Colors.black26,
-                      ),
+                      color: Colors.black26,
                       child: Text(
                         widget.talkItem.topicName,
                         overflow: TextOverflow.clip,

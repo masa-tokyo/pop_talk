@@ -87,7 +87,7 @@ class FirestoreAuthedUserRepository implements AuthedUserRepository {
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'credential-already-in-use') {
-        throw PopTalkException('アカウントが存在します');
+        throw PopTalkException('すでにアカウントが存在します');
       }
       // } on FirebaseAuthException {
     }
@@ -142,7 +142,7 @@ class FirestoreAuthedUserRepository implements AuthedUserRepository {
       return null;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'credential-already-in-use') {
-        throw PopTalkException('アカウントが存在します');
+        throw PopTalkException('すでにアカウントが存在します');
       }
     }
   }

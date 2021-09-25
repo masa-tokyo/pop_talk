@@ -2,7 +2,7 @@
   "parameters": {
     "requireBuildNumber": {
       "defaultValue": {
-        "value": "1"
+        "value": "4"
       }
     }
   }
