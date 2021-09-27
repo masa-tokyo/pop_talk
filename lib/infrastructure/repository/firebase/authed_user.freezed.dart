@@ -28,7 +28,8 @@ class _$FirestoreAuthedUserTearOff {
       required List<String> likeTalkIds,
       required int followerNumber,
       required int likeNumber,
-      required String photoUrl}) {
+      required String photoUrl,
+      List<String>? blockUserIds}) {
     return _FirestoreAuthedUser(
       id: id,
       name: name,
@@ -38,6 +39,7 @@ class _$FirestoreAuthedUserTearOff {
       followerNumber: followerNumber,
       likeNumber: likeNumber,
       photoUrl: photoUrl,
+      blockUserIds: blockUserIds,
     );
   }
 
@@ -59,6 +61,7 @@ mixin _$FirestoreAuthedUser {
   int get followerNumber => throw _privateConstructorUsedError;
   int get likeNumber => throw _privateConstructorUsedError;
   String get photoUrl => throw _privateConstructorUsedError;
+  List<String>? get blockUserIds => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -79,7 +82,8 @@ abstract class $FirestoreAuthedUserCopyWith<$Res> {
       List<String> likeTalkIds,
       int followerNumber,
       int likeNumber,
-      String photoUrl});
+      String photoUrl,
+      List<String>? blockUserIds});
 }
 
 /// @nodoc
@@ -101,6 +105,7 @@ class _$FirestoreAuthedUserCopyWithImpl<$Res>
     Object? followerNumber = freezed,
     Object? likeNumber = freezed,
     Object? photoUrl = freezed,
+    Object? blockUserIds = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -135,6 +140,10 @@ class _$FirestoreAuthedUserCopyWithImpl<$Res>
           ? _value.photoUrl
           : photoUrl // ignore: cast_nullable_to_non_nullable
               as String,
+      blockUserIds: blockUserIds == freezed
+          ? _value.blockUserIds
+          : blockUserIds // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ));
   }
 }
@@ -154,7 +163,8 @@ abstract class _$FirestoreAuthedUserCopyWith<$Res>
       List<String> likeTalkIds,
       int followerNumber,
       int likeNumber,
-      String photoUrl});
+      String photoUrl,
+      List<String>? blockUserIds});
 }
 
 /// @nodoc
@@ -178,6 +188,7 @@ class __$FirestoreAuthedUserCopyWithImpl<$Res>
     Object? followerNumber = freezed,
     Object? likeNumber = freezed,
     Object? photoUrl = freezed,
+    Object? blockUserIds = freezed,
   }) {
     return _then(_FirestoreAuthedUser(
       id: id == freezed
@@ -212,6 +223,10 @@ class __$FirestoreAuthedUserCopyWithImpl<$Res>
           ? _value.photoUrl
           : photoUrl // ignore: cast_nullable_to_non_nullable
               as String,
+      blockUserIds: blockUserIds == freezed
+          ? _value.blockUserIds
+          : blockUserIds // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ));
   }
 }
@@ -228,7 +243,8 @@ class _$_FirestoreAuthedUser implements _FirestoreAuthedUser {
       required this.likeTalkIds,
       required this.followerNumber,
       required this.likeNumber,
-      required this.photoUrl});
+      required this.photoUrl,
+      this.blockUserIds});
 
   factory _$_FirestoreAuthedUser.fromJson(Map<String, dynamic> json) =>
       _$_$_FirestoreAuthedUserFromJson(json);
@@ -249,10 +265,12 @@ class _$_FirestoreAuthedUser implements _FirestoreAuthedUser {
   final int likeNumber;
   @override
   final String photoUrl;
+  @override
+  final List<String>? blockUserIds;
 
   @override
   String toString() {
-    return 'FirestoreAuthedUser(id: $id, name: $name, isAnonymous: $isAnonymous, followingUserIds: $followingUserIds, likeTalkIds: $likeTalkIds, followerNumber: $followerNumber, likeNumber: $likeNumber, photoUrl: $photoUrl)';
+    return 'FirestoreAuthedUser(id: $id, name: $name, isAnonymous: $isAnonymous, followingUserIds: $followingUserIds, likeTalkIds: $likeTalkIds, followerNumber: $followerNumber, likeNumber: $likeNumber, photoUrl: $photoUrl, blockUserIds: $blockUserIds)';
   }
 
   @override
@@ -280,7 +298,10 @@ class _$_FirestoreAuthedUser implements _FirestoreAuthedUser {
                     .equals(other.likeNumber, likeNumber)) &&
             (identical(other.photoUrl, photoUrl) ||
                 const DeepCollectionEquality()
-                    .equals(other.photoUrl, photoUrl)));
+                    .equals(other.photoUrl, photoUrl)) &&
+            (identical(other.blockUserIds, blockUserIds) ||
+                const DeepCollectionEquality()
+                    .equals(other.blockUserIds, blockUserIds)));
   }
 
   @override
@@ -293,7 +314,8 @@ class _$_FirestoreAuthedUser implements _FirestoreAuthedUser {
       const DeepCollectionEquality().hash(likeTalkIds) ^
       const DeepCollectionEquality().hash(followerNumber) ^
       const DeepCollectionEquality().hash(likeNumber) ^
-      const DeepCollectionEquality().hash(photoUrl);
+      const DeepCollectionEquality().hash(photoUrl) ^
+      const DeepCollectionEquality().hash(blockUserIds);
 
   @JsonKey(ignore: true)
   @override
@@ -316,7 +338,8 @@ abstract class _FirestoreAuthedUser implements FirestoreAuthedUser {
       required List<String> likeTalkIds,
       required int followerNumber,
       required int likeNumber,
-      required String photoUrl}) = _$_FirestoreAuthedUser;
+      required String photoUrl,
+      List<String>? blockUserIds}) = _$_FirestoreAuthedUser;
 
   factory _FirestoreAuthedUser.fromJson(Map<String, dynamic> json) =
       _$_FirestoreAuthedUser.fromJson;
@@ -337,6 +360,8 @@ abstract class _FirestoreAuthedUser implements FirestoreAuthedUser {
   int get likeNumber => throw _privateConstructorUsedError;
   @override
   String get photoUrl => throw _privateConstructorUsedError;
+  @override
+  List<String>? get blockUserIds => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$FirestoreAuthedUserCopyWith<_FirestoreAuthedUser> get copyWith =>

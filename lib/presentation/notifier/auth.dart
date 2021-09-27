@@ -120,6 +120,13 @@ class AuthNotifier with ChangeNotifier {
     await _repository.changeUserName(authedUser.id, newName);
     notifyListeners();
   }
+
+  Future<void> blockUser(String userId) async {
+    currentUser!.blockUser(userId);
+    await _repository.blockUser(currentUser!, userId);
+    notifyListeners();
+  }
+
 }
 
 final authProvider = ChangeNotifierProvider<AuthNotifier>(
