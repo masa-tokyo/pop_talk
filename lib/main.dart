@@ -162,7 +162,7 @@ class _SetUpState extends State<SetUp> {
     ]);
 
     await Future.wait([
-      // checkBuildNumber(context),
+      checkBuildNumber(context),
       context.read(authProvider).implicitLogin(),
       showSplash,
     ]);

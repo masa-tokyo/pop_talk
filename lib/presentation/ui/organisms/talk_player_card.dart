@@ -5,7 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pop_talk/presentation/notifier/auth.dart';
 import 'package:pop_talk/presentation/notifier/player.dart';
 import 'package:pop_talk/presentation/ui/atoms/user_avator.dart';
+import 'package:pop_talk/presentation/ui/organisms/user_options.dart';
 import 'package:pop_talk/presentation/ui/utils/functions.dart';
+import 'package:pop_talk/presentation/ui/utils/modal_bottom_sheet.dart';
 
 class TalkPlayerCard extends StatelessWidget {
   const TalkPlayerCard(
@@ -39,7 +41,12 @@ class TalkPlayerCard extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: () {},
+                onTap: () async {
+                  await showBottomSheetPage(
+                    context: context,
+                    page: const UserOptions(),
+                  );
+                },
                 child: const Icon(Icons.more_horiz),
               ),
             ),

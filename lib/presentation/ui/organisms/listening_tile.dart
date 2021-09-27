@@ -4,6 +4,8 @@ import 'package:pop_talk/presentation/notifier/auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pop_talk/presentation/notifier/talk_list.dart';
 import 'package:intl/intl.dart';
+import 'package:pop_talk/presentation/ui/organisms/user_options.dart';
+import 'package:pop_talk/presentation/ui/utils/modal_bottom_sheet.dart';
 
 class ListeningTile extends StatelessWidget {
   const ListeningTile({
@@ -48,7 +50,12 @@ class ListeningTile extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: GestureDetector(
                           behavior: HitTestBehavior.opaque,
-                          onTap: () {},
+                          onTap: () async {
+                            await showBottomSheetPage(
+                              context: context,
+                              page: const UserOptions(),
+                            );
+                          },
                           child: const Icon(Icons.more_horiz),
                         ),
                       ),
