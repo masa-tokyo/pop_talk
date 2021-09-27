@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pop_talk/presentation/ui/organisms/block_confirmation.dart';
+import 'package:pop_talk/presentation/ui/templates/listening/report_page.dart';
 import 'package:pop_talk/presentation/ui/utils/modal_bottom_sheet.dart';
 
 class UserOptions extends StatelessWidget {
-  const UserOptions({Key? key}) : super(key: key);
+  const UserOptions({Key? key, required this.userId}) : super(key: key);
+
+  final String userId;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,9 @@ class UserOptions extends StatelessWidget {
                     Navigator.of(context).pop();
                     await showBottomSheetPage(
                       context: context,
-                      page: const BlockConfirmation(),
+                      page: BlockConfirmation(
+                        userId: userId,
+                      ),
                     );
                   },
                   child: Column(
@@ -50,19 +55,31 @@ class UserOptions extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 24),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Colors.black12,
-                      child: FaIcon(
-                        FontAwesomeIcons.exclamationTriangle,
-                        color: Colors.black45,
+                GestureDetector(
+                  onTap: () async {
+                    Navigator.of(context).pop();
+                    await Navigator.push<void>(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext _context) =>
+                            ReportPage(userId: userId),
                       ),
-                    ),
-                    Text('通報'),
-                  ],
+                    );
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundColor: Colors.black12,
+                        child: FaIcon(
+                          FontAwesomeIcons.exclamationTriangle,
+                          color: Colors.black45,
+                        ),
+                      ),
+                      Text('通報'),
+                    ],
+                  ),
                 ),
               ],
             ),

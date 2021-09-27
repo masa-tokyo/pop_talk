@@ -44,7 +44,7 @@ class TalkPlayerCard extends StatelessWidget {
                 onTap: () async {
                   await showBottomSheetPage(
                     context: context,
-                    page: const UserOptions(),
+                    page: UserOptions(userId: talk.createdUser.id),
                   );
                 },
                 child: const Icon(Icons.more_horiz),

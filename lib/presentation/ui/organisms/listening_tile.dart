@@ -53,7 +53,8 @@ class ListeningTile extends StatelessWidget {
                           onTap: () async {
                             await showBottomSheetPage(
                               context: context,
-                              page: const UserOptions(),
+                              page:
+                                  UserOptions(userId: talkItem.createdUser.id),
                             );
                           },
                           child: const Icon(Icons.more_horiz),
