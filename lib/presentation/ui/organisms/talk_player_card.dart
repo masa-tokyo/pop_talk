@@ -32,7 +32,17 @@ class TalkPlayerCard extends StatelessWidget {
         constraints: const BoxConstraints(maxWidth: 360),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Container(
+              padding: const EdgeInsets.only(top: 4, right: 16, bottom: 4),
+              alignment: Alignment.centerRight,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {},
+                child: const Icon(Icons.more_horiz),
+              ),
+            ),
             _topicCard(),
             _aboutTopicItem(),
             _audioPlayer(context),
@@ -59,9 +69,9 @@ class TalkPlayerCard extends StatelessWidget {
 
   Widget _topicCard() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
       child: Container(
-        height: 220,
+        height: 240,
         decoration: BoxDecoration(
           color: Color(talk.colorCode),
           borderRadius: const BorderRadius.all(Radius.circular(10)),

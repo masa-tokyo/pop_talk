@@ -38,14 +38,21 @@ class ListeningTile extends StatelessWidget {
             children: [
               Stack(
                 children: [
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 3),
-                      child: Text(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
                         '${dateFormat.format(talkItem.publishedAt!)} 配信',
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {},
+                          child: const Icon(Icons.more_horiz),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
