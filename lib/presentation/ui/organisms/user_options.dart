@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pop_talk/presentation/ui/organisms/block_confirmation.dart';
+import 'package:pop_talk/presentation/ui/utils/modal_bottom_sheet.dart';
 
 class UserOptions extends StatelessWidget {
   const UserOptions({Key? key}) : super(key: key);
@@ -7,7 +9,7 @@ class UserOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 180,
+      height: 200,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -20,22 +22,32 @@ class UserOptions extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 20),
+            padding: const EdgeInsets.only(left: 20, top: 16),
             child: Row(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Colors.black12,
-                      child: FaIcon(
-                        FontAwesomeIcons.ban,
-                        color: Colors.black45,
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () async {
+                    Navigator.of(context).pop();
+                    await showBottomSheetPage(
+                      context: context,
+                      page: const BlockConfirmation(),
+                    );
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundColor: Colors.black12,
+                        child: FaIcon(
+                          FontAwesomeIcons.userSlash,
+                          color: Colors.black45,
+                        ),
                       ),
-                    ),
-                    Text('ブロック'),
-                  ],
+                      Text('ブロック'),
+                    ],
+                  ),
                 ),
                 const SizedBox(width: 24),
                 Column(
