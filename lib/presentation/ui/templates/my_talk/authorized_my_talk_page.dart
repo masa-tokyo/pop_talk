@@ -7,6 +7,7 @@ import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/presentation/notifier/my_talk.dart';
 import 'package:pop_talk/presentation/ui/atoms/circular_progress_indicator.dart';
 import 'package:pop_talk/presentation/ui/atoms/user_avator.dart';
+import 'package:pop_talk/presentation/ui/organisms/logout_confirmation.dart';
 import 'package:pop_talk/presentation/ui/organisms/talk_tile.dart';
 import 'package:pop_talk/presentation/ui/templates/my_talk/profile_edit_page.dart';
 import 'package:pop_talk/presentation/ui/utils/modal_bottom_sheet.dart';
@@ -50,7 +51,10 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
                   alignment: Alignment.centerRight,
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
-                    onTap: () async {},
+                    onTap: () async {
+                      await showBottomSheetPage(
+                          context: context, page: LogoutConfirmation());
+                    },
                     child: const Icon(Icons.more_horiz),
                   ),
                 ),
