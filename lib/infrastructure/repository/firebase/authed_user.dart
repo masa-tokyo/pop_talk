@@ -133,10 +133,6 @@ class FirestoreAuthedUserRepository implements AuthedUserRepository {
 
       await _auth.currentUser!.linkWithCredential(credential);
       return _getFirebaseUser();
-      // } on FirebaseAuthException catch (e) {
-      //   print(e);
-      //   return null;
-      // }
     } on SignInWithAppleAuthorizationException {
       // if (e.code == 'AuthorizationErrorCode.unknown') {
       //   return null;

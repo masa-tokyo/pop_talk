@@ -73,7 +73,7 @@ class AuthNotifier with ChangeNotifier {
 
   Future<bool> signInWithApple() async {
     try {
-      final appleUser = await _repository.signUpWithApple();
+      final appleUser = await _repository.signInWithApple();
       if (appleUser == null) {
         return false;
       }
@@ -126,7 +126,6 @@ class AuthNotifier with ChangeNotifier {
     await _repository.blockUser(currentUser!, userId);
     notifyListeners();
   }
-
 }
 
 final authProvider = ChangeNotifierProvider<AuthNotifier>(
