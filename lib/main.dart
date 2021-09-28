@@ -259,7 +259,8 @@ Future<void> _showUpdateDialog({
               if (Platform.isIOS) {
                 await launch('https://apps.apple.com/app/id1586833764');
               } else {
-                await launch('https://play.google.com/store/apps/details?id=com.yamyanu.poptalk');
+                await launch(
+                    'https://play.google.com/store/apps/details?id=com.yamyanu.poptalk');
               }
             },
             child: const Text('アップデート'),
