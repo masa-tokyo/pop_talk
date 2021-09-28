@@ -32,9 +32,11 @@ class TalkListNotifier with ChangeNotifier {
     }
     if (_store.followLists != null) {
       _store.followLists = _blockService.filterTalks(_store.followLists!);
+      fetchFollowLists();
     }
     if (_store.likeLists != null) {
       _store.likeLists = _blockService.filterTalks(_store.likeLists!);
+      fetchLikeLists();
     }
   }
 

@@ -5,9 +5,11 @@ import 'package:pop_talk/presentation/ui/templates/listening/report_page.dart';
 import 'package:pop_talk/presentation/ui/utils/modal_bottom_sheet.dart';
 
 class TalkOptions extends StatelessWidget {
-  const TalkOptions({Key? key, required this.talkId}) : super(key: key);
+  const TalkOptions({Key? key, required this.talkId, required this.userId})
+      : super(key: key);
 
   final String talkId;
+  final String userId;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +38,7 @@ class TalkOptions extends StatelessWidget {
                       context: context,
                       page: BlockConfirmation(
                         talkId: talkId,
+                        userId: userId,
                       ),
                     );
                   },
