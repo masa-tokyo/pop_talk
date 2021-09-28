@@ -5,7 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pop_talk/presentation/notifier/auth.dart';
 import 'package:pop_talk/presentation/notifier/player.dart';
 import 'package:pop_talk/presentation/ui/atoms/user_avator.dart';
+import 'package:pop_talk/presentation/ui/organisms/talk_options.dart';
 import 'package:pop_talk/presentation/ui/utils/functions.dart';
+import 'package:pop_talk/presentation/ui/utils/modal_bottom_sheet.dart';
 
 class TalkPlayerCard extends StatelessWidget {
   const TalkPlayerCard(
@@ -32,7 +34,22 @@ class TalkPlayerCard extends StatelessWidget {
         constraints: const BoxConstraints(maxWidth: 360),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Container(
+              padding: const EdgeInsets.only(top: 4, right: 16, bottom: 4),
+              alignment: Alignment.centerRight,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () async {
+                  await showBottomSheetPage(
+                    context: context,
+                    page: TalkOptions(talkId: talk.id),
+                  );
+                },
+                child: const Icon(Icons.more_horiz),
+              ),
+            ),
             _topicCard(),
             _aboutTopicItem(),
             _audioPlayer(context),
@@ -59,9 +76,9 @@ class TalkPlayerCard extends StatelessWidget {
 
   Widget _topicCard() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
       child: Container(
-        height: 220,
+        height: 240,
         decoration: BoxDecoration(
           color: Color(talk.colorCode),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
