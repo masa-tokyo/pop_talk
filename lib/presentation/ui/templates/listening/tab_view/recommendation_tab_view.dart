@@ -32,9 +32,8 @@ class _RecommendationTabViewState extends State<RecommendationTabView> {
         final recommendPlayerNotifier = watch(
           playerFamilyProvider(RecommendationTabView.playerProviderName),
         );
-
-        if (talkListNotifier.recommendLists == null  ||
-         recommendPlayerNotifier.currentTalk == null) {
+        if (talkListNotifier.recommendLists == null ||
+            recommendPlayerNotifier.currentTalk == null) {
           return const Center(child: PopTalkCircularProgressIndicator());
         }
         return RefreshIndicator(
@@ -44,7 +43,6 @@ class _RecommendationTabViewState extends State<RecommendationTabView> {
             final playerNotifier = context.read(
               playerFamilyProvider(RecommendationTabView.playerProviderName),
             );
-            await playerNotifier.reset();
             await playerNotifier.initPlayer(
               AudioPlayType.playlist,
               talks: talkListNotifier.recommendLists,
