@@ -10,7 +10,8 @@ class AuthedUser implements HasProfile {
     required this.followerNumber,
     required this.likeNumber,
     required this.photoUrl,
-  });
+    List<String>? blockUserIds,
+  }) : blockUserIds = blockUserIds ?? [];
 
   final String id;
   @override
@@ -22,6 +23,7 @@ class AuthedUser implements HasProfile {
   final int likeNumber;
   @override
   final String photoUrl;
+  final List<String> blockUserIds;
 
   void likeTalk(String talkId) {
     final talkIds = {...likeTalkIds, talkId}.toList();
@@ -33,6 +35,13 @@ class AuthedUser implements HasProfile {
   void followUser(String userId) {
     final userIds = {...followingUserIds, userId}.toList();
     followingUserIds
+      ..clear()
+      ..addAll(userIds);
+  }
+
+  void blockUser(String userId) {
+    final userIds = {...blockUserIds, userId}.toList();
+    blockUserIds
       ..clear()
       ..addAll(userIds);
   }

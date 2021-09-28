@@ -20,6 +20,9 @@ _$_FirestoreAuthedUser _$_$_FirestoreAuthedUserFromJson(
     followerNumber: json['followerNumber'] as int,
     likeNumber: json['likeNumber'] as int,
     photoUrl: json['photoUrl'] as String,
+    blockUserIds: (json['blockUserIds'] as List<dynamic>?)
+        ?.map((e) => e as String)
+        .toList(),
   );
 }
 
@@ -34,4 +37,5 @@ Map<String, dynamic> _$_$_FirestoreAuthedUserToJson(
       'followerNumber': instance.followerNumber,
       'likeNumber': instance.likeNumber,
       'photoUrl': instance.photoUrl,
+      'blockUserIds': instance.blockUserIds,
     };

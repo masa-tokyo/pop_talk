@@ -110,9 +110,8 @@ class ListeningTile extends StatelessWidget {
                             );
                           } else {
                             return InkWell(
-                              onTap: () {
-                                _authNotifier.likeTalk(talkItem);
-                                context.read(talkListProvider).fetchLikeLists();
+                              onTap: () async {
+                                await _authNotifier.likeTalk(talkItem);
                               },
                               child: const Icon(
                                 Icons.favorite_border,

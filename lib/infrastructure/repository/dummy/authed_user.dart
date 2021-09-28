@@ -57,4 +57,9 @@ class DummyAuthedUserRepository implements AuthedUserRepository {
   Future<void> changeUserName(String id, String newName) async {
     authedUser.name = newName;
   }
+
+  @override
+  Future<void> blockUser(AuthedUser user, String userId) async {
+    return;
+  }
 }

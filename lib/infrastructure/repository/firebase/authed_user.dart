@@ -32,6 +32,7 @@ class FirestoreAuthedUserRepository implements AuthedUserRepository {
         'followingUserIds': <dynamic>[],
         'followerNumber': 0,
         'likeNumber': 0,
+        'blockUserIds': <dynamic>[],
       });
       firestoreUser = await _userCollection.doc(firebaseUser.uid).get();
     }
@@ -67,6 +68,7 @@ class FirestoreAuthedUserRepository implements AuthedUserRepository {
       followerNumber: firestoreUser.followerNumber,
       likeNumber: firestoreUser.likeNumber,
       photoUrl: firestoreUser.photoUrl,
+      blockUserIds: firestoreUser.blockUserIds,
     );
   }
 
@@ -193,6 +195,13 @@ class FirestoreAuthedUserRepository implements AuthedUserRepository {
       'name': newName,
     });
   }
+
+  @override
+  Future<void> blockUser(AuthedUser user, String userId) async {
+    await _userCollection.doc(user.id).update({
+      'blockUserIds': FieldValue.arrayUnion(<dynamic>[userId]),
+    });
+  }
 }
 
 @freezed
@@ -206,6 +215,7 @@ class FirestoreAuthedUser with _$FirestoreAuthedUser {
     required int followerNumber,
     required int likeNumber,
     required String photoUrl,
+    List<String>? blockUserIds,
   }) = _FirestoreAuthedUser;
 
   factory FirestoreAuthedUser.fromJson(Map<String, dynamic> json) =>
