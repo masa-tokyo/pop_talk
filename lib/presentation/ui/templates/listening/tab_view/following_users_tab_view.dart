@@ -53,7 +53,7 @@ class _FollowingUsersTabViewState extends State<FollowingUsersTabView> {
                         await context
                             .read(
                               playerFamilyProvider(
-                                RecommendationTabView.playerProviderName,
+                                RecommendPlayer.playerProviderName,
                               ),
                             )
                             .reset();

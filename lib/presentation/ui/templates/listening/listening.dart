@@ -58,7 +58,7 @@ class _ListeningTemplateState extends State<ListeningTemplate> {
           Expanded(
             child: TabBarView(
               children: [
-                const RecommendationTabView(),
+                RecommendationTabView(),
                 FollowingUsersTabView(),
                 LikedTalksTabView(),
               ],
