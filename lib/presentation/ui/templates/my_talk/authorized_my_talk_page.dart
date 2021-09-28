@@ -7,6 +7,7 @@ import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/presentation/notifier/my_talk.dart';
 import 'package:pop_talk/presentation/ui/atoms/circular_progress_indicator.dart';
 import 'package:pop_talk/presentation/ui/atoms/user_avator.dart';
+import 'package:pop_talk/presentation/ui/organisms/logout_confirmation.dart';
 import 'package:pop_talk/presentation/ui/organisms/talk_tile.dart';
 import 'package:pop_talk/presentation/ui/templates/my_talk/profile_edit_page.dart';
 import 'package:pop_talk/presentation/ui/utils/modal_bottom_sheet.dart';
@@ -43,90 +44,118 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
               color: Colors.white,
             ),
             constraints: const BoxConstraints(minHeight: 140, maxWidth: 565),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            child: Column(
               children: [
-                UserAvatar(profile: widget.authedUser),
-                ConstrainedBox(
-                  constraints:
-                      const BoxConstraints(minHeight: 140, maxWidth: 200),
-                  child: Column(
+                Container(
+                  padding: const EdgeInsets.only(top: 4, right: 16),
+                  alignment: Alignment.centerRight,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () async {
+                      await showBottomSheetPage(
+                          context: context, page: const LogoutConfirmation());
+                    },
+                    child: const Icon(Icons.more_horiz),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, bottom: 16),
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        widget.authedUser.name,
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline3!
-                            .copyWith(fontSize: 24),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          await showBottomSheetPage(
-                              context: context,
-                              page: ProfileEditPage(
-                                  authedUser: widget.authedUser));
-                        },
-                        style: TextButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            side: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 4,
-                            horizontal: 16,
-                          ),
-                        ),
-                        child: Text(
-                          'プロフィール編集',
-                          style:
-                              Theme.of(context).textTheme.headline5!.copyWith(
-                                    color: Theme.of(context).primaryColor,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            '${widget.authedUser.followerNumber}',
-                            style:
-                                Theme.of(context).textTheme.headline3!.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                          ),
-                          const SizedBox(width: 2),
-                          Text(
-                            'フォロワー',
-                            style:
-                                Theme.of(context).textTheme.headline5!.copyWith(
+                      UserAvatar(profile: widget.authedUser),
+                      ConstrainedBox(
+                        constraints:
+                            const BoxConstraints(minHeight: 140, maxWidth: 200),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              widget.authedUser.name,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline3!
+                                  .copyWith(fontSize: 24),
+                            ),
+                            const SizedBox(height: 4),
+                            TextButton(
+                              onPressed: () async {
+                                await showBottomSheetPage(
+                                    context: context,
+                                    page: ProfileEditPage(
+                                        authedUser: widget.authedUser));
+                              },
+                              style: TextButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  side: BorderSide(
+                                      color: Theme.of(context).primaryColor),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 4,
+                                  horizontal: 16,
+                                ),
+                              ),
+                              child: Text(
+                                'プロフィール編集',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline5!
+                                    .copyWith(
+                                      color: Theme.of(context).primaryColor,
                                       fontWeight: FontWeight.normal,
                                     ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '${widget.authedUser.likeNumber}',
-                            style:
-                                Theme.of(context).textTheme.headline3!.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                          ),
-                          const SizedBox(width: 2),
-                          Text(
-                            'いいね',
-                            style:
-                                Theme.of(context).textTheme.headline5!.copyWith(
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                          ),
-                        ],
-                      )
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '${widget.authedUser.followerNumber}',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline3!
+                                      .copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                                const SizedBox(width: 2),
+                                Text(
+                                  'フォロワー',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline5!
+                                      .copyWith(
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  '${widget.authedUser.likeNumber}',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline3!
+                                      .copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                                const SizedBox(width: 2),
+                                Text(
+                                  'いいね',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline5!
+                                      .copyWith(
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
