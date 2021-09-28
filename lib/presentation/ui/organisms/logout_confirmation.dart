@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pop_talk/presentation/notifier/auth.dart';
 
-class LogoutConfirmation extends StatelessWidget {
+class LogoutConfirmation extends ConsumerWidget {
   const LogoutConfirmation({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ScopedReader watch) {
     return SizedBox(
       height: 220,
       child: Column(
@@ -29,7 +31,8 @@ class LogoutConfirmation extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    await watch(authProvider).signOut();
                     Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(

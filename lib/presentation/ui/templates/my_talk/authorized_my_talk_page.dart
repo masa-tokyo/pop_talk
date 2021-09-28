@@ -53,7 +53,7 @@ class _AuthorizedMyTalkPageState extends State<AuthorizedMyTalkPage> {
                     behavior: HitTestBehavior.opaque,
                     onTap: () async {
                       await showBottomSheetPage(
-                          context: context, page: LogoutConfirmation());
+                          context: context, page: const LogoutConfirmation());
                     },
                     child: const Icon(Icons.more_horiz),
                   ),
