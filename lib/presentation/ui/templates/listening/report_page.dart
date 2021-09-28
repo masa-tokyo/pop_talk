@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class ReportPage extends StatefulWidget {
-  const ReportPage({Key? key, required this.userId}) : super(key: key);
+  const ReportPage({Key? key, required this.talkId}) : super(key: key);
 
-  final String userId;
+  final String talkId;
   @override
   _ReportPageState createState() => _ReportPageState();
 }
@@ -43,7 +43,7 @@ class _ReportPageState extends State<ReportPage> {
           Expanded(
             child: WebView(
               initialUrl:
-                  'https://docs.google.com/forms/d/e/1FAIpQLSePAnSUGCvFtQpqNABT7g0f8uPOZA1p6AgKQWDg_Pu3KRUC7w/viewform?usp=pp_url&entry.971288946=${widget.userId}',
+                  'https://docs.google.com/forms/d/e/1FAIpQLSePAnSUGCvFtQpqNABT7g0f8uPOZA1p6AgKQWDg_Pu3KRUC7w/viewform?usp=pp_url&entry.971288946=${widget.talkId}',
               javascriptMode: JavascriptMode.unrestricted,
               onWebViewCreated: _controller.complete,
               onPageStarted: (String url) {

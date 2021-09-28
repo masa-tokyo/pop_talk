@@ -4,10 +4,10 @@ import 'package:pop_talk/presentation/ui/organisms/block_confirmation.dart';
 import 'package:pop_talk/presentation/ui/templates/listening/report_page.dart';
 import 'package:pop_talk/presentation/ui/utils/modal_bottom_sheet.dart';
 
-class UserOptions extends StatelessWidget {
-  const UserOptions({Key? key, required this.userId}) : super(key: key);
+class TalkOptions extends StatelessWidget {
+  const TalkOptions({Key? key, required this.talkId}) : super(key: key);
 
-  final String userId;
+  final String talkId;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class UserOptions extends StatelessWidget {
                     await showBottomSheetPage(
                       context: context,
                       page: BlockConfirmation(
-                        userId: userId,
+                        talkId: talkId,
                       ),
                     );
                   },
@@ -62,7 +62,7 @@ class UserOptions extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (BuildContext _context) =>
-                            ReportPage(userId: userId),
+                            ReportPage(talkId: talkId),
                       ),
                     );
                   },

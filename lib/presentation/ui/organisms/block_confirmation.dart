@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class BlockConfirmation extends StatelessWidget {
-  const BlockConfirmation({Key? key, required this.userId}) : super(key: key);
+  const BlockConfirmation({Key? key, required this.talkId}) : super(key: key);
 
-  final String userId;
+  final String talkId;
 
   @override
   Widget build(BuildContext context) {

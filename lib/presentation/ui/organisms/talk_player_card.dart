@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pop_talk/presentation/notifier/auth.dart';
 import 'package:pop_talk/presentation/notifier/player.dart';
 import 'package:pop_talk/presentation/ui/atoms/user_avator.dart';
-import 'package:pop_talk/presentation/ui/organisms/user_options.dart';
+import 'package:pop_talk/presentation/ui/organisms/talk_options.dart';
 import 'package:pop_talk/presentation/ui/utils/functions.dart';
 import 'package:pop_talk/presentation/ui/utils/modal_bottom_sheet.dart';
 
@@ -44,7 +44,7 @@ class TalkPlayerCard extends StatelessWidget {
                 onTap: () async {
                   await showBottomSheetPage(
                     context: context,
-                    page: UserOptions(userId: talk.createdUser.id),
+                    page: TalkOptions(talkId: talk.id),
                   );
                 },
                 child: const Icon(Icons.more_horiz),
