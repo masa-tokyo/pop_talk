@@ -21,9 +21,9 @@ class BlockConfirmation extends StatelessWidget {
             ),
             const Text(
               'このユーザーのトークは表示されなくなります',
+              overflow: TextOverflow.clip,
               style: TextStyle(
                 fontSize: 16,
-                overflow: TextOverflow.clip,
               ),
             ),
             const SizedBox(height: 20),
