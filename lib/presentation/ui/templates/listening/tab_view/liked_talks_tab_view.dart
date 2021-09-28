@@ -53,7 +53,7 @@ class _LikedTalksTabViewState extends State<LikedTalksTabView> {
                         await context
                             .read(
                               playerFamilyProvider(
-                                RecommendationTabView.playerProviderName,
+                                RecommendPlayer.playerProviderName,
                               ),
                             )
                             .reset();

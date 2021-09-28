@@ -18,7 +18,7 @@ enum AudioPlayType {
 class PlayerNotifier extends ChangeNotifier {
   AudioPlayType? playType;
   AudioPlayer? _audioPlayer;
-  List<TalkItem>? _talks;
+  List<TalkItem>? playList;
   PlayerButtonState playerButtonState = PlayerButtonState.paused;
   Duration position = Duration.zero;
   Duration duration = Duration.zero;
@@ -26,17 +26,17 @@ class PlayerNotifier extends ChangeNotifier {
   TalkItem? get currentTalk {
     if (_audioPlayer == null ||
         playType != AudioPlayType.playlist ||
-        _talks == null ||
-        _talks!.isEmpty) {
+        playList == null ||
+        playList!.isEmpty) {
       return null;
     }
-    return _talks![_audioPlayer!.currentIndex ?? 0];
+    return playList![_audioPlayer!.currentIndex ?? 0];
   }
 
   Future<void> reset() async {
     await _audioPlayer?.dispose();
     _audioPlayer = null;
-    _talks = null;
+    playList = null;
     playType = null;
     playerButtonState = PlayerButtonState.paused;
     position = Duration.zero;
@@ -53,7 +53,7 @@ class PlayerNotifier extends ChangeNotifier {
     final currentPlayer = _audioPlayer = AudioPlayer();
     this.playType = playType;
     if (playType == AudioPlayType.playlist) {
-      _talks = talks;
+      playList = talks;
       await currentPlayer.setAudioSource(
         ConcatenatingAudioSource(
           useLazyPreparation: true,
