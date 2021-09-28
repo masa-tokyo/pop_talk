@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pop_talk/domain/model/talk_item.dart';
 import 'package:pop_talk/presentation/notifier/auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pop_talk/presentation/notifier/talk_list.dart';
 import 'package:intl/intl.dart';
 import 'package:pop_talk/presentation/ui/organisms/talk_options.dart';
 import 'package:pop_talk/presentation/ui/utils/modal_bottom_sheet.dart';
@@ -53,7 +52,10 @@ class ListeningTile extends StatelessWidget {
                           onTap: () async {
                             await showBottomSheetPage(
                               context: context,
-                              page: TalkOptions(talkId: talkItem.id),
+                              page: TalkOptions(
+                                talkId: talkItem.id,
+                                userId: talkItem.createdUser.id,
+                              ),
                             );
                           },
                           child: const Icon(Icons.more_horiz),

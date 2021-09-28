@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pop_talk/presentation/notifier/auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class BlockConfirmation extends StatelessWidget {
-  const BlockConfirmation({Key? key, required this.talkId}) : super(key: key);
+  const BlockConfirmation(
+      {Key? key, required this.talkId, required this.userId})
+      : super(key: key);
 
   final String talkId;
+  final String userId;
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +41,10 @@ class BlockConfirmation extends StatelessWidget {
                 ),
                 const SizedBox(width: 16),
                 GestureDetector(
-                  onTap: () {
-                    // TODO(any): ブロック処理
+                  onTap: () async{
+                    final authNotifier = context.read(authProvider);
+                    await authNotifier.blockUser(userId);
+                    Navigator.pop(context);
                   },
                   child: const Text(
                     'ユーザーをブロック',
