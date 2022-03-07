@@ -1,3 +1,9 @@
+# アプリ説明
+Flutter大学の共同開発チームで作成したアプリです。
+○音声配信アプリ『ポップトーク』
+iOS版: https://apps.apple.com/app/id1586833764
+Android版: https://play.google.com/store/apps/details?id=com.yamyanu.poptalk
+
 # 開発方法
 
 0. flutterのversionを`2.2.1`以上に設定する(fvm推奨)
